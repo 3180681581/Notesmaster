@@ -2,6 +2,7 @@
         <!--属性：命名空间-->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+<!--包名在build.gradle（app）中，为net.micode.notes-->
       <!--    应用需要的权限    -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
@@ -36,6 +37,19 @@ fullBackupContent用于定义 Android 6.0（API 23）及以上版本的自动备
 主题通常定义在 res/values/styles.xml 中。单个 Activity 可以设置自己的 android:theme 覆盖此默认值。-->
 <!--tools:targetApi="31"这是一个 tools 命名空间 的属性，用于告诉 Android Studio 等工具：该属性（此处指整个 <application>
 标签中的某些属性）仅在 API 31（Android 12）及以上版本 生效。避免 Lint 报错“该属性在低版本不可用”-->
+
+<!-- activity 是 Android 四大组件之一，代表应用程序中一个拥有用户界面的单一屏幕。
+每一个继承自 Activity 或 AppCompatActivity 的类，只要它想要成为一个可供用户交互的界面，就必须在 AndroidManifest.xml 中显式地声明它。-->
+
+<!--android:name：指定 Activity 的类名（必填）。
+:configChanges 告诉系统：当指定的设备配置发生变化时，不要销毁并重建 Activity，而是由 Activity 自己处理变化（通过重写 onConfigurationChanged() 方法）
+:label：设置 Activity 的标题（显示在顶部 ActionBar/Toolbar）以及启动器图标下方的名称。
+:launchMode：指定启动模式（standard、singleTop、singleTask、singleInstance），控制任务栈中 Activity 的实例化方式 singleTop 行为：
+如果目标 Activity 的实例已位于任务栈的栈顶，则系统不会创建新实例，而是通过 onNewIntent() 将新 Intent 传递给已有的栈顶实例。
+:theme：为该 Activity 单独设置主题（如全屏、对话框样式）。
+:uiOptions="splitActionBarWhenNarrow"在窄屏幕（如手机横屏）时，将 ActionBar 的选项菜单项拆分到底部栏显示
+:exported：是否允许其他应用启动该 Activity。如果 Activity 包含 intent-filter，通常默认为 true；如果不包含，默认为 false。
+:screenOrientation：锁定屏幕方向（如 portrait、landscape）。-->
         <activity
             android:name=".ui.NotesListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
