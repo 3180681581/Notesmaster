@@ -48,8 +48,13 @@ fullBackupContent用于定义 Android 6.0（API 23）及以上版本的自动备
 如果目标 Activity 的实例已位于任务栈的栈顶，则系统不会创建新实例，而是通过 onNewIntent() 将新 Intent 传递给已有的栈顶实例。
 :theme：为该 Activity 单独设置主题（如全屏、对话框样式）。
 :uiOptions="splitActionBarWhenNarrow"在窄屏幕（如手机横屏）时，将 ActionBar 的选项菜单项拆分到底部栏显示
+:windowSoftInputMode 用于指定 Activity 窗口与软键盘的交互方式。adjustPan 是其中一种模式。
 :exported：是否允许其他应用启动该 Activity。如果 Activity 包含 intent-filter，通常默认为 true；如果不包含，默认为 false。
-:screenOrientation：锁定屏幕方向（如 portrait、landscape）。-->
+
+<intent-filter> 用于声明一个组件（如 Activity、Service、BroadcastReceiver）能够响应哪些隐式 Intent。
+action 定义“做什么”（What）。
+category 定义“在什么情况下做”（Context / Role）。
+data 定义对什么数据做这个动作-->
         <activity
             android:name=".ui.NotesListActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -63,6 +68,7 @@ fullBackupContent用于定义 Android 6.0（API 23）及以上版本的自动备
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+<!--定义了 Activity 作为应用的入口以及启动器图标的对应关系。-->
         </activity>
 
 
@@ -75,13 +81,17 @@ fullBackupContent用于定义 Android 6.0（API 23）及以上版本的自动备
 
             <intent-filter >
                 <action android:name="android.intent.action.VIEW" />
+<!--表示“查看”某个内容-->
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.item/text_note" />
+<!--android:mimeType	数据的 MIME 类型-->
+<!--vnd.android.cursor.item/text_note：自定义 MIME 类型，表示“文本笔记”类型的数据项-->
                 <data android:mimeType="vnd.android.cursor.item/call_note" />
             </intent-filter >
 
             <intent-filter>
                 <action android:name="android.intent.action.INSERT_OR_EDIT" />
+<!--插入或编辑（INSERT_OR_EDIT）指定 MIME 类型的笔记数据-->
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="vnd.android.cursor.item/text_note" />
                 <data android:mimeType="vnd.android.cursor.item/call_note" />
@@ -89,12 +99,15 @@ fullBackupContent用于定义 Android 6.0（API 23）及以上版本的自动备
 
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
+<!--处理搜索请求（SEARCH）。通常用于支持系统全局搜索或应用内搜索框。查询词不是数据而是参数-->
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
+<!--<meta-data> 以键值对的形式为组件添加额外配置信息，供系统或应用在运行时读取。-->
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
+<!--android.app.searchable 是系统定义的键，用于关联 Activity 与搜索配置。
+@xml/searchable 指向一个描述搜索行为的 XML 文件。-->
         </activity>
 
 
