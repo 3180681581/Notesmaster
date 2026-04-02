@@ -83,7 +83,8 @@ import java.util.HashSet;
  * 便签列表主页面，负责列表展示和大部分入口交互。
  * 实现方法：
  * 通过 ListView + Adapter 展示数据，结合 ContentResolver/AsyncQueryHandler 读写数据库，
- * 并在点击、长按、菜单、搜索、导出、同步等回调中分发具体业务。
+ * 并在点击、长按、菜单、搜索、导出、同步等回调中分发具体业务，
+ * 采用状态驱动的思想：以状态常量和文件夹id来决定操作。
  */
 public class NotesListActivity extends Activity implements OnClickListener, OnItemLongClickListener {
     // 异步查询 token：查询“当前文件夹下便签列表”
