@@ -28,6 +28,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
+/*
+ * 作用：日期时间组合选择控件，支持最近一周日期、时分选择及 12/24 小时制切换。
+ * 实现方法：通过 NumberPicker 组合实现日期/小时/分钟/上午下午四个维度；
+ * 使用 setCurrentDate、setCurrentHour、setCurrentMinute 等方法同步内部 Calendar；
+ * 在各 OnValueChangeListener 中处理跨天与 AM/PM 切换，并通过 onDateTimeChanged 回调外部。
+ * 逻辑示意：DateTimePicker(context, date, is24HourView) -> updateDateControl()/updateHourControl()/updateAmPmControl()
+ * -> mOnDateChangedListener/mOnHourChangedListener/mOnMinuteChangedListener/mOnAmPmChangedListener
+ * -> setCurrentYear/month/day/hour/minute -> onDateTimeChanged()
+ */
 public class DateTimePicker extends FrameLayout {
 
     private static final boolean DEFAULT_ENABLE_STATE = true;
@@ -64,6 +73,10 @@ public class DateTimePicker extends FrameLayout {
 
     private OnDateTimeChangedListener mOnDateTimeChangedListener;
 
+    /*
+     * 作用：监听日期滚轮变化。
+     * 实现方法：按滚轮偏移调整 Calendar 的天数，并刷新日期显示后触发变更回调。
+     */
     private NumberPicker.OnValueChangeListener mOnDateChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -73,6 +86,10 @@ public class DateTimePicker extends FrameLayout {
         }
     };
 
+    /*
+     * 作用：监听小时滚轮变化并处理跨天/AMPM翻转。
+     * 实现方法：根据 12/24 小时制判断边界值回绕场景，必要时调整日期并更新 AMPM 状态。
+     */
     private NumberPicker.OnValueChangeListener mOnHourChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -115,6 +132,10 @@ public class DateTimePicker extends FrameLayout {
         }
     };
 
+    /*
+     * 作用：监听分钟滚轮变化并处理小时进位/借位。
+     * 实现方法：在 59->0 或 0->59 时调整小时与日期显示，并同步 AMPM 状态。
+     */
     private NumberPicker.OnValueChangeListener mOnMinuteChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -144,6 +165,10 @@ public class DateTimePicker extends FrameLayout {
         }
     };
 
+    /*
+     * 作用：监听 AM/PM 滚轮变化。
+     * 实现方法：切换 mIsAm 并对 Calendar 小时加减 12，随后刷新控件与回调。
+     */
     private NumberPicker.OnValueChangeListener mOnAmPmChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
         public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
@@ -158,19 +183,35 @@ public class DateTimePicker extends FrameLayout {
         }
     };
 
+    /*
+     * 作用：定义日期时间变化回调接口。
+     * 实现方法：对外暴露 onDateTimeChanged，传出年/月/日/时/分完整结果。
+     */
     public interface OnDateTimeChangedListener {
         void onDateTimeChanged(DateTimePicker view, int year, int month,
                 int dayOfMonth, int hourOfDay, int minute);
     }
 
+    /*
+     * 作用：使用当前系统时间初始化控件。
+     * 实现方法：委托到带时间戳构造函数。
+     */
     public DateTimePicker(Context context) {
         this(context, System.currentTimeMillis());
     }
 
+    /*
+     * 作用：使用指定时间戳初始化控件。
+     * 实现方法：自动读取系统 24 小时制设置并委托主构造函数。
+     */
     public DateTimePicker(Context context, long date) {
         this(context, date, DateFormat.is24HourFormat(context));
     }
 
+    /*
+     * 作用：执行完整初始化流程。
+     * 实现方法：初始化 Calendar 与四个 NumberPicker，绑定监听器，设置显示制式并写入初始时间。
+     */
     public DateTimePicker(Context context, long date, boolean is24HourView) {
         super(context);
         mDate = Calendar.getInstance();
@@ -215,6 +256,10 @@ public class DateTimePicker extends FrameLayout {
     }
 
     @Override
+    /*
+     * 作用：启用或禁用整个日期时间控件。
+     * 实现方法：同步父类状态并批量设置各 NumberPicker 的 enabled 状态。
+     */
     public void setEnabled(boolean enabled) {
         if (mIsEnabled == enabled) {
             return;
@@ -228,23 +273,25 @@ public class DateTimePicker extends FrameLayout {
     }
 
     @Override
+    /*
+     * 作用：获取当前启用状态。
+     * 实现方法：返回内部维护的 mIsEnabled。
+     */
     public boolean isEnabled() {
         return mIsEnabled;
     }
 
-    /**
-     * Get the current date in millis
-     *
-     * @return the current date in millis
+    /*
+     * 作用：获取当前选择时间的毫秒值。
+     * 实现方法：直接返回内部 Calendar 的时间戳。
      */
     public long getCurrentDateInTimeMillis() {
         return mDate.getTimeInMillis();
     }
 
-    /**
-     * Set the current date
-     *
-     * @param date The current date in millis
+    /*
+     * 作用：按毫秒值设置当前日期时间。
+     * 实现方法：先转为 Calendar，再委托到分量设置方法。
      */
     public void setCurrentDate(long date) {
         Calendar cal = Calendar.getInstance();
@@ -253,14 +300,9 @@ public class DateTimePicker extends FrameLayout {
                 cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE));
     }
 
-    /**
-     * Set the current date
-     *
-     * @param year The current year
-     * @param month The current month
-     * @param dayOfMonth The current dayOfMonth
-     * @param hourOfDay The current hourOfDay
-     * @param minute The current minute
+    /*
+     * 作用：按年月日时分设置当前日期时间。
+     * 实现方法：顺序调用 setCurrentYear/setCurrentMonth/setCurrentDay/setCurrentHour/setCurrentMinute。
      */
     public void setCurrentDate(int year, int month,
             int dayOfMonth, int hourOfDay, int minute) {
@@ -271,19 +313,17 @@ public class DateTimePicker extends FrameLayout {
         setCurrentMinute(minute);
     }
 
-    /**
-     * Get current year
-     *
-     * @return The current year
+    /*
+     * 作用：获取当前年份。
+     * 实现方法：从内部 Calendar 读取 YEAR 字段。
      */
     public int getCurrentYear() {
         return mDate.get(Calendar.YEAR);
     }
 
-    /**
-     * Set current year
-     *
-     * @param year The current year
+    /*
+     * 作用：设置当前年份。
+     * 实现方法：去重判断后写入 Calendar，并刷新日期控件与回调。
      */
     public void setCurrentYear(int year) {
         if (!mInitialising && year == getCurrentYear()) {
@@ -294,19 +334,17 @@ public class DateTimePicker extends FrameLayout {
         onDateTimeChanged();
     }
 
-    /**
-     * Get current month in the year
-     *
-     * @return The current month in the year
+    /*
+     * 作用：获取当前月份。
+     * 实现方法：从内部 Calendar 读取 MONTH 字段。
      */
     public int getCurrentMonth() {
         return mDate.get(Calendar.MONTH);
     }
 
-    /**
-     * Set current month in the year
-     *
-     * @param month The month in the year
+    /*
+     * 作用：设置当前月份。
+     * 实现方法：去重判断后写入 Calendar，并刷新日期控件与回调。
      */
     public void setCurrentMonth(int month) {
         if (!mInitialising && month == getCurrentMonth()) {
@@ -317,19 +355,17 @@ public class DateTimePicker extends FrameLayout {
         onDateTimeChanged();
     }
 
-    /**
-     * Get current day of the month
-     *
-     * @return The day of the month
+    /*
+     * 作用：获取当前日。
+     * 实现方法：从内部 Calendar 读取 DAY_OF_MONTH 字段。
      */
     public int getCurrentDay() {
         return mDate.get(Calendar.DAY_OF_MONTH);
     }
 
-    /**
-     * Set current day of the month
-     *
-     * @param dayOfMonth The day of the month
+    /*
+     * 作用：设置当前日。
+     * 实现方法：去重判断后写入 Calendar，并刷新日期控件与回调。
      */
     public void setCurrentDay(int dayOfMonth) {
         if (!mInitialising && dayOfMonth == getCurrentDay()) {
@@ -340,14 +376,18 @@ public class DateTimePicker extends FrameLayout {
         onDateTimeChanged();
     }
 
-    /**
-     * Get current hour in 24 hour mode, in the range (0~23)
-     * @return The current hour in 24 hour mode
+    /*
+     * 作用：获取 24 小时制下当前小时。
+     * 实现方法：从内部 Calendar 读取 HOUR_OF_DAY 字段。
      */
     public int getCurrentHourOfDay() {
         return mDate.get(Calendar.HOUR_OF_DAY);
     }
 
+    /*
+     * 作用：获取当前用于小时滚轮显示的小时值。
+     * 实现方法：24 小时制直接返回；12 小时制按 AM/PM 规则转换为 1~12。
+     */
     private int getCurrentHour() {
         if (mIs24HourView){
             return getCurrentHourOfDay();
@@ -361,10 +401,9 @@ public class DateTimePicker extends FrameLayout {
         }
     }
 
-    /**
-     * Set current hour in 24 hour mode, in the range (0~23)
-     *
-     * @param hourOfDay
+    /*
+     * 作用：设置当前小时。
+     * 实现方法：写入 Calendar 后按制式修正 AM/PM 与滚轮值，并触发回调。
      */
     public void setCurrentHour(int hourOfDay) {
         if (!mInitialising && hourOfDay == getCurrentHourOfDay()) {
@@ -389,17 +428,17 @@ public class DateTimePicker extends FrameLayout {
         onDateTimeChanged();
     }
 
-    /**
-     * Get currentMinute
-     *
-     * @return The Current Minute
+    /*
+     * 作用：获取当前分钟。
+     * 实现方法：从内部 Calendar 读取 MINUTE 字段。
      */
     public int getCurrentMinute() {
         return mDate.get(Calendar.MINUTE);
     }
 
-    /**
-     * Set current minute
+    /*
+     * 作用：设置当前分钟。
+     * 实现方法：去重判断后更新分钟滚轮与 Calendar 字段并触发回调。
      */
     public void setCurrentMinute(int minute) {
         if (!mInitialising && minute == getCurrentMinute()) {
@@ -410,17 +449,17 @@ public class DateTimePicker extends FrameLayout {
         onDateTimeChanged();
     }
 
-    /**
-     * @return true if this is in 24 hour view else false.
+    /*
+     * 作用：获取是否为 24 小时制显示。
+     * 实现方法：返回 mIs24HourView。
      */
     public boolean is24HourView () {
         return mIs24HourView;
     }
 
-    /**
-     * Set whether in 24 hour or AM/PM mode.
-     *
-     * @param is24HourView True for 24 hour mode. False for AM/PM mode.
+    /*
+     * 作用：切换 24 小时制与 AM/PM 显示模式。
+     * 实现方法：更新制式标志，调整 AMPM 控件可见性与小时范围，并回写当前小时显示。
      */
     public void set24HourView(boolean is24HourView) {
         if (mIs24HourView == is24HourView) {
@@ -434,6 +473,10 @@ public class DateTimePicker extends FrameLayout {
         updateAmPmControl();
     }
 
+    /*
+     * 作用：刷新日期滚轮显示内容。
+     * 实现方法：以当前日期为中心生成前后 7 天展示文案并重置滚轮到中位。
+     */
     private void updateDateControl() {
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(mDate.getTimeInMillis());
@@ -448,6 +491,10 @@ public class DateTimePicker extends FrameLayout {
         mDateSpinner.invalidate();
     }
 
+    /*
+     * 作用：刷新 AM/PM 控件状态。
+     * 实现方法：24 小时制隐藏控件；12 小时制按 mIsAm 设置值并显示。
+     */
     private void updateAmPmControl() {
         if (mIs24HourView) {
             mAmPmSpinner.setVisibility(View.GONE);
@@ -458,6 +505,10 @@ public class DateTimePicker extends FrameLayout {
         }
     }
 
+    /*
+     * 作用：刷新小时滚轮取值范围。
+     * 实现方法：根据当前制式设置 24 小时范围(0~23)或 12 小时范围(1~12)。
+     */
     private void updateHourControl() {
         if (mIs24HourView) {
             mHourSpinner.setMinValue(HOUR_SPINNER_MIN_VAL_24_HOUR_VIEW);
@@ -468,14 +519,18 @@ public class DateTimePicker extends FrameLayout {
         }
     }
 
-    /**
-     * Set the callback that indicates the 'Set' button has been pressed.
-     * @param callback the callback, if null will do nothing
+    /*
+     * 作用：设置日期时间变更回调监听器。
+     * 实现方法：保存 callback 引用，后续由 onDateTimeChanged 统一触发。
      */
     public void setOnDateTimeChangedListener(OnDateTimeChangedListener callback) {
         mOnDateTimeChangedListener = callback;
     }
 
+    /*
+     * 作用：向外分发日期时间变化事件。
+     * 实现方法：监听器非空时回调当前年/月/日/时/分。
+     */
     private void onDateTimeChanged() {
         if (mOnDateTimeChangedListener != null) {
             mOnDateTimeChangedListener.onDateTimeChanged(this, getCurrentYear(),
