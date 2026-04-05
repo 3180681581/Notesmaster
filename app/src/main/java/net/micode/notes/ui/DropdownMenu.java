@@ -29,7 +29,11 @@ import net.micode.notes.R;
 
 /*
  * 作用：封装一个带下拉菜单的按钮控件。
- * 实现方法：通过 Button 结合 PopupMenu 提供标题显示、菜单展开和菜单项点击能力。
+ * 实现方法：在 DropdownMenu 构造函数中完成按钮样式、菜单加载与点击弹出；
+ * 通过 setOnDropdownMenuItemClickListener 注册菜单点击回调；
+ * 通过 findItem 与 setTitle 分别提供菜单项查询和标题更新能力。
+ * 逻辑示意：DropdownMenu(context, button, menuId) -> mButton.setOnClickListener(v)
+ * -> mPopupMenu.show() -> setOnDropdownMenuItemClickListener(listener) -> findItem(id)/setTitle(title).
  */
 public class DropdownMenu {
     private Button mButton;

@@ -82,9 +82,13 @@ import java.util.HashSet;
  * 作用：
  * 便签列表主页面，负责列表展示和大部分入口交互。
  * 实现方法：
- * 通过 ListView + Adapter 展示数据，结合 ContentResolver/AsyncQueryHandler 读写数据库，
- * 并在点击、长按、菜单、搜索、导出、同步等回调中分发具体业务，
- * 采用状态驱动的思想：以状态常量和文件夹id来决定操作。
+ * 由 onCreate/initResources 初始化列表与交互组件，onStart/startAsyncNotesListQuery 驱动异步加载；
+ * 通过 onClick、onItemLongClick、onOptionsItemSelected、onContextItemSelected 分发用户操作，
+ * 并由 openNode/openFolder、batchDelete/deleteFolder、exportNoteToText、startQueryDestinationFolders 等方法执行具体业务，
+ * 采用 mState 与 mCurrentFolderId 的状态驱动逻辑决定界面与数据行为。
+ * 逻辑示意：onCreate(savedInstanceState) -> initResources() -> onStart() -> startAsyncNotesListQuery()
+ * -> BackgroundQueryHandler.onQueryComplete(token, cookie, cursor) -> 列表交互分发(onClick/onItemLongClick/onOptionsItemSelected)
+ * -> openNode(data)/openFolder(data)/batchDelete()/deleteFolder(folderId)/exportNoteToText().
  */
 public class NotesListActivity extends Activity implements OnClickListener, OnItemLongClickListener {
     // 异步查询 token：查询“当前文件夹下便签列表”
