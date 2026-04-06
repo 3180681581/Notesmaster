@@ -88,7 +88,7 @@ import java.util.HashSet;
  * 采用 mState 与 mCurrentFolderId 的状态驱动逻辑决定界面与数据行为。
  * 逻辑示意：onCreate(savedInstanceState) -> initResources() -> onStart() -> startAsyncNotesListQuery()
  * -> BackgroundQueryHandler.onQueryComplete(token, cookie, cursor) -> 列表交互分发(onClick/onItemLongClick/onOptionsItemSelected)
- * -> openNode(data)/openFolder(data)/batchDelete()/deleteFolder(folderId)/exportNoteToText().
+ * -> openNode(data)/openFolder(data)/batchDelete()/deleteFolder(folderId)/exportNoteToText()
  */
 public class NotesListActivity extends Activity implements OnClickListener, OnItemLongClickListener {
     // 异步查询 token：查询“当前文件夹下便签列表”

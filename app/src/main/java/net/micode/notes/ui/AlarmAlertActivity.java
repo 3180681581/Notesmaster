@@ -46,7 +46,7 @@ import java.io.IOException;
  * 通过 isScreenOn 控制亮屏与按钮分支；在 onClick 处理中转到 NoteEditActivity；
  * 在 onDismiss 中调用 stopAlarmSound 释放音频资源并结束页面。
  * 逻辑示意：onCreate(intent, savedInstanceState) -> isScreenOn() -> showActionDialog() -> playAlarmSound()
- * -> onClick(dialog, which)/onDismiss(dialog) -> stopAlarmSound() -> finish().
+ * -> onClick(dialog, which)/onDismiss(dialog) -> stopAlarmSound() -> finish()
  */
 public class AlarmAlertActivity extends Activity implements OnClickListener, OnDismissListener {
     /*

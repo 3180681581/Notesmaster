@@ -33,7 +33,7 @@ import net.micode.notes.R;
  * 通过 setOnDropdownMenuItemClickListener 注册菜单点击回调；
  * 通过 findItem 与 setTitle 分别提供菜单项查询和标题更新能力。
  * 逻辑示意：DropdownMenu(context, button, menuId) -> mButton.setOnClickListener(v)
- * -> mPopupMenu.show() -> setOnDropdownMenuItemClickListener(listener) -> findItem(id)/setTitle(title).
+ * -> mPopupMenu.show() -> setOnDropdownMenuItemClickListener(listener) -> findItem(id)/setTitle(title)
  */
 public class DropdownMenu {
     private Button mButton;
