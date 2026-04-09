@@ -27,11 +27,23 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 
 import net.micode.notes.R;
 
+/*
+ * 作用：封装一个带下拉菜单的按钮控件。
+ * 实现方法：在 DropdownMenu 构造函数中完成按钮样式、菜单加载与点击弹出；
+ * 通过 setOnDropdownMenuItemClickListener 注册菜单点击回调；
+ * 通过 findItem 与 setTitle 分别提供菜单项查询和标题更新能力。
+ * 逻辑示意：DropdownMenu(context, button, menuId) -> mButton.setOnClickListener(v)
+ * -> mPopupMenu.show() -> setOnDropdownMenuItemClickListener(listener) -> findItem(id)/setTitle(title)
+ */
 public class DropdownMenu {
     private Button mButton;
     private PopupMenu mPopupMenu;
     private Menu mMenu;
 
+    /*
+     * 作用：初始化下拉菜单组件。
+     * 实现方法：为按钮设置下拉图标，创建 PopupMenu，加载菜单资源，并绑定按钮点击事件以显示菜单。
+     */
     public DropdownMenu(Context context, Button button, int menuId) {
         mButton = button;
         mButton.setBackgroundResource(R.drawable.dropdown_icon);
@@ -39,22 +51,38 @@ public class DropdownMenu {
         mMenu = mPopupMenu.getMenu();
         mPopupMenu.getMenuInflater().inflate(menuId, mMenu);
         mButton.setOnClickListener(new OnClickListener() {
+            /*
+             * 作用：响应按钮点击以弹出下拉菜单。
+             * 实现方法：在点击回调中直接调用 PopupMenu.show()。
+             */
             public void onClick(View v) {
                 mPopupMenu.show();
             }
         });
     }
 
+    /*
+     * 作用：设置下拉菜单项点击监听器。
+     * 实现方法：判断 PopupMenu 是否存在后，将外部监听器注册到 PopupMenu。
+     */
     public void setOnDropdownMenuItemClickListener(OnMenuItemClickListener listener) {
         if (mPopupMenu != null) {
             mPopupMenu.setOnMenuItemClickListener(listener);
         }
     }
 
+    /*
+     * 作用：按菜单项 id 查找对应的菜单项。
+     * 实现方法：直接委托给内部 Menu 对象进行查找。
+     */
     public MenuItem findItem(int id) {
         return mMenu.findItem(id);
     }
 
+    /*
+     * 作用：设置下拉按钮显示的标题。
+     * 实现方法：将传入标题写入按钮文本。
+     */
     public void setTitle(CharSequence title) {
         mButton.setText(title);
     }

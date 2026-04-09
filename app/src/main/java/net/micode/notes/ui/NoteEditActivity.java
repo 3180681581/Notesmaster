@@ -72,8 +72,23 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+/*
+ * 作用：便签编辑页面，负责便签内容编辑、样式设置、提醒设置、分享与桌面快捷方式等操作。
+ * 实现方法：由 onCreate/initActivityState/initResources 初始化工作便签与界面；
+ * 通过 onResume/initNoteScreen 刷新展示，通过 onPause/saveNote 落盘；
+ * 通过 onClick/onOptionsItemSelected 分发颜色、字体、清单模式、提醒、分享、删除等业务；
+ * 并通过 OnTextViewChangeListener 回调维护清单编辑行为。
+ * 流程：初始化，展示，交互，同步，持久化。
+ * 逻辑示意：onCreate(savedInstanceState) -> initActivityState(intent) -> initResources() -> onResume()
+ * -> initNoteScreen() -> onClick(v)/onOptionsItemSelected(item) -> getWorkingText()/saveNote()
+ * -> onPause() -> onClockAlertChanged(date, set)/sendToDesktop().
+ */
 public class NoteEditActivity extends Activity implements OnClickListener,
         NoteSettingChangedListener, OnTextViewChangeListener {
+    /*
+     * 作用：缓存头部区域控件引用。
+     * 实现方法：在 initResources 中统一绑定，减少重复 findViewById 调用。
+     */
     private class HeadViewHolder {
         public TextView tvModified;
 
@@ -150,6 +165,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     private Pattern mPattern;
 
     @Override
+    /*
+     * 作用：页面创建入口，完成状态初始化与资源绑定。
+     * 实现方法：先根据 Intent 初始化工作便签，失败则结束页面；成功后加载并绑定界面资源。
+     */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setContentView(R.layout.note_edit);
@@ -161,7 +180,11 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         initResources();
     }
 
-    /**
+    /*
+     * 作用：恢复系统回收后的页面状态。
+     * 实现方法：从 savedInstanceState 取回便签 id，重新构造 VIEW intent 并复用 initActivityState。
+     */
+    /*
      * Current activity may be killed when the memory is low. Once it is killed, for another time
      * user load this activity, we should restore the former state
      */
@@ -179,17 +202,29 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         }
     }
 
+    /*
+     * 作用：根据启动 Intent 初始化当前编辑会话状态。
+     * 实现方法：分支处理 ACTION_VIEW 与 ACTION_INSERT_OR_EDIT，加载已有便签或创建新便签，并设置软键盘策略。
+     */
     private boolean initActivityState(Intent intent) {
-        /**
+        /*
          * If the user specified the {@link Intent#ACTION_VIEW} but not provided with id,
          * then jump to the NotesListActivity
+         */
+        /*
+         * 作用：处理查看模式下的无效 id 场景。
+         * 实现方法：若便签不可见则跳转列表页并提示，再终止当前编辑页初始化。
          */
         mWorkingNote = null;
         if (TextUtils.equals(Intent.ACTION_VIEW, intent.getAction())) {
             long noteId = intent.getLongExtra(Intent.EXTRA_UID, 0);
             mUserQuery = "";
 
-            /**
+            /*
+             * 作用：兼容搜索结果跳转到编辑页。
+             * 实现方法：优先从 SearchManager 附加参数解析 noteId 与用户查询词。
+             */
+            /*
              * Starting from the searched result
              */
             if (intent.hasExtra(SearchManager.EXTRA_DATA_KEY)) {
@@ -263,11 +298,19 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：页面恢复前台时刷新编辑界面。
+     * 实现方法：调用 initNoteScreen 根据当前便签与模式重建展示状态。
+     */
     protected void onResume() {
         super.onResume();
         initNoteScreen();
     }
 
+    /*
+     * 作用：初始化编辑区、样式与头部显示。
+     * 实现方法：按普通/清单模式加载内容，应用背景与字体配置，并刷新修改时间与提醒头部。
+     */
     private void initNoteScreen() {
         mNoteEditor.setTextAppearance(this, TextAppearanceResources
                 .getTexAppearanceResource(mFontSizeId));
@@ -288,13 +331,17 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                         | DateUtils.FORMAT_NUMERIC_DATE | DateUtils.FORMAT_SHOW_TIME
                         | DateUtils.FORMAT_SHOW_YEAR));
 
-        /**
-         * TODO: Add the menu for setting alert. Currently disable it because the DateTimePicker
-         * is not ready
+        /*
+         * 作用：同步提醒展示区状态。
+         * 实现方法：调用 showAlertHeader 根据当前提醒信息显示或隐藏提醒图标与文本。
          */
         showAlertHeader();
     }
 
+    /*
+     * 作用：刷新提醒头部显示。
+     * 实现方法：有提醒时显示剩余时间或过期文案，无提醒时隐藏对应控件。
+     */
     private void showAlertHeader() {
         if (mWorkingNote.hasClockAlert()) {
             long time = System.currentTimeMillis();
@@ -313,18 +360,25 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：响应复用实例接收的新 Intent。
+     * 实现方法：直接复用 initActivityState 重新加载目标便签。
+     */
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         initActivityState(intent);
     }
 
     @Override
+    /*
+     * 作用：保存页面临时状态以应对系统回收。
+     * 实现方法：确保新建便签先落库拿到 id，再写入 outState 供恢复使用。
+     */
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        /**
-         * For new note without note id, we should firstly save it to
-         * generate a id. If the editing note is not worth saving, there
-         * is no id which is equivalent to create new note
+        /*
+         * 作用：保证无 id 的新便签也能被恢复。
+         * 实现方法：对未入库便签先执行 saveNote，再保存生成的 noteId。
          */
         if (!mWorkingNote.existInDatabase()) {
             saveNote();
@@ -334,6 +388,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：统一处理触摸事件以关闭设置面板。
+     * 实现方法：当触摸点落在面板外时隐藏背景色或字体选择器并拦截事件。
+     */
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (mNoteBgColorSelector.getVisibility() == View.VISIBLE
                 && !inRangeOfView(mNoteBgColorSelector, ev)) {
@@ -349,6 +407,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return super.dispatchTouchEvent(ev);
     }
 
+    /*
+     * 作用：判断触摸点是否在指定视图区域内。
+     * 实现方法：读取视图屏幕坐标与宽高，比较事件 x/y 是否落入边界。
+     */
     private boolean inRangeOfView(View view, MotionEvent ev) {
         int []location = new int[2];
         view.getLocationOnScreen(location);
@@ -363,6 +425,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return true;
     }
 
+    /*
+     * 作用：初始化页面控件、选择器与偏好配置。
+     * 实现方法：绑定头部和编辑区视图，注册按钮监听，读取并校验字体大小偏好。
+     */
     private void initResources() {
         mHeadViewPanel = findViewById(R.id.note_title);
         mNoteHeaderHolder = new HeadViewHolder();
@@ -386,10 +452,14 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         };
         mSharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
         mFontSizeId = mSharedPrefs.getInt(PREFERENCE_FONT_SIZE, ResourceParser.BG_DEFAULT_FONT_SIZE);
-        /**
+        /*
          * HACKME: Fix bug of store the resource id in shared preference.
          * The id may larger than the length of resources, in this case,
          * return the {@link ResourceParser#BG_DEFAULT_FONT_SIZE}
+         */
+        /*
+         * 作用：修正异常字体偏好值。
+         * 实现方法：当偏好 id 超出资源范围时回退到默认字体大小。
          */
         if(mFontSizeId >= TextAppearanceResources.getResourcesSize()) {
             mFontSizeId = ResourceParser.BG_DEFAULT_FONT_SIZE;
@@ -398,6 +468,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：页面离开前保存数据并清理设置面板状态。
+     * 实现方法：调用 saveNote 持久化当前内容，再隐藏可能展开的选择器。
+     */
     protected void onPause() {
         super.onPause();
         if(saveNote()) {
@@ -406,6 +480,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         clearSettingState();
     }
 
+    /*
+     * 作用：刷新关联桌面小组件。
+     * 实现方法：按 widget 类型选择 Provider，发送 APPWIDGET_UPDATE 广播并回传结果。
+     */
     private void updateWidget() {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
         if (mWorkingNote.getWidgetType() == Notes.TYPE_WIDGET_2X) {
@@ -425,6 +503,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         setResult(RESULT_OK, intent);
     }
 
+    /*
+     * 作用：处理页面内按钮点击事件。
+     * 实现方法：按 id 分发背景色选择、字体选择及对应界面/配置更新。
+     */
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.btn_set_bg_color) {
@@ -453,6 +535,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：自定义返回键行为。
+     * 实现方法：优先关闭设置面板；否则先保存便签再执行系统返回。
+     */
     public void onBackPressed() {
         if(clearSettingState()) {
             return;
@@ -462,6 +548,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         super.onBackPressed();
     }
 
+    /*
+     * 作用：清理当前展开的设置面板。
+     * 实现方法：按优先级隐藏背景色选择器或字体选择器，并返回是否已消费。
+     */
     private boolean clearSettingState() {
         if (mNoteBgColorSelector.getVisibility() == View.VISIBLE) {
             mNoteBgColorSelector.setVisibility(View.GONE);
@@ -473,6 +563,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return false;
     }
 
+    /*
+     * 作用：响应便签背景色变化。
+     * 实现方法：更新选中标记及标题/编辑区背景资源。
+     */
     public void onBackgroundColorChanged() {
         findViewById(sBgSelectorSelectionMap.get(mWorkingNote.getBgColorId())).setVisibility(
                 View.VISIBLE);
@@ -481,6 +575,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：动态准备顶部菜单。
+     * 实现方法：按便签所在目录与清单模式切换菜单项文案与提醒相关菜单可见性。
+     */
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (isFinishing()) {
             return true;
@@ -506,6 +604,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     }
 
     @Override
+    /*
+     * 作用：处理顶部菜单点击动作。
+     * 实现方法：按菜单 id 分发新建、删除、字体、清单模式、分享、提醒和桌面快捷方式等逻辑。
+     */
     public boolean onOptionsItemSelected(MenuItem item) {
 //        switch (item.getItemId()) {
 //            case R.id.menu_new_note:
@@ -588,6 +690,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return true;
     }
 
+    /*
+     * 作用：弹出提醒时间设置对话框。
+     * 实现方法：创建 DateTimePickerDialog，回调中将提醒时间写入 WorkingNote。
+     */
     private void setReminder() {
         DateTimePickerDialog d = new DateTimePickerDialog(this, System.currentTimeMillis());
         d.setOnDateTimeSetListener(new OnDateTimeSetListener() {
@@ -598,7 +704,11 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         d.show();
     }
 
-    /**
+    /*
+     * 作用：将便签内容分享给其他应用。
+     * 实现方法：构造 ACTION_SEND + text/plain 的 Intent 并启动系统分享面板。
+     */
+    /*
      * Share note to apps that support {@link Intent#ACTION_SEND} action
      * and {@text/plain} type
      */
@@ -609,6 +719,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         context.startActivity(intent);
     }
 
+    /*
+     * 作用：创建新便签并切换到新的编辑会话。
+     * 实现方法：先保存当前便签，再结束当前页面并以 INSERT_OR_EDIT 启动新实例。
+     */
     private void createNewNote() {
         // Firstly, save current editing notes
         saveNote();
@@ -621,6 +735,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         startActivity(intent);
     }
 
+    /*
+     * 作用：删除当前便签。
+     * 实现方法：已入库时按同步模式执行“物理删除”或“移入回收站”，并标记 WorkingNote 为已删除。
+     */
     private void deleteCurrentNote() {
         if (mWorkingNote.existInDatabase()) {
             HashSet<Long> ids = new HashSet<Long>();
@@ -643,14 +761,26 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         mWorkingNote.markDeleted(true);
     }
 
+    /*
+     * 作用：判断当前是否启用同步模式。
+     * 实现方法：读取同步账号名并判断 trim 后长度是否大于 0。
+     */
     private boolean isSyncMode() {
         return NotesPreferenceActivity.getSyncAccountName(this).trim().length() > 0;
     }
 
+    /*
+     * 作用：响应提醒时间设置变化。
+     * 实现方法：确保便签先入库，再基于 noteId 配置或取消 AlarmManager 定时广播。
+     */
     public void onClockAlertChanged(long date, boolean set) {
-        /**
+        /*
          * User could set clock to an unsaved note, so before setting the
          * alert clock, we should save the note first
+         */
+        /*
+         * 作用：保证设置提醒时存在有效 noteId。
+         * 实现方法：对未入库便签先执行保存，避免无法构造提醒广播 Uri。
          */
         if (!mWorkingNote.existInDatabase()) {
             saveNote();
@@ -667,20 +797,32 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                 alarmManager.set(AlarmManager.RTC_WAKEUP, date, pendingIntent);
             }
         } else {
-            /**
+            /*
              * There is the condition that user has input nothing (the note is
              * not worthy saving), we have no note id, remind the user that he
              * should input something
+             */
+            /*
+             * 作用：处理空便签无法设置提醒的场景。
+             * 实现方法：记录错误日志并提示用户先输入有效内容。
              */
             Log.e(TAG, "Clock alert setting error");
             showToast(R.string.error_note_empty_for_clock);
         }
     }
 
+    /*
+     * 作用：响应小组件设置变化。
+     * 实现方法：调用 updateWidget 触发桌面组件刷新。
+     */
     public void onWidgetChanged() {
         updateWidget();
     }
 
+    /*
+     * 作用：处理清单模式下编辑项删除。
+     * 实现方法：删除当前行后重排后续索引，并把内容拼接到前一行或首行并恢复焦点。
+     */
     public void onEditTextDelete(int index, String text) {
         int childCount = mEditTextList.getChildCount();
         if (childCount == 1) {
@@ -707,9 +849,17 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         edit.setSelection(length);
     }
 
+    /*
+     * 作用：处理清单模式下回车新增编辑项。
+     * 实现方法：在指定位置插入新列表项，聚焦新项并重排其后条目索引。
+     */
     public void onEditTextEnter(int index, String text) {
-        /**
+        /*
          * Should not happen, check for debug
+         */
+        /*
+         * 作用：保护异常索引越界场景。
+         * 实现方法：当插入索引超界时输出错误日志用于排查。
          */
         if(index > mEditTextList.getChildCount()) {
             Log.e(TAG, "Index out of mEditTextList boundrary, should not happen");
@@ -726,6 +876,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         }
     }
 
+    /*
+     * 作用：将普通文本切换为清单编辑视图。
+     * 实现方法：按换行拆分文本逐项创建列表行，补一条空行并切换可见性。
+     */
     private void switchToListMode(String text) {
         mEditTextList.removeAllViews();
         String[] items = text.split("\n");
@@ -743,6 +897,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         mEditTextList.setVisibility(View.VISIBLE);
     }
 
+    /*
+     * 作用：高亮搜索关键字匹配结果。
+     * 实现方法：对全文执行正则匹配并为命中区间添加 BackgroundColorSpan。
+     */
     private Spannable getHighlightQueryResult(String fullText, String userQuery) {
         SpannableString spannable = new SpannableString(fullText == null ? "" : fullText);
         if (!TextUtils.isEmpty(userQuery)) {
@@ -760,6 +918,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return spannable;
     }
 
+    /*
+     * 作用：创建清单模式单行视图。
+     * 实现方法：加载列表项布局，绑定复选框与编辑框，解析勾选标记并设置回调与高亮文本。
+     */
     private View getListItem(String item, int index) {
         View view = LayoutInflater.from(this).inflate(R.layout.note_edit_list_item, null);
         final NoteEditText edit = (NoteEditText) view.findViewById(R.id.et_edit_text);
@@ -791,6 +953,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return view;
     }
 
+    /*
+     * 作用：响应清单行文本有无内容变化。
+     * 实现方法：根据 hasText 控制该行复选框显示或隐藏。
+     */
     public void onTextChange(int index, boolean hasText) {
         if (index >= mEditTextList.getChildCount()) {
             Log.e(TAG, "Wrong index, should not happen");
@@ -803,6 +969,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         }
     }
 
+    /*
+     * 作用：响应便签清单模式切换。
+     * 实现方法：切到清单模式时构建列表视图；切回普通模式时汇总文本并切换回 EditText 展示。
+     */
     public void onCheckListModeChanged(int oldMode, int newMode) {
         if (newMode == TextNote.MODE_CHECK_LIST) {
             switchToListMode(mNoteEditor.getText().toString());
@@ -817,6 +987,10 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         }
     }
 
+    /*
+     * 作用：把当前界面内容同步到 WorkingNote。
+     * 实现方法：清单模式下按复选框拼接“勾选/未勾选”标记文本，普通模式下直接读取编辑框文本。
+     */
     private boolean getWorkingText() {
         boolean hasChecked = false;
         if (mWorkingNote.getCheckListMode() == TextNote.MODE_CHECK_LIST) {
@@ -840,27 +1014,43 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         return hasChecked;
     }
 
+    /*
+     * 作用：保存当前便签到数据库。
+     * 实现方法：先同步 working text，再调用 WorkingNote.saveNote，成功时设置 RESULT_OK。
+     */
     private boolean saveNote() {
         getWorkingText();
         boolean saved = mWorkingNote.saveNote();
         if (saved) {
-            /**
+            /*
              * There are two modes from List view to edit view, open one note,
              * create/edit a node. Opening node requires to the original
              * position in the list when back from edit view, while creating a
              * new node requires to the top of the list. This code
              * {@link #RESULT_OK} is used to identify the create/edit state
              */
+            /*
+             * 作用：标记编辑页有成功保存行为。
+             * 实现方法：统一返回 RESULT_OK，供列表页按既定刷新策略处理。
+             */
             setResult(RESULT_OK);
         }
         return saved;
     }
 
+    /*
+     * 作用：把当前便签发送为桌面快捷方式。
+     * 实现方法：确保便签已入库后构造 INSTALL_SHORTCUT 广播并附带打开该便签的 Intent。
+     */
     private void sendToDesktop() {
-        /**
+        /*
          * Before send message to home, we should make sure that current
          * editing note is exists in databases. So, for new note, firstly
          * save it
+         */
+        /*
+         * 作用：保证快捷方式指向有效便签。
+         * 实现方法：对未入库便签先保存，获取可用 noteId 后再发送快捷方式广播。
          */
         if (!mWorkingNote.existInDatabase()) {
             saveNote();
@@ -881,16 +1071,24 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             showToast(R.string.info_note_enter_desktop);
             sendBroadcast(sender);
         } else {
-            /**
+            /*
              * There is the condition that user has input nothing (the note is
              * not worthy saving), we have no note id, remind the user that he
              * should input something
+             */
+            /*
+             * 作用：处理空便签无法发送桌面的场景。
+             * 实现方法：记录错误并提示用户先输入有效内容。
              */
             Log.e(TAG, "Send to desktop error");
             showToast(R.string.error_note_empty_for_send_to_desktop);
         }
     }
 
+    /*
+     * 作用：生成桌面快捷方式标题。
+     * 实现方法：去除清单标记字符后按最大长度截断。
+     */
     private String makeShortcutIconTitle(String content) {
         content = content.replace(TAG_CHECKED, "");
         content = content.replace(TAG_UNCHECKED, "");
@@ -898,10 +1096,18 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                 SHORTCUT_ICON_TITLE_MAX_LEN) : content;
     }
 
+    /*
+     * 作用：显示短时 Toast 提示。
+     * 实现方法：委托到带时长参数的 showToast 重载。
+     */
     private void showToast(int resId) {
         showToast(resId, Toast.LENGTH_SHORT);
     }
 
+    /*
+     * 作用：按指定时长显示 Toast 提示。
+     * 实现方法：调用 Toast.makeText(...).show() 直接弹出提示。
+     */
     private void showToast(int resId, int duration) {
         Toast.makeText(this, resId, duration).show();
     }
