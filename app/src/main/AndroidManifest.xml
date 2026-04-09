@@ -110,77 +110,97 @@ data 定义对什么数据做这个动作-->
 @xml/searchable 指向一个描述搜索行为的 XML 文件。-->
         </activity>
 
-
+        <!--内容提供者（Content Provider）：用于管理笔记数据的数据库访问-->
         <provider
             android:name="net.micode.notes.data.NotesProvider"
             android:authorities="micode_notes"
             android:multiprocess="true" />
+        <!--android:name 指向 NotesProvider 类，负责处理数据库查询、插入、更新、删除操作
+        android:authorities="micode_notes" 定义此内容提供者的权限标识
+        android:multiprocess="true" 允许多个进程同时访问此提供者-->
 
+        <!--2x2 大小的应用小部件提供者（Widget Provider）：在桌面显示笔记快捷方式-->
         <receiver
             android:name=".widget.NoteWidgetProvider_2x"
             android:label="@string/app_widget2x2"
             android:exported="true">
             <intent-filter>
+                <!--监听小部件更新动作-->
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <!--监听小部件被删除-->
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-
-
+                <!--监听隐私模式变化-->
                 <action android:name="android.intent.action.PRIVACY_MODE_CHANGED" />
             </intent-filter>
 
+            <!--关联小部件的配置信息-->
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_2x_info" />
         </receiver>
+        <!--4x4 大小的应用小部件提供者（Widget Provider）：在桌面显示更大的笔记快捷方式-->
         <receiver
             android:name=".widget.NoteWidgetProvider_4x"
             android:label="@string/app_widget4x4"
             android:exported="true">
 
             <intent-filter>
+                <!--监听小部件更新动作-->
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <!--监听小部件被删除-->
                 <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
+                <!--监听隐私模式变化-->
                 <action android:name="android.intent.action.PRIVACY_MODE_CHANGED" />
             </intent-filter>
 
+            <!--关联小部件的配置信息-->
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_4x_info" />
         </receiver>
 
+        <!--广播接收者：系统启动时初始化闹钟-->
         <receiver android:name=".ui.AlarmInitReceiver"
             android:exported="true">
             <intent-filter>
+                <!--监听系统启动完成事件-->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
 
+        <!--广播接收者：处理闹钟触发事件（运行在单独进程中）-->
         <receiver
             android:name="net.micode.notes.ui.AlarmReceiver"
             android:process=":remote" >
         </receiver>
 
+        <!--闹钟提醒界面：当闹钟触发时弹出的提醒活动-->
         <activity
             android:name=".ui.AlarmAlertActivity"
             android:label="@string/app_name"
             android:launchMode="singleInstance"
             android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar" >
+        <!--android:launchMode="singleInstance" 确保只有一个实例存在于整个系统
+        android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar" 使用壁纸背景且无标题栏的主题-->
         </activity>
 
+        <!--应用设置界面：用户可在此修改应用偏好设置-->
         <activity
             android:name="net.micode.notes.ui.NotesPreferenceActivity"
-
-
             android:label="@string/preferences_title"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Holo.Light" >
+        <!--android:theme="@android:style/Theme.Holo.Light" 使用亮色主题-->
         </activity>
 
+        <!--后台服务：同步笔记数据到 Google 任务（需在单独进程中运行）-->
         <service
             android:name="net.micode.notes.gtask.remote.GTaskSyncService"
             android:exported="false" >
+        <!--android:exported="false" 此服务仅供本应用内部使用，不允许其他应用调用-->
         </service>
 
+        <!--设置默认可搜索的 Activity，用于系统搜索集成-->
         <meta-data
             android:name="android.app.default_searchable"
             android:value=".ui.NoteEditActivity" />
