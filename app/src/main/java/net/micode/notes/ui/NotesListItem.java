@@ -31,47 +31,47 @@ import net.micode.notes.tool.ResourceParser.NoteItemBgResources;
 
 
 /*
- * ×÷ÓÃ£º±ãÇ©ÁĞ±íµ¥ĞĞÊÓÍ¼×é¼ş£¬¸ºÔğ¸ù¾İÌõÄ¿ÀàĞÍäÖÈ¾Í¼±ê¡¢±êÌâ¡¢Ê±¼äºÍ±³¾°ÑùÊ½¡£
- * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôìº¯ÊıÖĞ°ó¶¨×Ó¿Ø¼ş£»Í¨¹ı bind ´¦Àí¶àÑ¡Ì¬Óë²»Í¬ÒµÎñÀàĞÍÕ¹Ê¾£»
- * Í¨¹ı setBackground ¸ù¾İ±ãÇ©Î»ÖÃ¹ØÏµÑ¡Ôñ²»Í¬±³¾°×ÊÔ´£»Í¨¹ı getItemData ±©Â¶µ±Ç°°ó¶¨Êı¾İ¡£
- * Âß¼­Ê¾Òâ£ºNotesListItem(context) -> bind(context, data, choiceMode, checked)
+ * ä½œç”¨ï¼šä¾¿ç­¾åˆ—è¡¨å•è¡Œè§†å›¾ç»„ä»¶ï¼Œè´Ÿè´£æ ¹æ®æ¡ç›®ç±»å‹æ¸²æŸ“å›¾æ ‡ã€æ ‡é¢˜ã€æ—¶é—´å’ŒèƒŒæ™¯æ ·å¼ã€‚
+ * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ å‡½æ•°ä¸­ç»‘å®šå­æ§ä»¶ï¼›é€šè¿‡ bind å¤„ç†å¤šé€‰æ€ä¸ä¸åŒä¸šåŠ¡ç±»å‹å±•ç¤ºï¼›
+ * é€šè¿‡ setBackground æ ¹æ®ä¾¿ç­¾ä½ç½®å…³ç³»é€‰æ‹©ä¸åŒèƒŒæ™¯èµ„æºï¼›é€šè¿‡ getItemData æš´éœ²å½“å‰ç»‘å®šæ•°æ®ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šNotesListItem(context) -> bind(context, data, choiceMode, checked)
  * -> setBackground(data) -> getItemData().
  */
 public class NotesListItem extends LinearLayout {
     /*
-     * ×÷ÓÃ£ºÌáĞÑ/ÀàĞÍÍ¼±ê¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÔÚ bind ÖĞ°´ÌõÄ¿ÀàĞÍÉèÖÃÏÔÊ¾×´Ì¬ÓëÍ¼±ê×ÊÔ´¡£
+     * ä½œç”¨ï¼šæé†’/ç±»å‹å›¾æ ‡æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ bind ä¸­æŒ‰æ¡ç›®ç±»å‹è®¾ç½®æ˜¾ç¤ºçŠ¶æ€ä¸å›¾æ ‡èµ„æºã€‚
      */
     private ImageView mAlert;
     /*
-     * ×÷ÓÃ£ºÖ÷±êÌâÎÄ±¾¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÔÚ bind ÖĞÏÔÊ¾ÎÄ¼ş¼Ğ±êÌâ»ò±ãÇ©ÕªÒª¡£
+     * ä½œç”¨ï¼šä¸»æ ‡é¢˜æ–‡æœ¬æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ bind ä¸­æ˜¾ç¤ºæ–‡ä»¶å¤¹æ ‡é¢˜æˆ–ä¾¿ç­¾æ‘˜è¦ã€‚
      */
     private TextView mTitle;
     /*
-     * ×÷ÓÃ£ºÊ±¼äÎÄ±¾¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÔÚ bind ÖĞÏÔÊ¾Ïà¶ÔĞŞ¸ÄÊ±¼ä¡£
+     * ä½œç”¨ï¼šæ—¶é—´æ–‡æœ¬æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ bind ä¸­æ˜¾ç¤ºç›¸å¯¹ä¿®æ”¹æ—¶é—´ã€‚
      */
     private TextView mTime;
     /*
-     * ×÷ÓÃ£ºÍ¨»°Ãû³ÆÎÄ±¾¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÍ¨»°¼ÇÂ¼×ÓÏîÊ±ÏÔÊ¾ÁªÏµÈËÃû³Æ£¬ÆäÓà³¡¾°Òş²Ø¡£
+     * ä½œç”¨ï¼šé€šè¯åç§°æ–‡æœ¬æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šé€šè¯è®°å½•å­é¡¹æ—¶æ˜¾ç¤ºè”ç³»äººåç§°ï¼Œå…¶ä½™åœºæ™¯éšè—ã€‚
      */
     private TextView mCallName;
     /*
-     * ×÷ÓÃ£º±£´æµ±Ç°°ó¶¨µÄÊı¾İ¶ÔÏó¡£
-     * ÊµÏÖ·½·¨£ºÔÚ bind Ê±Ğ´Èë£¬¹© getItemData ·µ»Ø¡£
+     * ä½œç”¨ï¼šä¿å­˜å½“å‰ç»‘å®šçš„æ•°æ®å¯¹è±¡ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ bind æ—¶å†™å…¥ï¼Œä¾› getItemData è¿”å›ã€‚
      */
     private NoteItemData mItemData;
     /*
-     * ×÷ÓÃ£º¶àÑ¡Ä£Ê½¹´Ñ¡¿ò¡£
-     * ÊµÏÖ·½·¨£º½öÔÚ¶àÑ¡ÇÒÌõÄ¿Îª±ãÇ©ÀàĞÍÊ±ÏÔÊ¾²¢Í¬²½¹´Ñ¡×´Ì¬¡£
+     * ä½œç”¨ï¼šå¤šé€‰æ¨¡å¼å‹¾é€‰æ¡†ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»…åœ¨å¤šé€‰ä¸”æ¡ç›®ä¸ºä¾¿ç­¾ç±»å‹æ—¶æ˜¾ç¤ºå¹¶åŒæ­¥å‹¾é€‰çŠ¶æ€ã€‚
      */
     private CheckBox mCheckBox;
 
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯ÁĞ±íÏîÊÓÍ¼Óë×Ó¿Ø¼şÒıÓÃ¡£
-     * ÊµÏÖ·½·¨£º¼ÓÔØ note_item ²¼¾Ö²¢Í¨¹ı findViewById °ó¶¨¸÷¿Ø¼ş¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–åˆ—è¡¨é¡¹è§†å›¾ä¸å­æ§ä»¶å¼•ç”¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šåŠ è½½ note_item å¸ƒå±€å¹¶é€šè¿‡ findViewById ç»‘å®šå„æ§ä»¶ã€‚
      */
     public NotesListItem(Context context) {
         super(context);
@@ -84,12 +84,12 @@ public class NotesListItem extends LinearLayout {
     }
 
     /*
-     * ×÷ÓÃ£º°ó¶¨ÌõÄ¿Êı¾İ²¢Ë¢ĞÂ½çÃæÕ¹Ê¾¡£
-     * ÊµÏÖ·½·¨£ºÏÈ´¦Àí¶àÑ¡¹´Ñ¡¿ò£¬ÔÙ°´¡°Í¨»°¼ÇÂ¼ÎÄ¼ş¼Ğ/Í¨»°¼ÇÂ¼×ÓÏî/ÆÕÍ¨Ïî¡±·ÖÖ§äÖÈ¾±êÌâ¡¢Í¼±êÓë¿É¼ûĞÔ£¬×îºóÉèÖÃÊ±¼äÓë±³¾°¡£
+     * ä½œç”¨ï¼šç»‘å®šæ¡ç›®æ•°æ®å¹¶åˆ·æ–°ç•Œé¢å±•ç¤ºã€‚
+     * å®ç°æ–¹æ³•ï¼šå…ˆå¤„ç†å¤šé€‰å‹¾é€‰æ¡†ï¼Œå†æŒ‰â€œé€šè¯è®°å½•æ–‡ä»¶å¤¹/é€šè¯è®°å½•å­é¡¹/æ™®é€šé¡¹â€åˆ†æ”¯æ¸²æŸ“æ ‡é¢˜ã€å›¾æ ‡ä¸å¯è§æ€§ï¼Œæœ€åè®¾ç½®æ—¶é—´ä¸èƒŒæ™¯ã€‚
      */
     public void bind(Context context, NoteItemData data, boolean choiceMode, boolean checked) {
-        // ×÷ÓÃ£º¿ØÖÆ¶àÑ¡Ä£Ê½ÏÂ¹´Ñ¡¿òÏÔÊ¾¡£
-        // ÊµÏÖ·½·¨£º½ö¶Ô±ãÇ©ÌõÄ¿ÏÔÊ¾¹´Ñ¡¿ò²¢Í¬²½ checked ×´Ì¬¡£
+        // ä½œç”¨ï¼šæ§åˆ¶å¤šé€‰æ¨¡å¼ä¸‹å‹¾é€‰æ¡†æ˜¾ç¤ºã€‚
+        // å®ç°æ–¹æ³•ï¼šä»…å¯¹ä¾¿ç­¾æ¡ç›®æ˜¾ç¤ºå‹¾é€‰æ¡†å¹¶åŒæ­¥ checked çŠ¶æ€ã€‚
         if (choiceMode && data.getType() == Notes.TYPE_NOTE) {
             mCheckBox.setVisibility(View.VISIBLE);
             mCheckBox.setChecked(checked);
@@ -98,8 +98,8 @@ public class NotesListItem extends LinearLayout {
         }
 
         mItemData = data;
-        // ×÷ÓÃ£ºäÖÈ¾¡°Í¨»°¼ÇÂ¼ÎÄ¼ş¼Ğ¡±ÌØÊâÑùÊ½¡£
-        // ÊµÏÖ·½·¨£ºÒş²ØÁªÏµÈËÃû³Æ¡¢Õ¹Ê¾×¨ÊôÍ¼±êÓëÎÄ¼ş¼Ğ¼ÆÊıÎÄ°¸¡£
+        // ä½œç”¨ï¼šæ¸²æŸ“â€œé€šè¯è®°å½•æ–‡ä»¶å¤¹â€ç‰¹æ®Šæ ·å¼ã€‚
+        // å®ç°æ–¹æ³•ï¼šéšè—è”ç³»äººåç§°ã€å±•ç¤ºä¸“å±å›¾æ ‡ä¸æ–‡ä»¶å¤¹è®¡æ•°æ–‡æ¡ˆã€‚
         if (data.getId() == Notes.ID_CALL_RECORD_FOLDER) {
             mCallName.setVisibility(View.GONE);
             mAlert.setVisibility(View.VISIBLE);
@@ -107,8 +107,8 @@ public class NotesListItem extends LinearLayout {
             mTitle.setText(context.getString(R.string.call_record_folder_name)
                     + context.getString(R.string.format_folder_files_count, data.getNotesCount()));
             mAlert.setImageResource(R.drawable.call_record);
-        // ×÷ÓÃ£ºäÖÈ¾¡°Í¨»°¼ÇÂ¼×ÓÏî¡±ÑùÊ½¡£
-        // ÊµÏÖ·½·¨£ºÏÔÊ¾ÁªÏµÈËÃû³Æ£¬Ö÷±êÌâÕ¹Ê¾ÕªÒª£¬²¢°´ÌáĞÑ×´Ì¬ÏÔÊ¾Ê±ÖÓÍ¼±ê¡£
+        // ä½œç”¨ï¼šæ¸²æŸ“â€œé€šè¯è®°å½•å­é¡¹â€æ ·å¼ã€‚
+        // å®ç°æ–¹æ³•ï¼šæ˜¾ç¤ºè”ç³»äººåç§°ï¼Œä¸»æ ‡é¢˜å±•ç¤ºæ‘˜è¦ï¼Œå¹¶æŒ‰æé†’çŠ¶æ€æ˜¾ç¤ºæ—¶é’Ÿå›¾æ ‡ã€‚
         } else if (data.getParentId() == Notes.ID_CALL_RECORD_FOLDER) {
             mCallName.setVisibility(View.VISIBLE);
             mCallName.setText(data.getCallName());
@@ -124,8 +124,8 @@ public class NotesListItem extends LinearLayout {
             mCallName.setVisibility(View.GONE);
             mTitle.setTextAppearance(context, R.style.TextAppearancePrimaryItem);
 
-            // ×÷ÓÃ£ºÇø·ÖÆÕÍ¨ÎÄ¼ş¼ĞÓëÆÕÍ¨±ãÇ©äÖÈ¾¡£
-            // ÊµÏÖ·½·¨£ºÎÄ¼ş¼ĞÕ¹Ê¾ÊıÁ¿ÎÄ°¸£»±ãÇ©Õ¹Ê¾ÕªÒª²¢°´ÌáĞÑ×´Ì¬ÏÔÊ¾Í¼±ê¡£
+            // ä½œç”¨ï¼šåŒºåˆ†æ™®é€šæ–‡ä»¶å¤¹ä¸æ™®é€šä¾¿ç­¾æ¸²æŸ“ã€‚
+            // å®ç°æ–¹æ³•ï¼šæ–‡ä»¶å¤¹å±•ç¤ºæ•°é‡æ–‡æ¡ˆï¼›ä¾¿ç­¾å±•ç¤ºæ‘˜è¦å¹¶æŒ‰æé†’çŠ¶æ€æ˜¾ç¤ºå›¾æ ‡ã€‚
             if (data.getType() == Notes.TYPE_FOLDER) {
                 mTitle.setText(data.getSnippet()
                         + context.getString(R.string.format_folder_files_count,
@@ -147,8 +147,8 @@ public class NotesListItem extends LinearLayout {
     }
 
     /*
-     * ×÷ÓÃ£º¸ù¾İÌõÄ¿ÀàĞÍÓëÎ»ÖÃ¹ØÏµÉèÖÃ±³¾°×ÊÔ´¡£
-     * ÊµÏÖ·½·¨£º±ãÇ©°´ single/first/normal/last µÈ×´Ì¬Ñ¡Ôñ²»Í¬±³¾°£»ÎÄ¼ş¼ĞÍ³Ò»Ê¹ÓÃÎÄ¼ş¼Ğ±³¾°¡£
+     * ä½œç”¨ï¼šæ ¹æ®æ¡ç›®ç±»å‹ä¸ä½ç½®å…³ç³»è®¾ç½®èƒŒæ™¯èµ„æºã€‚
+     * å®ç°æ–¹æ³•ï¼šä¾¿ç­¾æŒ‰ single/first/normal/last ç­‰çŠ¶æ€é€‰æ‹©ä¸åŒèƒŒæ™¯ï¼›æ–‡ä»¶å¤¹ç»Ÿä¸€ä½¿ç”¨æ–‡ä»¶å¤¹èƒŒæ™¯ã€‚
      */
     private void setBackground(NoteItemData data) {
         int id = data.getBgColorId();
@@ -168,8 +168,8 @@ public class NotesListItem extends LinearLayout {
     }
 
     /*
-     * ×÷ÓÃ£º·µ»Øµ±Ç°ÁĞ±íÏî°ó¶¨µÄÊı¾İ¶ÔÏó¡£
-     * ÊµÏÖ·½·¨£ºÖ±½Ó·µ»Ø mItemData¡£
+     * ä½œç”¨ï¼šè¿”å›å½“å‰åˆ—è¡¨é¡¹ç»‘å®šçš„æ•°æ®å¯¹è±¡ã€‚
+     * å®ç°æ–¹æ³•ï¼šç›´æ¥è¿”å› mItemDataã€‚
      */
     public NoteItemData getItemData() {
         return mItemData;

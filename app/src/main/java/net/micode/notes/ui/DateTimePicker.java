@@ -29,11 +29,11 @@ import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
 /*
- * ×÷ÓÃ£ºÈÕÆÚÊ±¼ä×éºÏÑ¡Ôñ¿Ø¼ş£¬Ö§³Ö×î½üÒ»ÖÜÈÕÆÚ¡¢Ê±·ÖÑ¡Ôñ¼° 12/24 Ğ¡Ê±ÖÆÇĞ»»¡£
- * ÊµÏÖ·½·¨£ºÍ¨¹ı NumberPicker ×éºÏÊµÏÖÈÕÆÚ/Ğ¡Ê±/·ÖÖÓ/ÉÏÎçÏÂÎçËÄ¸öÎ¬¶È£»
- * Ê¹ÓÃ setCurrentDate¡¢setCurrentHour¡¢setCurrentMinute µÈ·½·¨Í¬²½ÄÚ²¿ Calendar£»
- * ÔÚ¸÷ OnValueChangeListener ÖĞ´¦Àí¿çÌìÓë AM/PM ÇĞ»»£¬²¢Í¨¹ı onDateTimeChanged »Øµ÷Íâ²¿¡£
- * Âß¼­Ê¾Òâ£ºDateTimePicker(context, date, is24HourView) -> updateDateControl()/updateHourControl()/updateAmPmControl()
+ * ä½œç”¨ï¼šæ—¥æœŸæ—¶é—´ç»„åˆé€‰æ‹©æ§ä»¶ï¼Œæ”¯æŒæœ€è¿‘ä¸€å‘¨æ—¥æœŸã€æ—¶åˆ†é€‰æ‹©åŠ 12/24 å°æ—¶åˆ¶åˆ‡æ¢ã€‚
+ * å®ç°æ–¹æ³•ï¼šé€šè¿‡ NumberPicker ç»„åˆå®ç°æ—¥æœŸ/å°æ—¶/åˆ†é’Ÿ/ä¸Šåˆä¸‹åˆå››ä¸ªç»´åº¦ï¼›
+ * ä½¿ç”¨ setCurrentDateã€setCurrentHourã€setCurrentMinute ç­‰æ–¹æ³•åŒæ­¥å†…éƒ¨ Calendarï¼›
+ * åœ¨å„ OnValueChangeListener ä¸­å¤„ç†è·¨å¤©ä¸ AM/PM åˆ‡æ¢ï¼Œå¹¶é€šè¿‡ onDateTimeChanged å›è°ƒå¤–éƒ¨ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šDateTimePicker(context, date, is24HourView) -> updateDateControl()/updateHourControl()/updateAmPmControl()
  * -> mOnDateChangedListener/mOnHourChangedListener/mOnMinuteChangedListener/mOnAmPmChangedListener
  * -> setCurrentYear/month/day/hour/minute -> onDateTimeChanged()
  */
@@ -74,8 +74,8 @@ public class DateTimePicker extends FrameLayout {
     private OnDateTimeChangedListener mOnDateTimeChangedListener;
 
     /*
-     * ×÷ÓÃ£º¼àÌıÈÕÆÚ¹öÂÖ±ä»¯¡£
-     * ÊµÏÖ·½·¨£º°´¹öÂÖÆ«ÒÆµ÷Õû Calendar µÄÌìÊı£¬²¢Ë¢ĞÂÈÕÆÚÏÔÊ¾ºó´¥·¢±ä¸ü»Øµ÷¡£
+     * ä½œç”¨ï¼šç›‘å¬æ—¥æœŸæ»šè½®å˜åŒ–ã€‚
+     * å®ç°æ–¹æ³•ï¼šæŒ‰æ»šè½®åç§»è°ƒæ•´ Calendar çš„å¤©æ•°ï¼Œå¹¶åˆ·æ–°æ—¥æœŸæ˜¾ç¤ºåè§¦å‘å˜æ›´å›è°ƒã€‚
      */
     private NumberPicker.OnValueChangeListener mOnDateChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
@@ -87,8 +87,8 @@ public class DateTimePicker extends FrameLayout {
     };
 
     /*
-     * ×÷ÓÃ£º¼àÌıĞ¡Ê±¹öÂÖ±ä»¯²¢´¦Àí¿çÌì/AMPM·­×ª¡£
-     * ÊµÏÖ·½·¨£º¸ù¾İ 12/24 Ğ¡Ê±ÖÆÅĞ¶Ï±ß½çÖµ»ØÈÆ³¡¾°£¬±ØÒªÊ±µ÷ÕûÈÕÆÚ²¢¸üĞÂ AMPM ×´Ì¬¡£
+     * ä½œç”¨ï¼šç›‘å¬å°æ—¶æ»šè½®å˜åŒ–å¹¶å¤„ç†è·¨å¤©/AMPMç¿»è½¬ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ ¹æ® 12/24 å°æ—¶åˆ¶åˆ¤æ–­è¾¹ç•Œå€¼å›ç»•åœºæ™¯ï¼Œå¿…è¦æ—¶è°ƒæ•´æ—¥æœŸå¹¶æ›´æ–° AMPM çŠ¶æ€ã€‚
      */
     private NumberPicker.OnValueChangeListener mOnHourChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
@@ -133,8 +133,8 @@ public class DateTimePicker extends FrameLayout {
     };
 
     /*
-     * ×÷ÓÃ£º¼àÌı·ÖÖÓ¹öÂÖ±ä»¯²¢´¦ÀíĞ¡Ê±½øÎ»/½èÎ»¡£
-     * ÊµÏÖ·½·¨£ºÔÚ 59->0 »ò 0->59 Ê±µ÷ÕûĞ¡Ê±ÓëÈÕÆÚÏÔÊ¾£¬²¢Í¬²½ AMPM ×´Ì¬¡£
+     * ä½œç”¨ï¼šç›‘å¬åˆ†é’Ÿæ»šè½®å˜åŒ–å¹¶å¤„ç†å°æ—¶è¿›ä½/å€Ÿä½ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ 59->0 æˆ– 0->59 æ—¶è°ƒæ•´å°æ—¶ä¸æ—¥æœŸæ˜¾ç¤ºï¼Œå¹¶åŒæ­¥ AMPM çŠ¶æ€ã€‚
      */
     private NumberPicker.OnValueChangeListener mOnMinuteChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
@@ -166,8 +166,8 @@ public class DateTimePicker extends FrameLayout {
     };
 
     /*
-     * ×÷ÓÃ£º¼àÌı AM/PM ¹öÂÖ±ä»¯¡£
-     * ÊµÏÖ·½·¨£ºÇĞ»» mIsAm ²¢¶Ô Calendar Ğ¡Ê±¼Ó¼õ 12£¬ËæºóË¢ĞÂ¿Ø¼şÓë»Øµ÷¡£
+     * ä½œç”¨ï¼šç›‘å¬ AM/PM æ»šè½®å˜åŒ–ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ‡æ¢ mIsAm å¹¶å¯¹ Calendar å°æ—¶åŠ å‡ 12ï¼Œéšååˆ·æ–°æ§ä»¶ä¸å›è°ƒã€‚
      */
     private NumberPicker.OnValueChangeListener mOnAmPmChangedListener = new NumberPicker.OnValueChangeListener() {
         @Override
@@ -184,8 +184,8 @@ public class DateTimePicker extends FrameLayout {
     };
 
     /*
-     * ×÷ÓÃ£º¶¨ÒåÈÕÆÚÊ±¼ä±ä»¯»Øµ÷½Ó¿Ú¡£
-     * ÊµÏÖ·½·¨£º¶ÔÍâ±©Â¶ onDateTimeChanged£¬´«³öÄê/ÔÂ/ÈÕ/Ê±/·ÖÍêÕû½á¹û¡£
+     * ä½œç”¨ï¼šå®šä¹‰æ—¥æœŸæ—¶é—´å˜åŒ–å›è°ƒæ¥å£ã€‚
+     * å®ç°æ–¹æ³•ï¼šå¯¹å¤–æš´éœ² onDateTimeChangedï¼Œä¼ å‡ºå¹´/æœˆ/æ—¥/æ—¶/åˆ†å®Œæ•´ç»“æœã€‚
      */
     public interface OnDateTimeChangedListener {
         void onDateTimeChanged(DateTimePicker view, int year, int month,
@@ -193,24 +193,24 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºÊ¹ÓÃµ±Ç°ÏµÍ³Ê±¼ä³õÊ¼»¯¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÎ¯ÍĞµ½´øÊ±¼ä´Á¹¹Ôìº¯Êı¡£
+     * ä½œç”¨ï¼šä½¿ç”¨å½“å‰ç³»ç»Ÿæ—¶é—´åˆå§‹åŒ–æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šå§”æ‰˜åˆ°å¸¦æ—¶é—´æˆ³æ„é€ å‡½æ•°ã€‚
      */
     public DateTimePicker(Context context) {
         this(context, System.currentTimeMillis());
     }
 
     /*
-     * ×÷ÓÃ£ºÊ¹ÓÃÖ¸¶¨Ê±¼ä´Á³õÊ¼»¯¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£º×Ô¶¯¶ÁÈ¡ÏµÍ³ 24 Ğ¡Ê±ÖÆÉèÖÃ²¢Î¯ÍĞÖ÷¹¹Ôìº¯Êı¡£
+     * ä½œç”¨ï¼šä½¿ç”¨æŒ‡å®šæ—¶é—´æˆ³åˆå§‹åŒ–æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šè‡ªåŠ¨è¯»å–ç³»ç»Ÿ 24 å°æ—¶åˆ¶è®¾ç½®å¹¶å§”æ‰˜ä¸»æ„é€ å‡½æ•°ã€‚
      */
     public DateTimePicker(Context context, long date) {
         this(context, date, DateFormat.is24HourFormat(context));
     }
 
     /*
-     * ×÷ÓÃ£ºÖ´ĞĞÍêÕû³õÊ¼»¯Á÷³Ì¡£
-     * ÊµÏÖ·½·¨£º³õÊ¼»¯ Calendar ÓëËÄ¸ö NumberPicker£¬°ó¶¨¼àÌıÆ÷£¬ÉèÖÃÏÔÊ¾ÖÆÊ½²¢Ğ´Èë³õÊ¼Ê±¼ä¡£
+     * ä½œç”¨ï¼šæ‰§è¡Œå®Œæ•´åˆå§‹åŒ–æµç¨‹ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆå§‹åŒ– Calendar ä¸å››ä¸ª NumberPickerï¼Œç»‘å®šç›‘å¬å™¨ï¼Œè®¾ç½®æ˜¾ç¤ºåˆ¶å¼å¹¶å†™å…¥åˆå§‹æ—¶é—´ã€‚
      */
     public DateTimePicker(Context context, long date, boolean is24HourView) {
         super(context);
@@ -257,8 +257,8 @@ public class DateTimePicker extends FrameLayout {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÆôÓÃ»ò½ûÓÃÕû¸öÈÕÆÚÊ±¼ä¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÍ¬²½¸¸Àà×´Ì¬²¢ÅúÁ¿ÉèÖÃ¸÷ NumberPicker µÄ enabled ×´Ì¬¡£
+     * ä½œç”¨ï¼šå¯ç”¨æˆ–ç¦ç”¨æ•´ä¸ªæ—¥æœŸæ—¶é—´æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåŒæ­¥çˆ¶ç±»çŠ¶æ€å¹¶æ‰¹é‡è®¾ç½®å„ NumberPicker çš„ enabled çŠ¶æ€ã€‚
      */
     public void setEnabled(boolean enabled) {
         if (mIsEnabled == enabled) {
@@ -274,24 +274,24 @@ public class DateTimePicker extends FrameLayout {
 
     @Override
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°ÆôÓÃ×´Ì¬¡£
-     * ÊµÏÖ·½·¨£º·µ»ØÄÚ²¿Î¬»¤µÄ mIsEnabled¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰å¯ç”¨çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼šè¿”å›å†…éƒ¨ç»´æŠ¤çš„ mIsEnabledã€‚
      */
     public boolean isEnabled() {
         return mIsEnabled;
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°Ñ¡ÔñÊ±¼äµÄºÁÃëÖµ¡£
-     * ÊµÏÖ·½·¨£ºÖ±½Ó·µ»ØÄÚ²¿ Calendar µÄÊ±¼ä´Á¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰é€‰æ‹©æ—¶é—´çš„æ¯«ç§’å€¼ã€‚
+     * å®ç°æ–¹æ³•ï¼šç›´æ¥è¿”å›å†…éƒ¨ Calendar çš„æ—¶é—´æˆ³ã€‚
      */
     public long getCurrentDateInTimeMillis() {
         return mDate.getTimeInMillis();
     }
 
     /*
-     * ×÷ÓÃ£º°´ºÁÃëÖµÉèÖÃµ±Ç°ÈÕÆÚÊ±¼ä¡£
-     * ÊµÏÖ·½·¨£ºÏÈ×ªÎª Calendar£¬ÔÙÎ¯ÍĞµ½·ÖÁ¿ÉèÖÃ·½·¨¡£
+     * ä½œç”¨ï¼šæŒ‰æ¯«ç§’å€¼è®¾ç½®å½“å‰æ—¥æœŸæ—¶é—´ã€‚
+     * å®ç°æ–¹æ³•ï¼šå…ˆè½¬ä¸º Calendarï¼Œå†å§”æ‰˜åˆ°åˆ†é‡è®¾ç½®æ–¹æ³•ã€‚
      */
     public void setCurrentDate(long date) {
         Calendar cal = Calendar.getInstance();
@@ -301,8 +301,8 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º°´ÄêÔÂÈÕÊ±·ÖÉèÖÃµ±Ç°ÈÕÆÚÊ±¼ä¡£
-     * ÊµÏÖ·½·¨£ºË³Ğòµ÷ÓÃ setCurrentYear/setCurrentMonth/setCurrentDay/setCurrentHour/setCurrentMinute¡£
+     * ä½œç”¨ï¼šæŒ‰å¹´æœˆæ—¥æ—¶åˆ†è®¾ç½®å½“å‰æ—¥æœŸæ—¶é—´ã€‚
+     * å®ç°æ–¹æ³•ï¼šé¡ºåºè°ƒç”¨ setCurrentYear/setCurrentMonth/setCurrentDay/setCurrentHour/setCurrentMinuteã€‚
      */
     public void setCurrentDate(int year, int month,
             int dayOfMonth, int hourOfDay, int minute) {
@@ -314,16 +314,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°Äê·İ¡£
-     * ÊµÏÖ·½·¨£º´ÓÄÚ²¿ Calendar ¶ÁÈ¡ YEAR ×Ö¶Î¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰å¹´ä»½ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»å†…éƒ¨ Calendar è¯»å– YEAR å­—æ®µã€‚
      */
     public int getCurrentYear() {
         return mDate.get(Calendar.YEAR);
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°Äê·İ¡£
-     * ÊµÏÖ·½·¨£ºÈ¥ÖØÅĞ¶ÏºóĞ´Èë Calendar£¬²¢Ë¢ĞÂÈÕÆÚ¿Ø¼şÓë»Øµ÷¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰å¹´ä»½ã€‚
+     * å®ç°æ–¹æ³•ï¼šå»é‡åˆ¤æ–­åå†™å…¥ Calendarï¼Œå¹¶åˆ·æ–°æ—¥æœŸæ§ä»¶ä¸å›è°ƒã€‚
      */
     public void setCurrentYear(int year) {
         if (!mInitialising && year == getCurrentYear()) {
@@ -335,16 +335,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°ÔÂ·İ¡£
-     * ÊµÏÖ·½·¨£º´ÓÄÚ²¿ Calendar ¶ÁÈ¡ MONTH ×Ö¶Î¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰æœˆä»½ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»å†…éƒ¨ Calendar è¯»å– MONTH å­—æ®µã€‚
      */
     public int getCurrentMonth() {
         return mDate.get(Calendar.MONTH);
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°ÔÂ·İ¡£
-     * ÊµÏÖ·½·¨£ºÈ¥ÖØÅĞ¶ÏºóĞ´Èë Calendar£¬²¢Ë¢ĞÂÈÕÆÚ¿Ø¼şÓë»Øµ÷¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰æœˆä»½ã€‚
+     * å®ç°æ–¹æ³•ï¼šå»é‡åˆ¤æ–­åå†™å…¥ Calendarï¼Œå¹¶åˆ·æ–°æ—¥æœŸæ§ä»¶ä¸å›è°ƒã€‚
      */
     public void setCurrentMonth(int month) {
         if (!mInitialising && month == getCurrentMonth()) {
@@ -356,16 +356,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°ÈÕ¡£
-     * ÊµÏÖ·½·¨£º´ÓÄÚ²¿ Calendar ¶ÁÈ¡ DAY_OF_MONTH ×Ö¶Î¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰æ—¥ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»å†…éƒ¨ Calendar è¯»å– DAY_OF_MONTH å­—æ®µã€‚
      */
     public int getCurrentDay() {
         return mDate.get(Calendar.DAY_OF_MONTH);
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°ÈÕ¡£
-     * ÊµÏÖ·½·¨£ºÈ¥ÖØÅĞ¶ÏºóĞ´Èë Calendar£¬²¢Ë¢ĞÂÈÕÆÚ¿Ø¼şÓë»Øµ÷¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰æ—¥ã€‚
+     * å®ç°æ–¹æ³•ï¼šå»é‡åˆ¤æ–­åå†™å…¥ Calendarï¼Œå¹¶åˆ·æ–°æ—¥æœŸæ§ä»¶ä¸å›è°ƒã€‚
      */
     public void setCurrentDay(int dayOfMonth) {
         if (!mInitialising && dayOfMonth == getCurrentDay()) {
@@ -377,16 +377,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡ 24 Ğ¡Ê±ÖÆÏÂµ±Ç°Ğ¡Ê±¡£
-     * ÊµÏÖ·½·¨£º´ÓÄÚ²¿ Calendar ¶ÁÈ¡ HOUR_OF_DAY ×Ö¶Î¡£
+     * ä½œç”¨ï¼šè·å– 24 å°æ—¶åˆ¶ä¸‹å½“å‰å°æ—¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»å†…éƒ¨ Calendar è¯»å– HOUR_OF_DAY å­—æ®µã€‚
      */
     public int getCurrentHourOfDay() {
         return mDate.get(Calendar.HOUR_OF_DAY);
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°ÓÃÓÚĞ¡Ê±¹öÂÖÏÔÊ¾µÄĞ¡Ê±Öµ¡£
-     * ÊµÏÖ·½·¨£º24 Ğ¡Ê±ÖÆÖ±½Ó·µ»Ø£»12 Ğ¡Ê±ÖÆ°´ AM/PM ¹æÔò×ª»»Îª 1~12¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰ç”¨äºå°æ—¶æ»šè½®æ˜¾ç¤ºçš„å°æ—¶å€¼ã€‚
+     * å®ç°æ–¹æ³•ï¼š24 å°æ—¶åˆ¶ç›´æ¥è¿”å›ï¼›12 å°æ—¶åˆ¶æŒ‰ AM/PM è§„åˆ™è½¬æ¢ä¸º 1~12ã€‚
      */
     private int getCurrentHour() {
         if (mIs24HourView){
@@ -402,8 +402,8 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°Ğ¡Ê±¡£
-     * ÊµÏÖ·½·¨£ºĞ´Èë Calendar ºó°´ÖÆÊ½ĞŞÕı AM/PM Óë¹öÂÖÖµ£¬²¢´¥·¢»Øµ÷¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰å°æ—¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šå†™å…¥ Calendar åæŒ‰åˆ¶å¼ä¿®æ­£ AM/PM ä¸æ»šè½®å€¼ï¼Œå¹¶è§¦å‘å›è°ƒã€‚
      */
     public void setCurrentHour(int hourOfDay) {
         if (!mInitialising && hourOfDay == getCurrentHourOfDay()) {
@@ -429,16 +429,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°·ÖÖÓ¡£
-     * ÊµÏÖ·½·¨£º´ÓÄÚ²¿ Calendar ¶ÁÈ¡ MINUTE ×Ö¶Î¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰åˆ†é’Ÿã€‚
+     * å®ç°æ–¹æ³•ï¼šä»å†…éƒ¨ Calendar è¯»å– MINUTE å­—æ®µã€‚
      */
     public int getCurrentMinute() {
         return mDate.get(Calendar.MINUTE);
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°·ÖÖÓ¡£
-     * ÊµÏÖ·½·¨£ºÈ¥ÖØÅĞ¶Ïºó¸üĞÂ·ÖÖÓ¹öÂÖÓë Calendar ×Ö¶Î²¢´¥·¢»Øµ÷¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰åˆ†é’Ÿã€‚
+     * å®ç°æ–¹æ³•ï¼šå»é‡åˆ¤æ–­åæ›´æ–°åˆ†é’Ÿæ»šè½®ä¸ Calendar å­—æ®µå¹¶è§¦å‘å›è°ƒã€‚
      */
     public void setCurrentMinute(int minute) {
         if (!mInitialising && minute == getCurrentMinute()) {
@@ -450,16 +450,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡ÊÇ·ñÎª 24 Ğ¡Ê±ÖÆÏÔÊ¾¡£
-     * ÊµÏÖ·½·¨£º·µ»Ø mIs24HourView¡£
+     * ä½œç”¨ï¼šè·å–æ˜¯å¦ä¸º 24 å°æ—¶åˆ¶æ˜¾ç¤ºã€‚
+     * å®ç°æ–¹æ³•ï¼šè¿”å› mIs24HourViewã€‚
      */
     public boolean is24HourView () {
         return mIs24HourView;
     }
 
     /*
-     * ×÷ÓÃ£ºÇĞ»» 24 Ğ¡Ê±ÖÆÓë AM/PM ÏÔÊ¾Ä£Ê½¡£
-     * ÊµÏÖ·½·¨£º¸üĞÂÖÆÊ½±êÖ¾£¬µ÷Õû AMPM ¿Ø¼ş¿É¼ûĞÔÓëĞ¡Ê±·¶Î§£¬²¢»ØĞ´µ±Ç°Ğ¡Ê±ÏÔÊ¾¡£
+     * ä½œç”¨ï¼šåˆ‡æ¢ 24 å°æ—¶åˆ¶ä¸ AM/PM æ˜¾ç¤ºæ¨¡å¼ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ›´æ–°åˆ¶å¼æ ‡å¿—ï¼Œè°ƒæ•´ AMPM æ§ä»¶å¯è§æ€§ä¸å°æ—¶èŒƒå›´ï¼Œå¹¶å›å†™å½“å‰å°æ—¶æ˜¾ç¤ºã€‚
      */
     public void set24HourView(boolean is24HourView) {
         if (mIs24HourView == is24HourView) {
@@ -474,8 +474,8 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºË¢ĞÂÈÕÆÚ¹öÂÖÏÔÊ¾ÄÚÈİ¡£
-     * ÊµÏÖ·½·¨£ºÒÔµ±Ç°ÈÕÆÚÎªÖĞĞÄÉú³ÉÇ°ºó 7 ÌìÕ¹Ê¾ÎÄ°¸²¢ÖØÖÃ¹öÂÖµ½ÖĞÎ»¡£
+     * ä½œç”¨ï¼šåˆ·æ–°æ—¥æœŸæ»šè½®æ˜¾ç¤ºå†…å®¹ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»¥å½“å‰æ—¥æœŸä¸ºä¸­å¿ƒç”Ÿæˆå‰å 7 å¤©å±•ç¤ºæ–‡æ¡ˆå¹¶é‡ç½®æ»šè½®åˆ°ä¸­ä½ã€‚
      */
     private void updateDateControl() {
         Calendar cal = Calendar.getInstance();
@@ -492,8 +492,8 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºË¢ĞÂ AM/PM ¿Ø¼ş×´Ì¬¡£
-     * ÊµÏÖ·½·¨£º24 Ğ¡Ê±ÖÆÒş²Ø¿Ø¼ş£»12 Ğ¡Ê±ÖÆ°´ mIsAm ÉèÖÃÖµ²¢ÏÔÊ¾¡£
+     * ä½œç”¨ï¼šåˆ·æ–° AM/PM æ§ä»¶çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼š24 å°æ—¶åˆ¶éšè—æ§ä»¶ï¼›12 å°æ—¶åˆ¶æŒ‰ mIsAm è®¾ç½®å€¼å¹¶æ˜¾ç¤ºã€‚
      */
     private void updateAmPmControl() {
         if (mIs24HourView) {
@@ -506,8 +506,8 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºË¢ĞÂĞ¡Ê±¹öÂÖÈ¡Öµ·¶Î§¡£
-     * ÊµÏÖ·½·¨£º¸ù¾İµ±Ç°ÖÆÊ½ÉèÖÃ 24 Ğ¡Ê±·¶Î§(0~23)»ò 12 Ğ¡Ê±·¶Î§(1~12)¡£
+     * ä½œç”¨ï¼šåˆ·æ–°å°æ—¶æ»šè½®å–å€¼èŒƒå›´ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ ¹æ®å½“å‰åˆ¶å¼è®¾ç½® 24 å°æ—¶èŒƒå›´(0~23)æˆ– 12 å°æ—¶èŒƒå›´(1~12)ã€‚
      */
     private void updateHourControl() {
         if (mIs24HourView) {
@@ -520,16 +520,16 @@ public class DateTimePicker extends FrameLayout {
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃÈÕÆÚÊ±¼ä±ä¸ü»Øµ÷¼àÌıÆ÷¡£
-     * ÊµÏÖ·½·¨£º±£´æ callback ÒıÓÃ£¬ºóĞøÓÉ onDateTimeChanged Í³Ò»´¥·¢¡£
+     * ä½œç”¨ï¼šè®¾ç½®æ—¥æœŸæ—¶é—´å˜æ›´å›è°ƒç›‘å¬å™¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šä¿å­˜ callback å¼•ç”¨ï¼Œåç»­ç”± onDateTimeChanged ç»Ÿä¸€è§¦å‘ã€‚
      */
     public void setOnDateTimeChangedListener(OnDateTimeChangedListener callback) {
         mOnDateTimeChangedListener = callback;
     }
 
     /*
-     * ×÷ÓÃ£ºÏòÍâ·Ö·¢ÈÕÆÚÊ±¼ä±ä»¯ÊÂ¼ş¡£
-     * ÊµÏÖ·½·¨£º¼àÌıÆ÷·Ç¿ÕÊ±»Øµ÷µ±Ç°Äê/ÔÂ/ÈÕ/Ê±/·Ö¡£
+     * ä½œç”¨ï¼šå‘å¤–åˆ†å‘æ—¥æœŸæ—¶é—´å˜åŒ–äº‹ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šç›‘å¬å™¨éç©ºæ—¶å›è°ƒå½“å‰å¹´/æœˆ/æ—¥/æ—¶/åˆ†ã€‚
      */
     private void onDateTimeChanged() {
         if (mOnDateTimeChangedListener != null) {

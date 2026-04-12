@@ -38,54 +38,54 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
- * ���ã���ǩ�༭������������չ�����¼��������Ĳ˵�������
- * ʵ�ַ�����ͨ�� onTouchEvent ��ȷ��λ��ꣻͨ�� onKeyDown/onKeyUp �����س�������˸�ɾ����
- * ͨ�� onFocusChanged ֪ͨ�ı�״̬��ͨ�� onCreateContextMenu Ϊ�������ɿ�ݲ����˵���
- * �߼�ʾ�⣺onTouchEvent(event) -> Selection.setSelection(text, off) -> onKeyDown(keyCode, event)
+ * 作用：便签编辑输入框组件，扩展键盘事件与上下文菜单能力。
+ * 实现方法：通过 onTouchEvent 精确定位光标；通过 onKeyDown/onKeyUp 处理回车拆分与退格删除；
+ * 通过 onFocusChanged 通知文本状态；通过 onCreateContextMenu 为链接生成快捷操作菜单。
+ * 逻辑示意：onTouchEvent(event) -> Selection.setSelection(text, off) -> onKeyDown(keyCode, event)
  * -> onKeyUp(keyCode, event) -> OnTextViewChangeListener.onEditTextDelete/onEditTextEnter
  * -> onFocusChanged(focused, direction, rect) -> onCreateContextMenu(menu)
  */
 public class NoteEditText extends EditText {
     /*
-     * ���ã���־��ǩ��
-     * ʵ�ַ������ڼ�����δ���õȷ�֧���������������־��
+     * 作用：日志标签。
+     * 实现方法：在监听器未设置等分支中用于输出调试日志。
      */
     private static final String TAG = "NoteEditText";
     /*
-     * ���ã���¼��ǰ�༭�����б��е�λ�á�
-     * ʵ�ַ������� setIndex ��ֵ����ɾ��/�����ص���λ��Ŀ��
+     * 作用：记录当前编辑框在列表中的位置。
+     * 实现方法：由 setIndex 赋值，供删除/新增回调定位条目。
      */
     private int mIndex;
     /*
-     * ���ã���¼�˸�ǰ�Ĺ����ʼλ�á�
-     * ʵ�ַ������� onKeyDown(KEYCODE_DEL) ʱ���棬���� onKeyUp �ж��Ƿ񴥷�����ɾ����
+     * 作用：记录退格前的光标起始位置。
+     * 实现方法：在 onKeyDown(KEYCODE_DEL) 时缓存，用于 onKeyUp 判断是否触发整项删除。
      */
     private int mSelectionStartBeforeDelete;
 
     /*
-     * ���ã��绰����Э��ǰ׺��
-     * ʵ�ַ������������Ĳ˵�����ʱ����ƥ�� URLSpan ���͡�
+     * 作用：电话链接协议前缀。
+     * 实现方法：在上下文菜单生成时用于匹配 URLSpan 类型。
      */
     private static final String SCHEME_TEL = "tel:" ;
     /*
-     * ���ã���ҳ����Э��ǰ׺��
-     * ʵ�ַ������������Ĳ˵�����ʱ����ƥ�� URLSpan ���͡�
+     * 作用：网页链接协议前缀。
+     * 实现方法：在上下文菜单生成时用于匹配 URLSpan 类型。
      */
     private static final String SCHEME_HTTP = "http:" ;
     /*
-     * ���ã��ʼ�����Э��ǰ׺��
-     * ʵ�ַ������������Ĳ˵�����ʱ����ƥ�� URLSpan ���͡�
+     * 作用：邮件链接协议前缀。
+     * 实现方法：在上下文菜单生成时用于匹配 URLSpan 类型。
      */
     private static final String SCHEME_EMAIL = "mailto:" ;
 
     /*
-     * ���ã�Э����˵��İ���Դӳ�����
-     * ʵ�ַ������ھ�̬������г�ʼ���������Ӳ˵����⶯̬ѡ��
+     * 作用：协议与菜单文案资源映射表。
+     * 实现方法：在静态代码块中初始化，供链接菜单标题动态选择。
      */
     private static final Map<String, Integer> sSchemaActionResMap = new HashMap<String, Integer>();
     /*
-     * ���ã���ʼ��Э��ӳ�����á�
-     * ʵ�ַ������� tel/http/mailto �ֱ�ӳ�䵽��Ӧ�ַ�����Դ id��
+     * 作用：初始化协议映射配置。
+     * 实现方法：将 tel/http/mailto 分别映射到对应字符串资源 id。
      */
     static {
         sSchemaActionResMap.put(SCHEME_TEL, R.string.note_link_tel);
@@ -94,38 +94,38 @@ public class NoteEditText extends EditText {
     }
 
     /*
-     * ���ã�����༭�����ⲿҳ��֮����ı��仯�ص�Э�顣
-     * ʵ�ַ������� NoteEditActivity ʵ�ָýӿڣ�����ɾ�����������ı�״̬�仯֪ͨ��
+     * 作用：定义编辑框与外部页面之间的文本变化回调协议。
+     * 实现方法：由 NoteEditActivity 实现该接口，接收删除、新增和文本状态变化通知。
      */
     public interface OnTextViewChangeListener {
         /*
-         * ���ã����˸񴥷�����ɾ��ʱ�ص��ⲿ��
-         * ʵ�ַ�����onKeyUp(KEYCODE_DEL) ����������λ�ҷ�����ʱ���á�
+         * 作用：在退格触发整项删除时回调外部。
+         * 实现方法：onKeyUp(KEYCODE_DEL) 满足光标在首位且非首项时调用。
          */
         void onEditTextDelete(int index, String text);
 
         /*
-         * ���ã��ڻس��������в��ʱ�ص��ⲿ���������
-         * ʵ�ַ�����onKeyUp(KEYCODE_ENTER) ��ֵ�ǰ�ı�����á�
+         * 作用：在回车触发换行拆分时回调外部新增输入框。
+         * 实现方法：onKeyUp(KEYCODE_ENTER) 拆分当前文本后调用。
          */
         void onEditTextEnter(int index, String text);
 
         /*
-         * ���ã�֪ͨ�ⲿ��ǰ������Ƿ�����Ч�ı���
-         * ʵ�ַ������ڽ���仯ʱ�����ı��Ƿ�Ϊ�յ��á�
+         * 作用：通知外部当前输入框是否含有有效文本。
+         * 实现方法：在焦点变化时根据文本是否为空调用。
          */
         void onTextChange(int index, boolean hasText);
     }
 
     /*
-     * ���ã������ⲿ�ص����������á�
-     * ʵ�ַ�����ͨ�� setOnTextViewChangeListener ע�벢�ڼ���/�����¼��д�����
+     * 作用：保存外部回调监听器引用。
+     * 实现方法：通过 setOnTextViewChangeListener 注入并在键盘/焦点事件中触发。
      */
     private OnTextViewChangeListener mOnTextViewChangeListener;
 
     /*
-     * ���ã�ͨ��������ʼ���༭��
-     * ʵ�ַ��������ø��๹�첢��ʼ������Ϊ 0��
+     * 作用：通过最简构造初始化编辑框。
+     * 实现方法：调用父类构造并初始化索引为 0。
      */
     public NoteEditText(Context context) {
         super(context, null);
@@ -133,32 +133,32 @@ public class NoteEditText extends EditText {
     }
 
     /*
-     * ���ã����õ�ǰ�༭��������
-     * ʵ�ַ���������������д�� mIndex��
+     * 作用：设置当前编辑框索引。
+     * 实现方法：将传入索引写入 mIndex。
      */
     public void setIndex(int index) {
         mIndex = index;
     }
 
     /*
-     * ���ã������ı��仯�ص���������
-     * ʵ�ַ����������ⲿ listener �������뽹���¼��ص�ʹ�á�
+     * 作用：设置文本变化回调监听器。
+     * 实现方法：保存外部 listener 供键盘与焦点事件回调使用。
      */
     public void setOnTextViewChangeListener(OnTextViewChangeListener listener) {
         mOnTextViewChangeListener = listener;
     }
 
     /*
-     * ���ã�֧�� XML ���Թ����ʼ����
-     * ʵ�ַ��������ø��� EditText ��׼��ʽ���졣
+     * 作用：支持 XML 属性构造初始化。
+     * 实现方法：调用父类 EditText 标准样式构造。
      */
     public NoteEditText(Context context, AttributeSet attrs) {
         super(context, attrs, android.R.attr.editTextStyle);
     }
 
     /*
-     * ���ã�֧���������������ʼ����
-     * ʵ�ַ�����ֱ��ί�и��๹�������ʽ������Ӧ�á�
+     * 作用：支持完整参数构造初始化。
+     * 实现方法：直接委托父类构造完成样式与属性应用。
      */
     public NoteEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -167,8 +167,8 @@ public class NoteEditText extends EditText {
 
     @Override
     /*
-     * ���ã����������¼���������궨λ��
-     * ʵ�ַ������� ACTION_DOWN ʱ���������굽�ı��������꣬��ͨ�� Selection ���ù�ꡣ
+     * 作用：处理触摸事件并修正光标定位。
+     * 实现方法：在 ACTION_DOWN 时换算点击坐标到文本布局坐标，再通过 Selection 设置光标。
      */
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -193,8 +193,8 @@ public class NoteEditText extends EditText {
 
     @Override
     /*
-     * ���ã������������½׶ε�Ԥ������
-     * ʵ�ַ������س�ʱ���ɺ����߼��������˸�ʱ����ɾ��ǰ���λ�á�
+     * 作用：处理按键按下阶段的预处理。
+     * 实现方法：回车时交由后续逻辑处理；退格时缓存删除前光标位置。
      */
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
@@ -214,8 +214,8 @@ public class NoteEditText extends EditText {
 
     @Override
     /*
-     * ���ã���������̧��׶εĺ��ı༭�߼���
-     * ʵ�ַ������˸񴥷���λɾ���ص����س�����ı������������ص���δ���ü�����ʱ�����־��
+     * 作用：处理按键抬起阶段的核心编辑逻辑。
+     * 实现方法：退格触发首位删除回调；回车拆分文本并触发新增回调；未设置监听器时输出日志。
      */
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         switch(keyCode) {
@@ -247,8 +247,8 @@ public class NoteEditText extends EditText {
 
     @Override
     /*
-     * ���ã��ڽ���仯ʱͬ���ı�����״̬��
-     * ʵ�ַ�����ʧ�����ı�Ϊ��֪ͨ false���������֪ͨ true��
+     * 作用：在焦点变化时同步文本存在状态。
+     * 实现方法：失焦且文本为空通知 false，其余情况通知 true。
      */
     protected void onFocusChanged(boolean focused, int direction, Rect previouslyFocusedRect) {
         if (mOnTextViewChangeListener != null) {
@@ -263,8 +263,8 @@ public class NoteEditText extends EditText {
 
     @Override
     /*
-     * ���ã�Ϊѡ�����Ӷ�̬���������Ĳ˵��
-     * ʵ�ַ�����ʶ��ѡ������ URLSpan ���ͣ���Э��ƥ��˵��İ���ע��������ת������
+     * 作用：为选中链接动态创建上下文菜单项。
+     * 实现方法：识别选中区间 URLSpan 类型，按协议匹配菜单文案并注册点击后跳转动作。
      */
     protected void onCreateContextMenu(ContextMenu menu) {
         if (getText() instanceof Spanned) {
@@ -291,8 +291,8 @@ public class NoteEditText extends EditText {
                 menu.add(0, 0, 0, defaultResId).setOnMenuItemClickListener(
                         new OnMenuItemClickListener() {
                             /*
-                             * ���ã���Ӧ���Ӳ˵������ִ����ת��
-                             * ʵ�ַ�����ֱ�ӵ��� URLSpan.onClick ʹ��ϵͳ intent ��Ŀ�����ӡ�
+                             * 作用：响应链接菜单点击并执行跳转。
+                             * 实现方法：直接调用 URLSpan.onClick 使用系统 intent 打开目标链接。
                              */
                             public boolean onMenuItemClick(MenuItem item) {
                                 // goto a new intent

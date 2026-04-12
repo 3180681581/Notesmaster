@@ -41,39 +41,39 @@ import java.io.IOException;
 
 
 /*
- * ×÷ÓÃ£ºÄÖÖÓÌáĞÑµ¯´°Ò³Ãæ£¬¸ºÔğÌáĞÑÕ¹Ê¾¡¢ÁåÉù²¥·ÅÓëÓÃ»§Ìø×ª´¦Àí¡£
- * ÊµÏÖ·½·¨£ºÓÉ onCreate Íê³É´°¿ÚÓëÊı¾İ³õÊ¼»¯²¢´¥·¢ showActionDialog¡¢playAlarmSound£»
- * Í¨¹ı isScreenOn ¿ØÖÆÁÁÆÁÓë°´Å¥·ÖÖ§£»ÔÚ onClick ´¦ÀíÖĞ×ªµ½ NoteEditActivity£»
- * ÔÚ onDismiss ÖĞµ÷ÓÃ stopAlarmSound ÊÍ·ÅÒôÆµ×ÊÔ´²¢½áÊøÒ³Ãæ¡£
- * Âß¼­Ê¾Òâ£ºonCreate(intent, savedInstanceState) -> isScreenOn() -> showActionDialog() -> playAlarmSound()
+ * ä½œç”¨ï¼šé—¹é’Ÿæé†’å¼¹çª—é¡µé¢ï¼Œè´Ÿè´£æé†’å±•ç¤ºã€é“ƒå£°æ’­æ”¾ä¸ç”¨æˆ·è·³è½¬å¤„ç†ã€‚
+ * å®ç°æ–¹æ³•ï¼šç”± onCreate å®Œæˆçª—å£ä¸æ•°æ®åˆå§‹åŒ–å¹¶è§¦å‘ showActionDialogã€playAlarmSoundï¼›
+ * é€šè¿‡ isScreenOn æ§åˆ¶äº®å±ä¸æŒ‰é’®åˆ†æ”¯ï¼›åœ¨ onClick å¤„ç†ä¸­è½¬åˆ° NoteEditActivityï¼›
+ * åœ¨ onDismiss ä¸­è°ƒç”¨ stopAlarmSound é‡Šæ”¾éŸ³é¢‘èµ„æºå¹¶ç»“æŸé¡µé¢ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šonCreate(intent, savedInstanceState) -> isScreenOn() -> showActionDialog() -> playAlarmSound()
  * -> onClick(dialog, which)/onDismiss(dialog) -> stopAlarmSound() -> finish()
  */
 public class AlarmAlertActivity extends Activity implements OnClickListener, OnDismissListener {
     /*
-     * ×÷ÓÃ£º±£´æµ±Ç°ÌáĞÑ¶ÔÓ¦µÄ±ãÇ© id¡£
-     * ÊµÏÖ·½·¨£ºÔÚ onCreate ÖĞ´Ó Intent µÄ Uri Â·¾¶¶Î½âÎö²¢¸³Öµ¡£
+     * ä½œç”¨ï¼šä¿å­˜å½“å‰æé†’å¯¹åº”çš„ä¾¿ç­¾ idã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ onCreate ä¸­ä» Intent çš„ Uri è·¯å¾„æ®µè§£æå¹¶èµ‹å€¼ã€‚
      */
     private long mNoteId;
     /*
-     * ×÷ÓÃ£º±£´æÌáĞÑ¶Ô»°¿òÕ¹Ê¾µÄ±ãÇ©ÕªÒªÎÄ±¾¡£
-     * ÊµÏÖ·½·¨£º´ÓÊı¾İ¿â²éÑ¯ºó°´×î´ó³¤¶È½Ø¶Ï²¢×·¼ÓÊ¡ÂÔÌáÊ¾¡£
+     * ä½œç”¨ï¼šä¿å­˜æé†’å¯¹è¯æ¡†å±•ç¤ºçš„ä¾¿ç­¾æ‘˜è¦æ–‡æœ¬ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»æ•°æ®åº“æŸ¥è¯¢åæŒ‰æœ€å¤§é•¿åº¦æˆªæ–­å¹¶è¿½åŠ çœç•¥æç¤ºã€‚
      */
     private String mSnippet;
     /*
-     * ×÷ÓÃ£º¶¨ÒåÕªÒªÔ¤ÀÀ×î´ó³¤¶È¡£
-     * ÊµÏÖ·½·¨£ºÔÚ¶ÁÈ¡±ãÇ©ÕªÒªºóÓÃÓÚ³¤¶ÈÅĞ¶ÏÓë½Ø¶Ï¡£
+     * ä½œç”¨ï¼šå®šä¹‰æ‘˜è¦é¢„è§ˆæœ€å¤§é•¿åº¦ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨è¯»å–ä¾¿ç­¾æ‘˜è¦åç”¨äºé•¿åº¦åˆ¤æ–­ä¸æˆªæ–­ã€‚
      */
     private static final int SNIPPET_PREW_MAX_LEN = 60;
     /*
-     * ×÷ÓÃ£º¿ØÖÆÄÖÁåÒôÆµ²¥·Å¡£
-     * ÊµÏÖ·½·¨£ºÔÚÒ³Ãæ³õÊ¼»¯Ê±´´½¨£¬²¥·ÅÊ±ÅäÖÃÊı¾İÔ´²¢Ñ­»·£¬½áÊøÊ±Í£Ö¹²¢ÊÍ·Å¡£
+     * ä½œç”¨ï¼šæ§åˆ¶é—¹é“ƒéŸ³é¢‘æ’­æ”¾ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨é¡µé¢åˆå§‹åŒ–æ—¶åˆ›å»ºï¼Œæ’­æ”¾æ—¶é…ç½®æ•°æ®æºå¹¶å¾ªç¯ï¼Œç»“æŸæ—¶åœæ­¢å¹¶é‡Šæ”¾ã€‚
      */
     MediaPlayer mPlayer;
 
     @Override
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯ÌáĞÑÒ³Ãæ²¢´¥·¢ÌáĞÑÁ÷³Ì¡£
-     * ÊµÏÖ·½·¨£ºÅäÖÃËøÆÁÏÔÊ¾´°¿Ú²ÎÊı£¬½âÎöÌáĞÑ±ãÇ©ĞÅÏ¢£¬Ğ£Ñé±ãÇ©ÓĞĞ§ĞÔºóµ¯´°²¢²¥·ÅÁåÉù¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–æé†’é¡µé¢å¹¶è§¦å‘æé†’æµç¨‹ã€‚
+     * å®ç°æ–¹æ³•ï¼šé…ç½®é”å±æ˜¾ç¤ºçª—å£å‚æ•°ï¼Œè§£ææé†’ä¾¿ç­¾ä¿¡æ¯ï¼Œæ ¡éªŒä¾¿ç­¾æœ‰æ•ˆæ€§åå¼¹çª—å¹¶æ’­æ”¾é“ƒå£°ã€‚
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,8 +82,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
         final Window win = getWindow();
         win.addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED);
 
-        // ×÷ÓÃ£ºÔÚÃğÆÁ³¡¾°ÏÂµãÁÁ²¢±£³ÖÆÁÄ»£¬ÒÔ±ãÓÃ»§Ö±½Ó¿´µ½ÌáĞÑ¡£
-        // ÊµÏÖ·½·¨£º½öµ±µ±Ç°ÆÁÄ»¹Ø±ÕÊ±Ìí¼ÓÒ»×éµãÁÁÓëËøÆÁÏÔÊ¾´°¿Ú±ê¼Ç¡£
+        // ä½œç”¨ï¼šåœ¨ç­å±åœºæ™¯ä¸‹ç‚¹äº®å¹¶ä¿æŒå±å¹•ï¼Œä»¥ä¾¿ç”¨æˆ·ç›´æ¥çœ‹åˆ°æé†’ã€‚
+        // å®ç°æ–¹æ³•ï¼šä»…å½“å½“å‰å±å¹•å…³é—­æ—¶æ·»åŠ ä¸€ç»„ç‚¹äº®ä¸é”å±æ˜¾ç¤ºçª—å£æ ‡è®°ã€‚
         if (!isScreenOn()) {
             win.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
                     | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
@@ -94,8 +94,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
         Intent intent = getIntent();
 
         try {
-            // ×÷ÓÃ£º´ÓÌáĞÑ Intent ÖĞÌáÈ¡±ãÇ© id ²¢¹¹½¨Õ¹Ê¾ÕªÒª¡£
-            // ÊµÏÖ·½·¨£º¶ÁÈ¡ Uri Â·¾¶¶Î»ñÈ¡ id£¬²éÑ¯ÕªÒªºó°´×î´ó³¤¶È½Ø¶Ï¡£
+            // ä½œç”¨ï¼šä»æé†’ Intent ä¸­æå–ä¾¿ç­¾ id å¹¶æ„å»ºå±•ç¤ºæ‘˜è¦ã€‚
+            // å®ç°æ–¹æ³•ï¼šè¯»å– Uri è·¯å¾„æ®µè·å– idï¼ŒæŸ¥è¯¢æ‘˜è¦åæŒ‰æœ€å¤§é•¿åº¦æˆªæ–­ã€‚
             mNoteId = Long.valueOf(intent.getData().getPathSegments().get(1));
             mSnippet = DataUtils.getSnippetById(this.getContentResolver(), mNoteId);
             mSnippet = mSnippet.length() > SNIPPET_PREW_MAX_LEN ? mSnippet.substring(0,
@@ -107,8 +107,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
         }
 
         mPlayer = new MediaPlayer();
-        // ×÷ÓÃ£º±£Ö¤Ö»¶Ô¿É¼ûÇÒÓĞĞ§µÄ±ãÇ©Ö´ĞĞÌáĞÑ¡£
-        // ÊµÏÖ·½·¨£º²éÑ¯Êı¾İ¿â¿É¼ûĞÔ£¬Í¨¹ıºóµ¯³ö²Ù×÷¶Ô»°¿ò²¢²¥·ÅÄÖÁå£¬·ñÔòÖ±½Ó½áÊøÒ³Ãæ¡£
+        // ä½œç”¨ï¼šä¿è¯åªå¯¹å¯è§ä¸”æœ‰æ•ˆçš„ä¾¿ç­¾æ‰§è¡Œæé†’ã€‚
+        // å®ç°æ–¹æ³•ï¼šæŸ¥è¯¢æ•°æ®åº“å¯è§æ€§ï¼Œé€šè¿‡åå¼¹å‡ºæ“ä½œå¯¹è¯æ¡†å¹¶æ’­æ”¾é—¹é“ƒï¼Œå¦åˆ™ç›´æ¥ç»“æŸé¡µé¢ã€‚
         if (DataUtils.visibleInNoteDatabase(getContentResolver(), mNoteId, Notes.TYPE_NOTE)) {
             showActionDialog();
             playAlarmSound();
@@ -118,8 +118,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£ºÅĞ¶Ïµ±Ç°Éè±¸ÆÁÄ»ÊÇ·ñµãÁÁ¡£
-     * ÊµÏÖ·½·¨£ºÍ¨¹ı PowerManager »ñÈ¡µ±Ç°ÆÁÄ»µçÔ´×´Ì¬¡£
+     * ä½œç”¨ï¼šåˆ¤æ–­å½“å‰è®¾å¤‡å±å¹•æ˜¯å¦ç‚¹äº®ã€‚
+     * å®ç°æ–¹æ³•ï¼šé€šè¿‡ PowerManager è·å–å½“å‰å±å¹•ç”µæºçŠ¶æ€ã€‚
      */
     private boolean isScreenOn() {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
@@ -127,8 +127,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£º²¥·ÅÌáĞÑÄÖÁåÉùÒô¡£
-     * ÊµÏÖ·½·¨£º¶ÁÈ¡ÏµÍ³Ä¬ÈÏÄÖÖÓÁåÉù£¬ÉèÖÃÒôÆµÁ÷ÀàĞÍ£¬ÅäÖÃ MediaPlayer Êı¾İÔ´ºóÑ­»·²¥·Å¡£
+     * ä½œç”¨ï¼šæ’­æ”¾æé†’é—¹é“ƒå£°éŸ³ã€‚
+     * å®ç°æ–¹æ³•ï¼šè¯»å–ç³»ç»Ÿé»˜è®¤é—¹é’Ÿé“ƒå£°ï¼Œè®¾ç½®éŸ³é¢‘æµç±»å‹ï¼Œé…ç½® MediaPlayer æ•°æ®æºåå¾ªç¯æ’­æ”¾ã€‚
      */
     private void playAlarmSound() {
         Uri url = RingtoneManager.getActualDefaultRingtoneUri(this, RingtoneManager.TYPE_ALARM);
@@ -136,8 +136,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
         int silentModeStreams = Settings.System.getInt(getContentResolver(),
                 Settings.System.MODE_RINGER_STREAMS_AFFECTED, 0);
 
-        // ×÷ÓÃ£º¸ù¾İÏµÍ³¾²ÒôÓ°ÏìÎ»Ñ¡ÔñÒôÆµÁ÷ÀàĞÍ¡£
-        // ÊµÏÖ·½·¨£ºÈôÄÖÖÓÁ÷ÊÜ¾²Òô²ßÂÔÓ°ÏìÔòÊ¹ÓÃ¶ÔÓ¦Á÷±êÊ¶£¬·ñÔò¹Ì¶¨Ê¹ÓÃÄÖÖÓÁ÷¡£
+        // ä½œç”¨ï¼šæ ¹æ®ç³»ç»Ÿé™éŸ³å½±å“ä½é€‰æ‹©éŸ³é¢‘æµç±»å‹ã€‚
+        // å®ç°æ–¹æ³•ï¼šè‹¥é—¹é’Ÿæµå—é™éŸ³ç­–ç•¥å½±å“åˆ™ä½¿ç”¨å¯¹åº”æµæ ‡è¯†ï¼Œå¦åˆ™å›ºå®šä½¿ç”¨é—¹é’Ÿæµã€‚
         if ((silentModeStreams & (1 << AudioManager.STREAM_ALARM)) != 0) {
             mPlayer.setAudioStreamType(silentModeStreams);
         } else {
@@ -164,16 +164,16 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£ºÕ¹Ê¾ÌáĞÑ²Ù×÷¶Ô»°¿ò¡£
-     * ÊµÏÖ·½·¨£º¹¹½¨°üº¬ÕªÒª¡¢È·ÈÏ°´Å¥ºÍ¿ÉÑ¡¡°½øÈë±ãÇ©¡±°´Å¥µÄ¶Ô»°¿ò£¬²¢¼àÌı¹Ø±ÕÊÂ¼ş¡£
+     * ä½œç”¨ï¼šå±•ç¤ºæé†’æ“ä½œå¯¹è¯æ¡†ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ„å»ºåŒ…å«æ‘˜è¦ã€ç¡®è®¤æŒ‰é’®å’Œå¯é€‰â€œè¿›å…¥ä¾¿ç­¾â€æŒ‰é’®çš„å¯¹è¯æ¡†ï¼Œå¹¶ç›‘å¬å…³é—­äº‹ä»¶ã€‚
      */
     private void showActionDialog() {
         AlertDialog.Builder dialog = new AlertDialog.Builder(this);
         dialog.setTitle(R.string.app_name);
         dialog.setMessage(mSnippet);
         dialog.setPositiveButton(R.string.notealert_ok, this);
-        // ×÷ÓÃ£º½öÔÚÆÁÄ»ÒÑµãÁÁÊ±ÔÊĞíÖ±½ÓÌø×ªµ½±à¼­Ò³¡£
-        // ÊµÏÖ·½·¨£ºÆÁÄ»µãÁÁÌõ¼şÏÂÌí¼Ó¡°½øÈë±ãÇ©¡±¸º°´Å¥¡£
+        // ä½œç”¨ï¼šä»…åœ¨å±å¹•å·²ç‚¹äº®æ—¶å…è®¸ç›´æ¥è·³è½¬åˆ°ç¼–è¾‘é¡µã€‚
+        // å®ç°æ–¹æ³•ï¼šå±å¹•ç‚¹äº®æ¡ä»¶ä¸‹æ·»åŠ â€œè¿›å…¥ä¾¿ç­¾â€è´ŸæŒ‰é’®ã€‚
         if (isScreenOn()) {
             dialog.setNegativeButton(R.string.notealert_enter, this);
         }
@@ -181,8 +181,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£º´¦ÀíÌáĞÑ¶Ô»°¿ò°´Å¥µã»÷ÊÂ¼ş¡£
-     * ÊµÏÖ·½·¨£ºµã»÷¡°½øÈë±ãÇ©¡±Ê±Æô¶¯ NoteEditActivity ²é¿´µ±Ç°±ãÇ©£¬ÆäËû°´Å¥½ö¹Ø±ÕÁ÷³Ì¡£
+     * ä½œç”¨ï¼šå¤„ç†æé†’å¯¹è¯æ¡†æŒ‰é’®ç‚¹å‡»äº‹ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šç‚¹å‡»â€œè¿›å…¥ä¾¿ç­¾â€æ—¶å¯åŠ¨ NoteEditActivity æŸ¥çœ‹å½“å‰ä¾¿ç­¾ï¼Œå…¶ä»–æŒ‰é’®ä»…å…³é—­æµç¨‹ã€‚
      */
     public void onClick(DialogInterface dialog, int which) {
         switch (which) {
@@ -198,8 +198,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£º´¦ÀíÌáĞÑ¶Ô»°¿ò¹Ø±ÕÊÂ¼ş¡£
-     * ÊµÏÖ·½·¨£ºÔÚ¶Ô»°¿òÏûÊ§ºóÍ³Ò»Í£Ö¹ÄÖÁå²¢½áÊøµ±Ç°Ò³Ãæ¡£
+     * ä½œç”¨ï¼šå¤„ç†æé†’å¯¹è¯æ¡†å…³é—­äº‹ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨å¯¹è¯æ¡†æ¶ˆå¤±åç»Ÿä¸€åœæ­¢é—¹é“ƒå¹¶ç»“æŸå½“å‰é¡µé¢ã€‚
      */
     public void onDismiss(DialogInterface dialog) {
         stopAlarmSound();
@@ -207,8 +207,8 @@ public class AlarmAlertActivity extends Activity implements OnClickListener, OnD
     }
 
     /*
-     * ×÷ÓÃ£ºÍ£Ö¹²¢ÊÍ·ÅÄÖÁå²¥·ÅÆ÷×ÊÔ´¡£
-     * ÊµÏÖ·½·¨£ºÅĞ¿ÕºóÒÀ´ÎÖ´ĞĞ stop¡¢release ²¢Çå¿ÕÒıÓÃ¡£
+     * ä½œç”¨ï¼šåœæ­¢å¹¶é‡Šæ”¾é—¹é“ƒæ’­æ”¾å™¨èµ„æºã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ¤ç©ºåä¾æ¬¡æ‰§è¡Œ stopã€release å¹¶æ¸…ç©ºå¼•ç”¨ã€‚
      */
     private void stopAlarmSound() {
         if (mPlayer != null) {

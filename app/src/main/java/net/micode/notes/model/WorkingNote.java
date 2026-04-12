@@ -215,7 +215,7 @@ public class WorkingNote {
     }
 
     public synchronized boolean ensureNoteExists() {
-        // ¸½¼ş¿ÉÄÜÏÈÓÚÕıÎÄ±£´æ£¬ĞèÏÈÈ·±£ note Ö÷¼ÇÂ¼´æÔÚ¡£
+        // é™„ä»¶å¯èƒ½å…ˆäºæ­£æ–‡ä¿å­˜ï¼Œéœ€å…ˆç¡®ä¿ note ä¸»è®°å½•å­˜åœ¨ã€‚
         if (existInDatabase()) {
             return true;
         }

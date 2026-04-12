@@ -49,7 +49,7 @@ public class Notes {
     public static class DataConstants {
         public static final String NOTE = TextNote.CONTENT_ITEM_TYPE;
         public static final String CALL_NOTE = CallNote.CONTENT_ITEM_TYPE;
-        // Í¼Æ¬¸½¼şÔÚ data ±íÖĞµÄ MIME ±êÊ¶¡£
+        // å›¾ç‰‡é™„ä»¶åœ¨ data è¡¨ä¸­çš„ MIME æ ‡è¯†ã€‚
         public static final String IMAGE_NOTE = ImageNote.CONTENT_ITEM_TYPE;
     }
 
@@ -280,7 +280,7 @@ public class Notes {
     }
 
     public static final class ImageNote implements DataColumns {
-        // ½öÓÃÓÚ±êÊ¶¡°Í¼Æ¬¸½¼ş¡±Êı¾İĞĞ£¬²»Ö±½Ó±©Â¶¶ÀÁ¢ Provider Â·ÓÉ¡£
+        // ä»…ç”¨äºæ ‡è¯†â€œå›¾ç‰‡é™„ä»¶â€æ•°æ®è¡Œï¼Œä¸ç›´æ¥æš´éœ²ç‹¬ç«‹ Provider è·¯ç”±ã€‚
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/image_note";
 
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/image_note";

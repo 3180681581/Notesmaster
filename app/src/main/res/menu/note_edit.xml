@@ -42,17 +42,17 @@
         android:id="@+id/menu_send_to_desktop"
         android:title="@string/menu_send_to_desktop"/>
 
-    <!-- Ñ¡ÔñÒ»ÕÅ jpg/png ×÷Îªµ±Ç°±ãÇ©¸½¼þ¡£ -->
+    <!-- é€‰æ‹©ä¸€å¼  jpg/png ä½œä¸ºå½“å‰ä¾¿ç­¾é™„ä»¶ã€‚ -->
     <item
         android:id="@+id/menu_insert_image"
         android:title="@string/menu_insert_image" />
 
-    <!-- ½öÔÚµ±Ç°±ãÇ©ÒÑÓÐ¸½¼þÊ±ÏÔÊ¾£¬ÓÃÏµÍ³²é¿´Æ÷´ò¿ª¡£ -->
+    <!-- ä»…åœ¨å½“å‰ä¾¿ç­¾å·²æœ‰é™„ä»¶æ—¶æ˜¾ç¤ºï¼Œç”¨ç³»ç»ŸæŸ¥çœ‹å™¨æ‰“å¼€ã€‚ -->
     <item
         android:id="@+id/menu_open_image_attachment"
         android:title="@string/menu_open_image_attachment" />
 
-    <!-- ½öÔÚµ±Ç°±ãÇ©ÒÑÓÐ¸½¼þÊ±ÏÔÊ¾£¬É¾³ýµ±Ç°¸½¼þ¡£ -->
+    <!-- ä»…åœ¨å½“å‰ä¾¿ç­¾å·²æœ‰é™„ä»¶æ—¶æ˜¾ç¤ºï¼Œåˆ é™¤å½“å‰é™„ä»¶ã€‚ -->
     <item
         android:id="@+id/menu_delete_image_attachment"
         android:title="@string/menu_delete_image_attachment" />
