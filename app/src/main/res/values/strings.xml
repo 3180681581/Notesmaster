@@ -65,6 +65,9 @@
     <string name="folder_exist">The folder %1$s exist, please rename</string>
     <string name="menu_share">Share</string>
     <string name="menu_send_to_desktop">Send to home</string>
+     <string name="menu_insert_image">Insert image</string>
+     <string name="menu_open_image_attachment">Open image attachment</string>
+     <string name="menu_delete_image_attachment">Delete image attachment</string>
     <string name="menu_alert">Remind me</string>
     <string name="menu_remove_remind">Delete reminder</string>
     <string name="menu_title_select_folder">Select folder</string>
@@ -81,6 +84,11 @@
     <string name="error_note_not_exist">The note is not exist</string>
     <string name="error_note_empty_for_clock">Sorry, can not set clock on empty note</string>
     <string name="error_note_empty_for_send_to_desktop">Sorry, can not send and empty note to home</string>
+     <string name="image_attach_success">Image inserted</string>
+     <string name="image_attach_failed">Failed to insert image</string>
+     <string name="image_delete_success">Image attachment deleted</string>
+     <string name="image_not_found">Image attachment not found</string>
+     <string name="image_open_failed">No app found to open image</string>
     <string name="success_sdcard_export">Export successful</string>
     <string name="failed_sdcard_export">Export fail</string>
     <string name="format_exported_file_location">Export text file (%1$s) to SD (%2$s) directory</string>

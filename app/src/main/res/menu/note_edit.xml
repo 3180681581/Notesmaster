@@ -42,6 +42,21 @@
         android:id="@+id/menu_send_to_desktop"
         android:title="@string/menu_send_to_desktop"/>
 
+    <!-- 选择一张 jpg/png 作为当前便签附件。 -->
+    <item
+        android:id="@+id/menu_insert_image"
+        android:title="@string/menu_insert_image" />
+
+    <!-- 仅在当前便签已有附件时显示，用系统查看器打开。 -->
+    <item
+        android:id="@+id/menu_open_image_attachment"
+        android:title="@string/menu_open_image_attachment" />
+
+    <!-- 仅在当前便签已有附件时显示，删除当前附件。 -->
+    <item
+        android:id="@+id/menu_delete_image_attachment"
+        android:title="@string/menu_delete_image_attachment" />
+
     <item
         android:id="@+id/menu_alert"
         android:title="@string/menu_alert" />

@@ -162,6 +162,8 @@ public class WorkingNote {
                         mNote.setTextDataId(cursor.getLong(DATA_ID_COLUMN));
                     } else if (DataConstants.CALL_NOTE.equals(type)) {
                         mNote.setCallDataId(cursor.getLong(DATA_ID_COLUMN));
+                    } else if (DataConstants.IMAGE_NOTE.equals(type)) {
+                        // Image attachments are managed directly in NoteEditActivity.
                     } else {
                         Log.d(TAG, "Wrong note type with type:" + type);
                     }
@@ -210,6 +212,15 @@ public class WorkingNote {
         } else {
             return false;
         }
+    }
+
+    public synchronized boolean ensureNoteExists() {
+        // 附件可能先于正文保存，需先确保 note 主记录存在。
+        if (existInDatabase()) {
+            return true;
+        }
+        mNoteId = Note.getNewNoteId(mContext, mFolderId);
+        return mNoteId > 0;
     }
 
     public boolean existInDatabase() {

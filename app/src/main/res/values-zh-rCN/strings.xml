@@ -61,6 +61,9 @@
     <string name="folder_exist">文件夹 %1$s 已存在，请重新命名</string>
     <string name="menu_share">分享</string>
     <string name="menu_send_to_desktop">发送到桌面</string>
+    <string name="menu_insert_image">插入图片</string>
+    <string name="menu_open_image_attachment">打开图片附件</string>
+    <string name="menu_delete_image_attachment">删除图片附件</string>
     <string name="menu_alert">提醒我</string>
     <string name="menu_remove_remind">删除提醒</string>
     <string name="menu_title_select_folder">选择文件夹</string>
@@ -77,6 +80,11 @@
     <string name="error_note_not_exist">要查看的便签不存在</string>
     <string name="error_note_empty_for_clock">不能为空便签设置闹钟提醒</string>
     <string name="error_note_empty_for_send_to_desktop">不能将空便签发送到桌面</string>
+    <string name="image_attach_success">图片已插入</string>
+    <string name="image_attach_failed">插入图片失败</string>
+    <string name="image_delete_success">图片附件已删除</string>
+    <string name="image_not_found">未找到图片附件</string>
+    <string name="image_open_failed">没有可打开图片的应用</string>
     <string name="success_sdcard_export">导出成功</string>
     <string name="failed_sdcard_export">导出失败</string>
     <string name="format_exported_file_location">已将文本文件(%1$s)输出至SD卡(%2$s)目录</string>
