@@ -109,7 +109,7 @@
                 </LinearLayout>
             </ScrollView>
 
-            <!-- ±ãÇ©ÄÚÁªÍ¼Æ¬Ô¤ÀÀÇø£ºÓÐÍ¼Æ¬¸½¼þÊ±Õ¹Ê¾ËõÂÔÍ¼ÓëÃû³Æ¡£ -->
+            <!-- ä¾¿ç­¾å†…è”å›¾ç‰‡é¢„è§ˆåŒºï¼šæœ‰å›¾ç‰‡é™„ä»¶æ—¶å±•ç¤ºç¼©ç•¥å›¾ä¸Žåç§°ã€‚ -->
             <LinearLayout
                 android:id="@+id/image_attachment_preview_container"
                 android:layout_width="match_parent"
