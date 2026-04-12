@@ -85,6 +85,8 @@
     <string name="image_delete_success">图片附件已删除</string>
     <string name="image_not_found">未找到图片附件</string>
     <string name="image_open_failed">没有可打开图片的应用</string>
+    <string name="image_attachment_preview_title">图片预览</string>
+    <string name="image_attachment_unknown_name">未命名图片</string>
     <string name="success_sdcard_export">导出成功</string>
     <string name="failed_sdcard_export">导出失败</string>
     <string name="format_exported_file_location">已将文本文件(%1$s)输出至SD卡(%2$s)目录</string>

@@ -89,6 +89,8 @@
      <string name="image_delete_success">Image attachment deleted</string>
      <string name="image_not_found">Image attachment not found</string>
      <string name="image_open_failed">No app found to open image</string>
+     <string name="image_attachment_preview_title">Image preview</string>
+     <string name="image_attachment_unknown_name">Unnamed image</string>
     <string name="success_sdcard_export">Export successful</string>
     <string name="failed_sdcard_export">Export fail</string>
     <string name="format_exported_file_location">Export text file (%1$s) to SD (%2$s) directory</string>

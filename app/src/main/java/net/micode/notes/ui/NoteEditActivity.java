@@ -170,10 +170,18 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     private String mUserQuery;
     private Pattern mPattern;
 
+    // 图片选择器请求码。
     private static final int REQUEST_CODE_PICK_IMAGE = 2001;
 
+    // 当前便签图片附件缓存：data 主键、Uri 与展示名。
     private long mImageDataId;
     private String mImageUri;
+    private String mImageDisplayName;
+
+    // 编辑页内联预览控件。
+    private View mImagePreviewContainer;
+    private ImageView mImagePreview;
+    private TextView mImagePreviewName;
 
     @Override
     /*
@@ -384,6 +392,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // 仅处理“选择图片成功”的返回结果。
         if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
             handleImagePickResult(data.getData(), data.getFlags());
         }
@@ -459,6 +468,12 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         mNoteHeaderHolder.ibSetBgColor.setOnClickListener(this);
         mNoteEditor = (EditText) findViewById(R.id.note_edit_view);
         mNoteEditorPanel = findViewById(R.id.sv_note_edit);
+        // 绑定图片预览区域，支持“在便签中可视化展示”。
+        mImagePreviewContainer = findViewById(R.id.image_attachment_preview_container);
+        mImagePreview = (ImageView) findViewById(R.id.iv_image_attachment_preview);
+        mImagePreviewName = (TextView) findViewById(R.id.tv_image_attachment_name);
+        mImagePreview.setOnClickListener(this);
+        mImagePreviewName.setOnClickListener(this);
         mNoteBgColorSelector = findViewById(R.id.note_bg_color_selector);
         for (int id : sBgSelectorBtnsMap.keySet()) {
             ImageView iv = (ImageView) findViewById(id);
@@ -551,6 +566,8 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                         TextAppearanceResources.getTexAppearanceResource(mFontSizeId));
             }
             mFontSizeSelector.setVisibility(View.GONE);
+        } else if (id == R.id.iv_image_attachment_preview || id == R.id.tv_image_attachment_name) {
+            openImageAttachment();
         }
     }
 
@@ -769,6 +786,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             showToast(R.string.image_attach_failed);
             return;
         }
+        // 插入后同步刷新预览、菜单可见性与返回结果状态。
         updateAttachmentFlag(true);
         loadImageAttachment();
         invalidateOptionsMenu();
@@ -799,6 +817,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             return;
         }
         deleteImageAttachmentInternal();
+        // 删除后同步刷新预览、菜单可见性与返回结果状态。
         updateAttachmentFlag(false);
         loadImageAttachment();
         invalidateOptionsMenu();
@@ -819,12 +838,14 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     private void loadImageAttachment() {
         mImageDataId = 0;
         mImageUri = null;
+        mImageDisplayName = null;
         if (!mWorkingNote.existInDatabase()) {
+            refreshImagePreview();
             return;
         }
         Cursor cursor = getContentResolver().query(
                 Notes.CONTENT_DATA_URI,
-                new String[] { DataColumns.ID, DataColumns.CONTENT },
+                new String[] { DataColumns.ID, DataColumns.CONTENT, DataColumns.DATA3 },
                 DataColumns.NOTE_ID + "=? AND " + DataColumns.MIME_TYPE + "=?",
                 new String[] {
                         String.valueOf(mWorkingNote.getNoteId()),
@@ -836,9 +857,11 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             if (cursor.moveToFirst()) {
                 mImageDataId = cursor.getLong(0);
                 mImageUri = cursor.getString(1);
+                mImageDisplayName = cursor.getString(2);
             }
             cursor.close();
         }
+        refreshImagePreview();
     }
 
     // 当前仅以 dataId + uri 判断附件是否有效存在。
@@ -892,6 +915,26 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             }
         }
         return "image";
+    }
+
+    // 刷新编辑页内联预览：无附件隐藏，有附件显示缩略图和文件名。
+    private void refreshImagePreview() {
+        if (!hasImageAttachment()) {
+            mImagePreviewContainer.setVisibility(View.GONE);
+            mImagePreview.setImageDrawable(null);
+            mImagePreviewName.setText("");
+            return;
+        }
+
+        mImagePreviewContainer.setVisibility(View.VISIBLE);
+        mImagePreviewName.setText(TextUtils.isEmpty(mImageDisplayName)
+                ? getString(R.string.image_attachment_unknown_name)
+                : mImageDisplayName);
+        try {
+            mImagePreview.setImageURI(Uri.parse(mImageUri));
+        } catch (Exception e) {
+            mImagePreview.setImageResource(android.R.drawable.ic_menu_report_image);
+        }
     }
 
     /*
