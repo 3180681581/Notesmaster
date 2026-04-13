@@ -28,11 +28,11 @@ import android.widget.PopupMenu.OnMenuItemClickListener;
 import net.micode.notes.R;
 
 /*
- * ×÷ÓÃ£º·â×°Ò»¸ö´øÏÂÀ­²Ëµ¥µÄ°´Å¥¿Ø¼ş¡£
- * ÊµÏÖ·½·¨£ºÔÚ DropdownMenu ¹¹Ôìº¯ÊıÖĞÍê³É°´Å¥ÑùÊ½¡¢²Ëµ¥¼ÓÔØÓëµã»÷µ¯³ö£»
- * Í¨¹ı setOnDropdownMenuItemClickListener ×¢²á²Ëµ¥µã»÷»Øµ÷£»
- * Í¨¹ı findItem Óë setTitle ·Ö±ğÌá¹©²Ëµ¥Ïî²éÑ¯ºÍ±êÌâ¸üĞÂÄÜÁ¦¡£
- * Âß¼­Ê¾Òâ£ºDropdownMenu(context, button, menuId) -> mButton.setOnClickListener(v)
+ * ä½œç”¨ï¼šå°è£…ä¸€ä¸ªå¸¦ä¸‹æ‹‰èœå•çš„æŒ‰é’®æ§ä»¶ã€‚
+ * å®ç°æ–¹æ³•ï¼šåœ¨ DropdownMenu æ„é€ å‡½æ•°ä¸­å®ŒæˆæŒ‰é’®æ ·å¼ã€èœå•åŠ è½½ä¸ç‚¹å‡»å¼¹å‡ºï¼›
+ * é€šè¿‡ setOnDropdownMenuItemClickListener æ³¨å†Œèœå•ç‚¹å‡»å›è°ƒï¼›
+ * é€šè¿‡ findItem ä¸ setTitle åˆ†åˆ«æä¾›èœå•é¡¹æŸ¥è¯¢å’Œæ ‡é¢˜æ›´æ–°èƒ½åŠ›ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šDropdownMenu(context, button, menuId) -> mButton.setOnClickListener(v)
  * -> mPopupMenu.show() -> setOnDropdownMenuItemClickListener(listener) -> findItem(id)/setTitle(title)
  */
 public class DropdownMenu {
@@ -41,8 +41,8 @@ public class DropdownMenu {
     private Menu mMenu;
 
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯ÏÂÀ­²Ëµ¥×é¼ş¡£
-     * ÊµÏÖ·½·¨£ºÎª°´Å¥ÉèÖÃÏÂÀ­Í¼±ê£¬´´½¨ PopupMenu£¬¼ÓÔØ²Ëµ¥×ÊÔ´£¬²¢°ó¶¨°´Å¥µã»÷ÊÂ¼şÒÔÏÔÊ¾²Ëµ¥¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–ä¸‹æ‹‰èœå•ç»„ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šä¸ºæŒ‰é’®è®¾ç½®ä¸‹æ‹‰å›¾æ ‡ï¼Œåˆ›å»º PopupMenuï¼ŒåŠ è½½èœå•èµ„æºï¼Œå¹¶ç»‘å®šæŒ‰é’®ç‚¹å‡»äº‹ä»¶ä»¥æ˜¾ç¤ºèœå•ã€‚
      */
     public DropdownMenu(Context context, Button button, int menuId) {
         mButton = button;
@@ -52,8 +52,8 @@ public class DropdownMenu {
         mPopupMenu.getMenuInflater().inflate(menuId, mMenu);
         mButton.setOnClickListener(new OnClickListener() {
             /*
-             * ×÷ÓÃ£ºÏìÓ¦°´Å¥µã»÷ÒÔµ¯³öÏÂÀ­²Ëµ¥¡£
-             * ÊµÏÖ·½·¨£ºÔÚµã»÷»Øµ÷ÖĞÖ±½Óµ÷ÓÃ PopupMenu.show()¡£
+             * ä½œç”¨ï¼šå“åº”æŒ‰é’®ç‚¹å‡»ä»¥å¼¹å‡ºä¸‹æ‹‰èœå•ã€‚
+             * å®ç°æ–¹æ³•ï¼šåœ¨ç‚¹å‡»å›è°ƒä¸­ç›´æ¥è°ƒç”¨ PopupMenu.show()ã€‚
              */
             public void onClick(View v) {
                 mPopupMenu.show();
@@ -62,8 +62,8 @@ public class DropdownMenu {
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃÏÂÀ­²Ëµ¥Ïîµã»÷¼àÌıÆ÷¡£
-     * ÊµÏÖ·½·¨£ºÅĞ¶Ï PopupMenu ÊÇ·ñ´æÔÚºó£¬½«Íâ²¿¼àÌıÆ÷×¢²áµ½ PopupMenu¡£
+     * ä½œç”¨ï¼šè®¾ç½®ä¸‹æ‹‰èœå•é¡¹ç‚¹å‡»ç›‘å¬å™¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ¤æ–­ PopupMenu æ˜¯å¦å­˜åœ¨åï¼Œå°†å¤–éƒ¨ç›‘å¬å™¨æ³¨å†Œåˆ° PopupMenuã€‚
      */
     public void setOnDropdownMenuItemClickListener(OnMenuItemClickListener listener) {
         if (mPopupMenu != null) {
@@ -72,16 +72,16 @@ public class DropdownMenu {
     }
 
     /*
-     * ×÷ÓÃ£º°´²Ëµ¥Ïî id ²éÕÒ¶ÔÓ¦µÄ²Ëµ¥Ïî¡£
-     * ÊµÏÖ·½·¨£ºÖ±½ÓÎ¯ÍĞ¸øÄÚ²¿ Menu ¶ÔÏó½øĞĞ²éÕÒ¡£
+     * ä½œç”¨ï¼šæŒ‰èœå•é¡¹ id æŸ¥æ‰¾å¯¹åº”çš„èœå•é¡¹ã€‚
+     * å®ç°æ–¹æ³•ï¼šç›´æ¥å§”æ‰˜ç»™å†…éƒ¨ Menu å¯¹è±¡è¿›è¡ŒæŸ¥æ‰¾ã€‚
      */
     public MenuItem findItem(int id) {
         return mMenu.findItem(id);
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃÏÂÀ­°´Å¥ÏÔÊ¾µÄ±êÌâ¡£
-     * ÊµÏÖ·½·¨£º½«´«Èë±êÌâĞ´Èë°´Å¥ÎÄ±¾¡£
+     * ä½œç”¨ï¼šè®¾ç½®ä¸‹æ‹‰æŒ‰é’®æ˜¾ç¤ºçš„æ ‡é¢˜ã€‚
+     * å®ç°æ–¹æ³•ï¼šå°†ä¼ å…¥æ ‡é¢˜å†™å…¥æŒ‰é’®æ–‡æœ¬ã€‚
      */
     public void setTitle(CharSequence title) {
         mButton.setText(title);

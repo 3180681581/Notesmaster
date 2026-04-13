@@ -22,12 +22,16 @@ import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.SearchManager;
 import android.appwidget.AppWidgetManager;
+import android.content.ActivityNotFoundException;
 import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Spannable;
@@ -51,9 +55,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.provider.OpenableColumns;
 
 import net.micode.notes.R;
 import net.micode.notes.data.Notes;
+import net.micode.notes.data.Notes.DataColumns;
 import net.micode.notes.data.Notes.TextNote;
 import net.micode.notes.model.WorkingNote;
 import net.micode.notes.model.WorkingNote.NoteSettingChangedListener;
@@ -163,6 +169,19 @@ public class NoteEditActivity extends Activity implements OnClickListener,
 
     private String mUserQuery;
     private Pattern mPattern;
+
+    // 图片选择器请求码。
+    private static final int REQUEST_CODE_PICK_IMAGE = 2001;
+
+    // 当前便签图片附件缓存：data 主键、Uri 与展示名。
+    private long mImageDataId;
+    private String mImageUri;
+    private String mImageDisplayName;
+
+    // 编辑页内联预览控件。
+    private View mImagePreviewContainer;
+    private ImageView mImagePreview;
+    private TextView mImagePreviewName;
 
     @Override
     /*
@@ -336,6 +355,7 @@ public class NoteEditActivity extends Activity implements OnClickListener,
          * 实现方法：调用 showAlertHeader 根据当前提醒信息显示或隐藏提醒图标与文本。
          */
         showAlertHeader();
+        loadImageAttachment();
     }
 
     /*
@@ -367,6 +387,15 @@ public class NoteEditActivity extends Activity implements OnClickListener,
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         initActivityState(intent);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // 仅处理“选择图片成功”的返回结果。
+        if (requestCode == REQUEST_CODE_PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            handleImagePickResult(data.getData(), data.getFlags());
+        }
     }
 
     @Override
@@ -439,6 +468,12 @@ public class NoteEditActivity extends Activity implements OnClickListener,
         mNoteHeaderHolder.ibSetBgColor.setOnClickListener(this);
         mNoteEditor = (EditText) findViewById(R.id.note_edit_view);
         mNoteEditorPanel = findViewById(R.id.sv_note_edit);
+        // 绑定图片预览区域，支持“在便签中可视化展示”。
+        mImagePreviewContainer = findViewById(R.id.image_attachment_preview_container);
+        mImagePreview = (ImageView) findViewById(R.id.iv_image_attachment_preview);
+        mImagePreviewName = (TextView) findViewById(R.id.tv_image_attachment_name);
+        mImagePreview.setOnClickListener(this);
+        mImagePreviewName.setOnClickListener(this);
         mNoteBgColorSelector = findViewById(R.id.note_bg_color_selector);
         for (int id : sBgSelectorBtnsMap.keySet()) {
             ImageView iv = (ImageView) findViewById(id);
@@ -531,6 +566,8 @@ public class NoteEditActivity extends Activity implements OnClickListener,
                         TextAppearanceResources.getTexAppearanceResource(mFontSizeId));
             }
             mFontSizeSelector.setVisibility(View.GONE);
+        } else if (id == R.id.iv_image_attachment_preview || id == R.id.tv_image_attachment_name) {
+            openImageAttachment();
         }
     }
 
@@ -599,6 +636,15 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             menu.findItem(R.id.menu_alert).setVisible(false);
         } else {
             menu.findItem(R.id.menu_delete_remind).setVisible(false);
+        }
+        MenuItem openImageItem = menu.findItem(R.id.menu_open_image_attachment);
+        MenuItem deleteImageItem = menu.findItem(R.id.menu_delete_image_attachment);
+        // 仅在存在图片附件时展示“打开/删除附件”，避免无效操作入口。
+        if (openImageItem != null) {
+            openImageItem.setVisible(hasImageAttachment());
+        }
+        if (deleteImageItem != null) {
+            deleteImageItem.setVisible(hasImageAttachment());
         }
         return true;
     }
@@ -685,9 +731,210 @@ public class NoteEditActivity extends Activity implements OnClickListener,
             setReminder();
         } else if (itemId == R.id.menu_delete_remind) {
             mWorkingNote.setAlertDate(0, false);
+        } else if (itemId == R.id.menu_insert_image) {
+            pickImageFromSystem();
+        } else if (itemId == R.id.menu_open_image_attachment) {
+            openImageAttachment();
+        } else if (itemId == R.id.menu_delete_image_attachment) {
+            deleteImageAttachment();
         }
 // default 情况不需要处理，直接返回
         return true;
+    }
+
+    // 使用系统文档选择器，仅允许选择 jpg/png。
+    private void pickImageFromSystem() {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"image/jpeg", "image/png"});
+        startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE);
+    }
+
+    // 处理图片选择结果：保存 Uri 到 data 表，并更新 note.has_attachment 标记。
+    private void handleImagePickResult(Uri uri, int flags) {
+        if (uri == null) {
+            showToast(R.string.image_attach_failed);
+            return;
+        }
+        try {
+            getContentResolver().takePersistableUriPermission(
+                    uri,
+                    flags & (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION));
+        } catch (SecurityException e) {
+            Log.w(TAG, "Persistable permission unavailable: " + e.getMessage());
+        }
+
+        if (!mWorkingNote.ensureNoteExists()) {
+            showToast(R.string.image_attach_failed);
+            return;
+        }
+
+        // MVP 版本仅保留一张附件，插入新图前先删除旧附件。
+        if (hasImageAttachment()) {
+            deleteImageAttachmentInternal();
+        }
+
+        ContentValues values = new ContentValues();
+        values.put(DataColumns.NOTE_ID, mWorkingNote.getNoteId());
+        values.put(DataColumns.MIME_TYPE, Notes.DataConstants.IMAGE_NOTE);
+        values.put(DataColumns.CONTENT, uri.toString());
+        values.put(DataColumns.DATA3, getDisplayName(uri));
+
+        Uri result = getContentResolver().insert(Notes.CONTENT_DATA_URI, values);
+        if (result == null) {
+            showToast(R.string.image_attach_failed);
+            return;
+        }
+        // 插入后同步刷新预览、菜单可见性与返回结果状态。
+        updateAttachmentFlag(true);
+        loadImageAttachment();
+        invalidateOptionsMenu();
+        setResult(RESULT_OK);
+        showToast(R.string.image_attach_success);
+    }
+
+    // 使用系统查看器打开附件图片。
+    private void openImageAttachment() {
+        if (!hasImageAttachment()) {
+            showToast(R.string.image_not_found);
+            return;
+        }
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.parse(mImageUri), "image/*");
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            showToast(R.string.image_open_failed);
+        }
+    }
+
+    // 删除当前图片附件并同步更新 note 附件标志位。
+    private void deleteImageAttachment() {
+        if (!hasImageAttachment()) {
+            showToast(R.string.image_not_found);
+            return;
+        }
+        deleteImageAttachmentInternal();
+        // 删除后同步刷新预览、菜单可见性与返回结果状态。
+        updateAttachmentFlag(false);
+        loadImageAttachment();
+        invalidateOptionsMenu();
+        setResult(RESULT_OK);
+        showToast(R.string.image_delete_success);
+    }
+
+    // 仅做 data 表删除，不做 UI 和状态刷新，供内部复用。
+    private void deleteImageAttachmentInternal() {
+        if (!hasImageAttachment()) {
+            return;
+        }
+        getContentResolver().delete(ContentUris.withAppendedId(Notes.CONTENT_DATA_URI, mImageDataId),
+                null, null);
+    }
+
+    // 从 data 表读取当前便签的最新图片附件记录。
+    private void loadImageAttachment() {
+        mImageDataId = 0;
+        mImageUri = null;
+        mImageDisplayName = null;
+        if (!mWorkingNote.existInDatabase()) {
+            refreshImagePreview();
+            return;
+        }
+        Cursor cursor = getContentResolver().query(
+                Notes.CONTENT_DATA_URI,
+                new String[] { DataColumns.ID, DataColumns.CONTENT, DataColumns.DATA3 },
+                DataColumns.NOTE_ID + "=? AND " + DataColumns.MIME_TYPE + "=?",
+                new String[] {
+                        String.valueOf(mWorkingNote.getNoteId()),
+                        Notes.DataConstants.IMAGE_NOTE
+                },
+                DataColumns.ID + " DESC");
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                mImageDataId = cursor.getLong(0);
+                mImageUri = cursor.getString(1);
+                mImageDisplayName = cursor.getString(2);
+            }
+            cursor.close();
+        }
+        refreshImagePreview();
+    }
+
+    // 当前仅以 dataId + uri 判断附件是否有效存在。
+    private boolean hasImageAttachment() {
+        return mImageDataId > 0 && !TextUtils.isEmpty(mImageUri);
+    }
+
+    // 更新 note 表的 has_attachment，本实现仅统计图片类型附件。
+    private void updateAttachmentFlag(boolean fallbackHasAttachment) {
+        if (!mWorkingNote.existInDatabase()) {
+            return;
+        }
+
+        boolean hasAttachment = fallbackHasAttachment;
+        Cursor cursor = getContentResolver().query(
+                Notes.CONTENT_DATA_URI,
+                new String[] { "COUNT(*)" },
+                DataColumns.NOTE_ID + "=? AND " + DataColumns.MIME_TYPE + "=?",
+                new String[] { String.valueOf(mWorkingNote.getNoteId()), Notes.DataConstants.IMAGE_NOTE },
+                null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                hasAttachment = cursor.getInt(0) > 0;
+            }
+            cursor.close();
+        }
+
+        ContentValues noteValues = new ContentValues();
+        noteValues.put(Notes.NoteColumns.HAS_ATTACHMENT, hasAttachment ? 1 : 0);
+        noteValues.put(Notes.NoteColumns.LOCAL_MODIFIED, 1);
+        noteValues.put(Notes.NoteColumns.MODIFIED_DATE, System.currentTimeMillis());
+        getContentResolver().update(
+                ContentUris.withAppendedId(Notes.CONTENT_NOTE_URI, mWorkingNote.getNoteId()),
+                noteValues,
+                null,
+                null);
+    }
+
+    // 从 Uri 读取展示名，用于附件条目展示与后续扩展。
+    private String getDisplayName(Uri uri) {
+        Cursor cursor = getContentResolver().query(uri,
+                new String[] { OpenableColumns.DISPLAY_NAME }, null, null, null);
+        if (cursor != null) {
+            try {
+                if (cursor.moveToFirst()) {
+                    return cursor.getString(0);
+                }
+            } finally {
+                cursor.close();
+            }
+        }
+        return "image";
+    }
+
+    // 刷新编辑页内联预览：无附件隐藏，有附件显示缩略图和文件名。
+    private void refreshImagePreview() {
+        if (!hasImageAttachment()) {
+            mImagePreviewContainer.setVisibility(View.GONE);
+            mImagePreview.setImageDrawable(null);
+            mImagePreviewName.setText("");
+            return;
+        }
+
+        mImagePreviewContainer.setVisibility(View.VISIBLE);
+        mImagePreviewName.setText(TextUtils.isEmpty(mImageDisplayName)
+                ? getString(R.string.image_attachment_unknown_name)
+                : mImageDisplayName);
+        try {
+            mImagePreview.setImageURI(Uri.parse(mImageUri));
+        } catch (Exception e) {
+            mImagePreview.setImageResource(android.R.drawable.ic_menu_report_image);
+        }
     }
 
     /*

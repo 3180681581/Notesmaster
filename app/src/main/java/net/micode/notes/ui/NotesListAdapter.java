@@ -32,61 +32,61 @@ import java.util.Iterator;
 
 
 /*
- * ×÷ÓÃ£º±ãÇ©ÁĞ±íÊı¾İÊÊÅäÆ÷£¬¸ºÔğ½« Cursor Êı¾İ°ó¶¨µ½ÁĞ±íÏî²¢¹ÜÀí¶àÑ¡×´Ì¬¡£
- * ÊµÏÖ·½·¨£ºÍ¨¹ı newView/bindView ¹¹½¨Óë°ó¶¨ NotesListItem£»
- * Ê¹ÓÃ setChoiceMode¡¢setCheckedItem¡¢selectAll¡¢isSelectedItem¡¢getSelectedCount¡¢isAllSelected ¹ÜÀíÑ¡ÔñÌ¬£»
- * Ê¹ÓÃ getSelectedItemIds/getSelectedWidget Ìá¹©Åú´¦ÀíËùĞèÊı¾İ£¬²¢ÔÚ onContentChanged/changeCursor/calcNotesCount ÖĞÎ¬»¤±ãÇ©Í³¼Æ¡£
- * Âß¼­Ê¾Òâ£ºnewView(context, cursor, parent) -> bindView(view, context, cursor) -> setChoiceMode(mode)
+ * ä½œç”¨ï¼šä¾¿ç­¾åˆ—è¡¨æ•°æ®é€‚é…å™¨ï¼Œè´Ÿè´£å°† Cursor æ•°æ®ç»‘å®šåˆ°åˆ—è¡¨é¡¹å¹¶ç®¡ç†å¤šé€‰çŠ¶æ€ã€‚
+ * å®ç°æ–¹æ³•ï¼šé€šè¿‡ newView/bindView æ„å»ºä¸ç»‘å®š NotesListItemï¼›
+ * ä½¿ç”¨ setChoiceModeã€setCheckedItemã€selectAllã€isSelectedItemã€getSelectedCountã€isAllSelected ç®¡ç†é€‰æ‹©æ€ï¼›
+ * ä½¿ç”¨ getSelectedItemIds/getSelectedWidget æä¾›æ‰¹å¤„ç†æ‰€éœ€æ•°æ®ï¼Œå¹¶åœ¨ onContentChanged/changeCursor/calcNotesCount ä¸­ç»´æŠ¤ä¾¿ç­¾ç»Ÿè®¡ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šnewView(context, cursor, parent) -> bindView(view, context, cursor) -> setChoiceMode(mode)
  * -> setCheckedItem(position, checked)/selectAll(checked) -> getSelectedItemIds()/getSelectedWidget()
  * -> onContentChanged()/changeCursor(cursor) -> calcNotesCount()
  */
 public class NotesListAdapter extends CursorAdapter {
     /*
-     * ×÷ÓÃ£ºÈÕÖ¾Êä³ö±êÇ©¡£
-     * ÊµÏÖ·½·¨£ºÔÚÒì³£·ÖÖ§ÖĞÍ³Ò»×÷Îª Log µÄ tag¡£
+     * ä½œç”¨ï¼šæ—¥å¿—è¾“å‡ºæ ‡ç­¾ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨å¼‚å¸¸åˆ†æ”¯ä¸­ç»Ÿä¸€ä½œä¸º Log çš„ tagã€‚
      */
     private static final String TAG = "NotesListAdapter";
     /*
-     * ×÷ÓÃ£º±£´æÉÏÏÂÎÄÒıÓÃ¡£
-     * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôìº¯ÊıÖĞ¸³Öµ£¬ÓÃÓÚ´´½¨ NoteItemData µÈÒÀÀµ Context µÄ¶ÔÏó¡£
+     * ä½œç”¨ï¼šä¿å­˜ä¸Šä¸‹æ–‡å¼•ç”¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ å‡½æ•°ä¸­èµ‹å€¼ï¼Œç”¨äºåˆ›å»º NoteItemData ç­‰ä¾èµ– Context çš„å¯¹è±¡ã€‚
      */
     private Context mContext;
     /*
-     * ×÷ÓÃ£º¼ÇÂ¼ÁĞ±íÎ»ÖÃÓë¹´Ñ¡×´Ì¬Ó³Éä¡£
-     * ÊµÏÖ·½·¨£ºÒÔ position Îª key¡¢ÊÇ·ñÑ¡ÖĞÎª value Î¬»¤¶àÑ¡Êı¾İ¡£
+     * ä½œç”¨ï¼šè®°å½•åˆ—è¡¨ä½ç½®ä¸å‹¾é€‰çŠ¶æ€æ˜ å°„ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»¥ position ä¸º keyã€æ˜¯å¦é€‰ä¸­ä¸º value ç»´æŠ¤å¤šé€‰æ•°æ®ã€‚
      */
     private HashMap<Integer, Boolean> mSelectedIndex;
     /*
-     * ×÷ÓÃ£º¼ÇÂ¼µ±Ç°ÁĞ±íÖĞ¡°±ãÇ©ÀàĞÍ¡±ÌõÄ¿µÄÊıÁ¿¡£
-     * ÊµÏÖ·½·¨£ºÔÚÓÎ±ê±ä»¯ºóÓÉ calcNotesCount ÖØĞÂÍ³¼Æ¡£
+     * ä½œç”¨ï¼šè®°å½•å½“å‰åˆ—è¡¨ä¸­â€œä¾¿ç­¾ç±»å‹â€æ¡ç›®çš„æ•°é‡ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨æ¸¸æ ‡å˜åŒ–åç”± calcNotesCount é‡æ–°ç»Ÿè®¡ã€‚
      */
     private int mNotesCount;
     /*
-     * ×÷ÓÃ£º±ê¼ÇÊÇ·ñ´¦ÓÚ¶àÑ¡Ä£Ê½¡£
-     * ÊµÏÖ·½·¨£ºÓÉ setChoiceMode ÇĞ»»£¬¹© bindView ºÍ½»»¥Âß¼­ÅĞ¶Ï¡£
+     * ä½œç”¨ï¼šæ ‡è®°æ˜¯å¦å¤„äºå¤šé€‰æ¨¡å¼ã€‚
+     * å®ç°æ–¹æ³•ï¼šç”± setChoiceMode åˆ‡æ¢ï¼Œä¾› bindView å’Œäº¤äº’é€»è¾‘åˆ¤æ–­ã€‚
      */
     private boolean mChoiceMode;
 
     /*
-     * ×÷ÓÃ£º³ĞÔØĞ¡×é¼şË¢ĞÂËùĞè×Ö¶Î¡£
-     * ÊµÏÖ·½·¨£ºÔÚ getSelectedWidget ÖĞÌî³ä widgetId/widgetType ²¢·µ»Ø¼¯ºÏ¡£
+     * ä½œç”¨ï¼šæ‰¿è½½å°ç»„ä»¶åˆ·æ–°æ‰€éœ€å­—æ®µã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ getSelectedWidget ä¸­å¡«å…… widgetId/widgetType å¹¶è¿”å›é›†åˆã€‚
      */
     public static class AppWidgetAttribute {
         /*
-         * ×÷ÓÃ£ºĞ¡×é¼şÊµÀı id¡£
-         * ÊµÏÖ·½·¨£º´Ó±ãÇ©ÌõÄ¿Êı¾İ¶ÁÈ¡²¢Ğ´Èë¡£
+         * ä½œç”¨ï¼šå°ç»„ä»¶å®ä¾‹ idã€‚
+         * å®ç°æ–¹æ³•ï¼šä»ä¾¿ç­¾æ¡ç›®æ•°æ®è¯»å–å¹¶å†™å…¥ã€‚
          */
         public int widgetId;
         /*
-         * ×÷ÓÃ£ºĞ¡×é¼şÀàĞÍ£¨Èç 2x/4x£©¡£
-         * ÊµÏÖ·½·¨£º´Ó±ãÇ©ÌõÄ¿Êı¾İ¶ÁÈ¡²¢Ğ´Èë¡£
+         * ä½œç”¨ï¼šå°ç»„ä»¶ç±»å‹ï¼ˆå¦‚ 2x/4xï¼‰ã€‚
+         * å®ç°æ–¹æ³•ï¼šä»ä¾¿ç­¾æ¡ç›®æ•°æ®è¯»å–å¹¶å†™å…¥ã€‚
          */
         public int widgetType;
     };
 
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯±ãÇ©ÁĞ±íÊÊÅäÆ÷¡£
-     * ÊµÏÖ·½·¨£ºµ÷ÓÃ¸¸Àà¹¹Ôì²¢³õÊ¼»¯Ñ¡ÔñÓ³Éä¡¢ÉÏÏÂÎÄÒıÓÃÓë±ãÇ©¼ÆÊı¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–ä¾¿ç­¾åˆ—è¡¨é€‚é…å™¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šè°ƒç”¨çˆ¶ç±»æ„é€ å¹¶åˆå§‹åŒ–é€‰æ‹©æ˜ å°„ã€ä¸Šä¸‹æ–‡å¼•ç”¨ä¸ä¾¿ç­¾è®¡æ•°ã€‚
      */
     public NotesListAdapter(Context context) {
         super(context, null);
@@ -97,8 +97,8 @@ public class NotesListAdapter extends CursorAdapter {
 
     @Override
     /*
-     * ×÷ÓÃ£º´´½¨ÁĞ±íÏîÊÓÍ¼ÊµÀı¡£
-     * ÊµÏÖ·½·¨£º·µ»Ø×Ô¶¨Òå NotesListItem ×÷ÎªÃ¿ĞĞÕ¹Ê¾ÈİÆ÷¡£
+     * ä½œç”¨ï¼šåˆ›å»ºåˆ—è¡¨é¡¹è§†å›¾å®ä¾‹ã€‚
+     * å®ç°æ–¹æ³•ï¼šè¿”å›è‡ªå®šä¹‰ NotesListItem ä½œä¸ºæ¯è¡Œå±•ç¤ºå®¹å™¨ã€‚
      */
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
         return new NotesListItem(context);
@@ -106,8 +106,8 @@ public class NotesListAdapter extends CursorAdapter {
 
     @Override
     /*
-     * ×÷ÓÃ£º½«µ±Ç° Cursor ĞĞÊı¾İ°ó¶¨µ½ÁĞ±íÏî¡£
-     * ÊµÏÖ·½·¨£º¹¹Ôì NoteItemData ºóµ÷ÓÃ NotesListItem.bind£¬Í¬Ê±´«Èë¶àÑ¡Ä£Ê½ÓëÑ¡ÖĞ×´Ì¬¡£
+     * ä½œç”¨ï¼šå°†å½“å‰ Cursor è¡Œæ•°æ®ç»‘å®šåˆ°åˆ—è¡¨é¡¹ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ„é€  NoteItemData åè°ƒç”¨ NotesListItem.bindï¼ŒåŒæ—¶ä¼ å…¥å¤šé€‰æ¨¡å¼ä¸é€‰ä¸­çŠ¶æ€ã€‚
      */
     public void bindView(View view, Context context, Cursor cursor) {
         if (view instanceof NotesListItem) {
@@ -118,8 +118,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃÖ¸¶¨Î»ÖÃÌõÄ¿µÄ¹´Ñ¡×´Ì¬¡£
-     * ÊµÏÖ·½·¨£º¸üĞÂ mSelectedIndex Ó³Éä²¢Í¨ÖªÊÊÅäÆ÷Ë¢ĞÂ½çÃæ¡£
+     * ä½œç”¨ï¼šè®¾ç½®æŒ‡å®šä½ç½®æ¡ç›®çš„å‹¾é€‰çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ›´æ–° mSelectedIndex æ˜ å°„å¹¶é€šçŸ¥é€‚é…å™¨åˆ·æ–°ç•Œé¢ã€‚
      */
     public void setCheckedItem(final int position, final boolean checked) {
         mSelectedIndex.put(position, checked);
@@ -127,16 +127,16 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÅĞ¶Ïµ±Ç°ÊÇ·ñ´¦ÓÚ¶àÑ¡Ä£Ê½¡£
-     * ÊµÏÖ·½·¨£ºÖ±½Ó·µ»Ø mChoiceMode ×´Ì¬Öµ¡£
+     * ä½œç”¨ï¼šåˆ¤æ–­å½“å‰æ˜¯å¦å¤„äºå¤šé€‰æ¨¡å¼ã€‚
+     * å®ç°æ–¹æ³•ï¼šç›´æ¥è¿”å› mChoiceMode çŠ¶æ€å€¼ã€‚
      */
     public boolean isInChoiceMode() {
         return mChoiceMode;
     }
 
     /*
-     * ×÷ÓÃ£ºÇĞ»»¶àÑ¡Ä£Ê½×´Ì¬¡£
-     * ÊµÏÖ·½·¨£ºÏÈÇå¿ÕÀúÊ·¹´Ñ¡Ó³Éä£¬ÔÙĞ´ÈëĞÂµÄÄ£Ê½±êÖ¾¡£
+     * ä½œç”¨ï¼šåˆ‡æ¢å¤šé€‰æ¨¡å¼çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼šå…ˆæ¸…ç©ºå†å²å‹¾é€‰æ˜ å°„ï¼Œå†å†™å…¥æ–°çš„æ¨¡å¼æ ‡å¿—ã€‚
      */
     public void setChoiceMode(boolean mode) {
         mSelectedIndex.clear();
@@ -144,8 +144,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÅúÁ¿ÉèÖÃÈ«²¿±ãÇ©ÌõÄ¿µÄ¹´Ñ¡×´Ì¬¡£
-     * ÊµÏÖ·½·¨£º±éÀúÓÎ±êÎ»ÖÃ£¬½ö¶Ô TYPE_NOTE ÌõÄ¿µ÷ÓÃ setCheckedItem¡£
+     * ä½œç”¨ï¼šæ‰¹é‡è®¾ç½®å…¨éƒ¨ä¾¿ç­¾æ¡ç›®çš„å‹¾é€‰çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼šéå†æ¸¸æ ‡ä½ç½®ï¼Œä»…å¯¹ TYPE_NOTE æ¡ç›®è°ƒç”¨ setCheckedItemã€‚
      */
     public void selectAll(boolean checked) {
         Cursor cursor = getCursor();
@@ -159,8 +159,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡µ±Ç°Ñ¡ÖĞÌõÄ¿µÄÊı¾İ¿â id ¼¯ºÏ¡£
-     * ÊµÏÖ·½·¨£º±éÀúÒÑÑ¡Ó³Éä£¬¶ÁÈ¡ getItemId(position) ²¢¹ıÂË¸ùÄ¿Â¼ id¡£
+     * ä½œç”¨ï¼šè·å–å½“å‰é€‰ä¸­æ¡ç›®çš„æ•°æ®åº“ id é›†åˆã€‚
+     * å®ç°æ–¹æ³•ï¼šéå†å·²é€‰æ˜ å°„ï¼Œè¯»å– getItemId(position) å¹¶è¿‡æ»¤æ ¹ç›®å½• idã€‚
      */
     public HashSet<Long> getSelectedItemIds() {
         HashSet<Long> itemSet = new HashSet<Long>();
@@ -179,8 +179,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡Ñ¡ÖĞÌõÄ¿¶ÔÓ¦µÄĞ¡×é¼şÊôĞÔ¼¯ºÏ¡£
-     * ÊµÏÖ·½·¨£º±éÀúÑ¡ÖĞÎ»ÖÃ£¬¶ÁÈ¡ Cursor ¹¹Ôì NoteItemData£¬ÌáÈ¡ widgetId/widgetType ºó·â×°·µ»Ø¡£
+     * ä½œç”¨ï¼šè·å–é€‰ä¸­æ¡ç›®å¯¹åº”çš„å°ç»„ä»¶å±æ€§é›†åˆã€‚
+     * å®ç°æ–¹æ³•ï¼šéå†é€‰ä¸­ä½ç½®ï¼Œè¯»å– Cursor æ„é€  NoteItemDataï¼Œæå– widgetId/widgetType åå°è£…è¿”å›ã€‚
      */
     public HashSet<AppWidgetAttribute> getSelectedWidget() {
         HashSet<AppWidgetAttribute> itemSet = new HashSet<AppWidgetAttribute>();
@@ -194,8 +194,8 @@ public class NotesListAdapter extends CursorAdapter {
                     widget.widgetType = item.getWidgetType();
                     itemSet.add(widget);
                     /*
-                     * ×÷ÓÃ£ºÇ¿µ÷ÓÎ±êÉúÃüÖÜÆÚÓÉÊÊÅäÆ÷Í³Ò»¹ÜÀí¡£
-                     * ÊµÏÖ·½·¨£º´Ë´¦½öÏû·ÑÓÎ±êÊı¾İ£¬²»ÊÖ¶¯¹Ø±Õ£¬±ÜÃâÆÆ»µÊÊÅäÆ÷ºóĞø·ÃÎÊ¡£
+                     * ä½œç”¨ï¼šå¼ºè°ƒæ¸¸æ ‡ç”Ÿå‘½å‘¨æœŸç”±é€‚é…å™¨ç»Ÿä¸€ç®¡ç†ã€‚
+                     * å®ç°æ–¹æ³•ï¼šæ­¤å¤„ä»…æ¶ˆè´¹æ¸¸æ ‡æ•°æ®ï¼Œä¸æ‰‹åŠ¨å…³é—­ï¼Œé¿å…ç ´åé€‚é…å™¨åç»­è®¿é—®ã€‚
                      */
                 } else {
                     Log.e(TAG, "Invalid cursor");
@@ -207,8 +207,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÍ³¼Æµ±Ç°±»Ñ¡ÖĞµÄÌõÄ¿ÊıÁ¿¡£
-     * ÊµÏÖ·½·¨£º±éÀú mSelectedIndex µÄ value ¼¯ºÏ²¢ÀÛ¼Æ true ÊıÁ¿¡£
+     * ä½œç”¨ï¼šç»Ÿè®¡å½“å‰è¢«é€‰ä¸­çš„æ¡ç›®æ•°é‡ã€‚
+     * å®ç°æ–¹æ³•ï¼šéå† mSelectedIndex çš„ value é›†åˆå¹¶ç´¯è®¡ true æ•°é‡ã€‚
      */
     public int getSelectedCount() {
         Collection<Boolean> values = mSelectedIndex.values();
@@ -226,8 +226,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÅĞ¶Ï±ãÇ©ÌõÄ¿ÊÇ·ñÒÑÈ«Ñ¡¡£
-     * ÊµÏÖ·½·¨£º±È½ÏÑ¡ÖĞÊıÁ¿Óë mNotesCount£¬ÇÒÒªÇóÑ¡ÖĞÊı²»Îª 0¡£
+     * ä½œç”¨ï¼šåˆ¤æ–­ä¾¿ç­¾æ¡ç›®æ˜¯å¦å·²å…¨é€‰ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ¯”è¾ƒé€‰ä¸­æ•°é‡ä¸ mNotesCountï¼Œä¸”è¦æ±‚é€‰ä¸­æ•°ä¸ä¸º 0ã€‚
      */
     public boolean isAllSelected() {
         int checkedCount = getSelectedCount();
@@ -235,8 +235,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£ºÅĞ¶ÏÖ¸¶¨Î»ÖÃÌõÄ¿ÊÇ·ñÑ¡ÖĞ¡£
-     * ÊµÏÖ·½·¨£ºÏÈÅĞ¿ÕÓ³ÉäÖµ£¬²»Îª¿ÕÊ±·µ»Ø¶ÔÓ¦²¼¶ûÖµ¡£
+     * ä½œç”¨ï¼šåˆ¤æ–­æŒ‡å®šä½ç½®æ¡ç›®æ˜¯å¦é€‰ä¸­ã€‚
+     * å®ç°æ–¹æ³•ï¼šå…ˆåˆ¤ç©ºæ˜ å°„å€¼ï¼Œä¸ä¸ºç©ºæ—¶è¿”å›å¯¹åº”å¸ƒå°”å€¼ã€‚
      */
     public boolean isSelectedItem(final int position) {
         if (null == mSelectedIndex.get(position)) {
@@ -247,8 +247,8 @@ public class NotesListAdapter extends CursorAdapter {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÏìÓ¦Êı¾İÔ´ÄÚÈİ±ä»¯¡£
-     * ÊµÏÖ·½·¨£ºµ÷ÓÃ¸¸Àà´¦Àíºó£¬ÖØĞÂ¼ÆËã¿ÉÑ¡±ãÇ©ÊıÁ¿¡£
+     * ä½œç”¨ï¼šå“åº”æ•°æ®æºå†…å®¹å˜åŒ–ã€‚
+     * å®ç°æ–¹æ³•ï¼šè°ƒç”¨çˆ¶ç±»å¤„ç†åï¼Œé‡æ–°è®¡ç®—å¯é€‰ä¾¿ç­¾æ•°é‡ã€‚
      */
     protected void onContentChanged() {
         super.onContentChanged();
@@ -257,8 +257,8 @@ public class NotesListAdapter extends CursorAdapter {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÇĞ»»ÊÊÅäÆ÷Ê¹ÓÃµÄÓÎ±ê¶ÔÏó¡£
-     * ÊµÏÖ·½·¨£ºµ÷ÓÃ¸¸ÀàÌæ»»ÓÎ±êºó£¬´¥·¢±ãÇ©ÊıÁ¿ÖØËã¡£
+     * ä½œç”¨ï¼šåˆ‡æ¢é€‚é…å™¨ä½¿ç”¨çš„æ¸¸æ ‡å¯¹è±¡ã€‚
+     * å®ç°æ–¹æ³•ï¼šè°ƒç”¨çˆ¶ç±»æ›¿æ¢æ¸¸æ ‡åï¼Œè§¦å‘ä¾¿ç­¾æ•°é‡é‡ç®—ã€‚
      */
     public void changeCursor(Cursor cursor) {
         super.changeCursor(cursor);
@@ -266,8 +266,8 @@ public class NotesListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º¼ÆËãµ±Ç°ÁĞ±íÖĞµÄ±ãÇ©ÌõÄ¿×ÜÊı¡£
-     * ÊµÏÖ·½·¨£º±éÀúÈ«²¿ÌõÄ¿£¬°´ NoteItemData.getNoteType(c) Í³¼Æ TYPE_NOTE ÊıÁ¿¡£
+     * ä½œç”¨ï¼šè®¡ç®—å½“å‰åˆ—è¡¨ä¸­çš„ä¾¿ç­¾æ¡ç›®æ€»æ•°ã€‚
+     * å®ç°æ–¹æ³•ï¼šéå†å…¨éƒ¨æ¡ç›®ï¼ŒæŒ‰ NoteItemData.getNoteType(c) ç»Ÿè®¡ TYPE_NOTE æ•°é‡ã€‚
      */
     private void calcNotesCount() {
         mNotesCount = 0;

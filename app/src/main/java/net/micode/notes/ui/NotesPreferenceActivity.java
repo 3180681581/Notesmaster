@@ -49,31 +49,31 @@ import net.micode.notes.gtask.remote.GTaskSyncService;
 
 
 /*
- * ×÷ÓÃ£º±ãÇ©ÉèÖÃÒ³Ãæ£¬¸ºÔğÍ¬²½ÕËºÅ¹ÜÀí¡¢ÊÖ¶¯Í¬²½¿ØÖÆÓëÍ¬²½×´Ì¬Õ¹Ê¾¡£
- * ÊµÏÖ·½·¨£ºÔÚ onCreate ³õÊ¼»¯Æ«ºÃÏîºÍ¹ã²¥½ÓÊÕÆ÷£»
- * Í¨¹ı onResume/refreshUI/loadAccountPreference/loadSyncButton Ë¢ĞÂÕËºÅÓë°´Å¥×´Ì¬£»
- * Í¨¹ı showSelectAccountAlertDialog/showChangeAccountConfirmAlertDialog/setSyncAccount/removeSyncAccount ¹ÜÀíÕËºÅÅäÖÃ£»
- * Í¨¹ı GTaskReceiver.onReceive ÊµÊ±¸üĞÂÍ¬²½½ø¶ÈÕ¹Ê¾¡£
- * Âß¼­Ê¾Òâ£ºonCreate(icicle) -> onResume() -> refreshUI() -> loadAccountPreference()/loadSyncButton()
+ * ä½œç”¨ï¼šä¾¿ç­¾è®¾ç½®é¡µé¢ï¼Œè´Ÿè´£åŒæ­¥è´¦å·ç®¡ç†ã€æ‰‹åŠ¨åŒæ­¥æ§åˆ¶ä¸åŒæ­¥çŠ¶æ€å±•ç¤ºã€‚
+ * å®ç°æ–¹æ³•ï¼šåœ¨ onCreate åˆå§‹åŒ–åå¥½é¡¹å’Œå¹¿æ’­æ¥æ”¶å™¨ï¼›
+ * é€šè¿‡ onResume/refreshUI/loadAccountPreference/loadSyncButton åˆ·æ–°è´¦å·ä¸æŒ‰é’®çŠ¶æ€ï¼›
+ * é€šè¿‡ showSelectAccountAlertDialog/showChangeAccountConfirmAlertDialog/setSyncAccount/removeSyncAccount ç®¡ç†è´¦å·é…ç½®ï¼›
+ * é€šè¿‡ GTaskReceiver.onReceive å®æ—¶æ›´æ–°åŒæ­¥è¿›åº¦å±•ç¤ºã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šonCreate(icicle) -> onResume() -> refreshUI() -> loadAccountPreference()/loadSyncButton()
  * -> showSelectAccountAlertDialog()/showChangeAccountConfirmAlertDialog() -> setSyncAccount(account)/removeSyncAccount()
  * -> GTaskReceiver.onReceive(context, intent) -> refreshUI().
  */
 public class NotesPreferenceActivity extends PreferenceActivity {
     /*
-     * ×÷ÓÃ£ºSharedPreferences ÎÄ¼şÃû¡£
-     * ÊµÏÖ·½·¨£ºÓÃÓÚ¶ÁĞ´Í¬²½ÕËºÅÓë×î½üÍ¬²½Ê±¼ä¡£
+     * ä½œç”¨ï¼šSharedPreferences æ–‡ä»¶åã€‚
+     * å®ç°æ–¹æ³•ï¼šç”¨äºè¯»å†™åŒæ­¥è´¦å·ä¸æœ€è¿‘åŒæ­¥æ—¶é—´ã€‚
      */
     public static final String PREFERENCE_NAME = "notes_preferences";
 
     /*
-     * ×÷ÓÃ£ºÍ¬²½ÕËºÅÃû¼üÃû¡£
-     * ÊµÏÖ·½·¨£ºÔÚ setSyncAccount/getSyncAccountName ÖĞ×÷Îª³Ö¾Ã»¯¼üÊ¹ÓÃ¡£
+     * ä½œç”¨ï¼šåŒæ­¥è´¦å·åé”®åã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ setSyncAccount/getSyncAccountName ä¸­ä½œä¸ºæŒä¹…åŒ–é”®ä½¿ç”¨ã€‚
      */
     public static final String PREFERENCE_SYNC_ACCOUNT_NAME = "pref_key_account_name";
 
     /*
-     * ×÷ÓÃ£º×îºóÍ¬²½Ê±¼ä¼üÃû¡£
-     * ÊµÏÖ·½·¨£ºÔÚ setLastSyncTime/getLastSyncTime ÖĞ´æÈ¡Ê±¼ä´Á¡£
+     * ä½œç”¨ï¼šæœ€ååŒæ­¥æ—¶é—´é”®åã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨ setLastSyncTime/getLastSyncTime ä¸­å­˜å–æ—¶é—´æˆ³ã€‚
      */
     public static final String PREFERENCE_LAST_SYNC_TIME = "pref_last_sync_time";
 
@@ -93,8 +93,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÉèÖÃÒ³´´½¨Èë¿Ú¡£
-     * ÊµÏÖ·½·¨£ºÆôÓÃ·µ»Øµ¼º½£¬¼ÓÔØÆ«ºÃ×ÊÔ´£¬³õÊ¼»¯ÕËºÅ·ÖÀàÓëÍ¬²½¹ã²¥¼àÌı£¬²¢Ìí¼ÓÍ·²¿ÊÓÍ¼¡£
+     * ä½œç”¨ï¼šè®¾ç½®é¡µåˆ›å»ºå…¥å£ã€‚
+     * å®ç°æ–¹æ³•ï¼šå¯ç”¨è¿”å›å¯¼èˆªï¼ŒåŠ è½½åå¥½èµ„æºï¼Œåˆå§‹åŒ–è´¦å·åˆ†ç±»ä¸åŒæ­¥å¹¿æ’­ç›‘å¬ï¼Œå¹¶æ·»åŠ å¤´éƒ¨è§†å›¾ã€‚
      */
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -116,8 +116,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÒ³Ãæ»Ö¸´Ç°Ì¨Ê±´¦ÀíÕËºÅ±ä»¯²¢Ë¢ĞÂ½çÃæ¡£
-     * ÊµÏÖ·½·¨£ºÈôÓÃ»§¸ÕĞÂÔöÕËºÅÔò×Ô¶¯Ê¶±ğ²¢ÉèÖÃÎªÍ¬²½ÕËºÅ£¬ËæºóË¢ĞÂ UI¡£
+     * ä½œç”¨ï¼šé¡µé¢æ¢å¤å‰å°æ—¶å¤„ç†è´¦å·å˜åŒ–å¹¶åˆ·æ–°ç•Œé¢ã€‚
+     * å®ç°æ–¹æ³•ï¼šè‹¥ç”¨æˆ·åˆšæ–°å¢è´¦å·åˆ™è‡ªåŠ¨è¯†åˆ«å¹¶è®¾ç½®ä¸ºåŒæ­¥è´¦å·ï¼Œéšååˆ·æ–° UIã€‚
      */
     protected void onResume() {
         super.onResume();
@@ -148,8 +148,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * ×÷ÓÃ£ºÒ³ÃæÏú»ÙÊ±ÊÍ·Å¹ã²¥¼àÌı×ÊÔ´¡£
-     * ÊµÏÖ·½·¨£ºÅĞ¿Õºó×¢Ïú½ÓÊÕÆ÷£¬ÔÙµ÷ÓÃ¸¸ÀàÏú»Ù¡£
+     * ä½œç”¨ï¼šé¡µé¢é”€æ¯æ—¶é‡Šæ”¾å¹¿æ’­ç›‘å¬èµ„æºã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ¤ç©ºåæ³¨é”€æ¥æ”¶å™¨ï¼Œå†è°ƒç”¨çˆ¶ç±»é”€æ¯ã€‚
      */
     protected void onDestroy() {
         if (mReceiver != null) {
@@ -159,8 +159,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º¼ÓÔØ²¢ÅäÖÃÕËºÅÑ¡ÔñÆ«ºÃÏî¡£
-     * ÊµÏÖ·½·¨£ºÖØ½¨ÕËºÅ Preference£¬µã»÷Ê±°´ÊÇ·ñÒÑÓĞÕËºÅ¾ö¶¨µ¯³öÑ¡Ôñ¶Ô»°¿ò»ò·çÏÕÈ·ÈÏ¶Ô»°¿ò¡£
+     * ä½œç”¨ï¼šåŠ è½½å¹¶é…ç½®è´¦å·é€‰æ‹©åå¥½é¡¹ã€‚
+     * å®ç°æ–¹æ³•ï¼šé‡å»ºè´¦å· Preferenceï¼Œç‚¹å‡»æ—¶æŒ‰æ˜¯å¦å·²æœ‰è´¦å·å†³å®šå¼¹å‡ºé€‰æ‹©å¯¹è¯æ¡†æˆ–é£é™©ç¡®è®¤å¯¹è¯æ¡†ã€‚
      */
     private void loadAccountPreference() {
         mAccountCategory.removeAll();
@@ -193,8 +193,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º¼ÓÔØ²¢Ë¢ĞÂ¡°Á¢¼´Í¬²½/È¡ÏûÍ¬²½¡±°´Å¥ÓëÍ¬²½×´Ì¬ÎÄ±¾¡£
-     * ÊµÏÖ·½·¨£º°´µ±Ç°ÊÇ·ñÕıÔÚÍ¬²½ÇĞ»»°´Å¥ĞĞÎª£¬²¢¸ù¾İ×î½üÍ¬²½Ê±¼ä»ò½ø¶ÈĞÅÏ¢¸üĞÂ×´Ì¬ÎÄ±¾¡£
+     * ä½œç”¨ï¼šåŠ è½½å¹¶åˆ·æ–°â€œç«‹å³åŒæ­¥/å–æ¶ˆåŒæ­¥â€æŒ‰é’®ä¸åŒæ­¥çŠ¶æ€æ–‡æœ¬ã€‚
+     * å®ç°æ–¹æ³•ï¼šæŒ‰å½“å‰æ˜¯å¦æ­£åœ¨åŒæ­¥åˆ‡æ¢æŒ‰é’®è¡Œä¸ºï¼Œå¹¶æ ¹æ®æœ€è¿‘åŒæ­¥æ—¶é—´æˆ–è¿›åº¦ä¿¡æ¯æ›´æ–°çŠ¶æ€æ–‡æœ¬ã€‚
      */
     private void loadSyncButton() {
         Button syncButton = (Button) findViewById(R.id.preference_sync_button);
@@ -236,8 +236,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£ºÍ³Ò»Ë¢ĞÂÉèÖÃÒ³½çÃæ¡£
-     * ÊµÏÖ·½·¨£ºË³Ğòµ÷ÓÃ loadAccountPreference Óë loadSyncButton¡£
+     * ä½œç”¨ï¼šç»Ÿä¸€åˆ·æ–°è®¾ç½®é¡µç•Œé¢ã€‚
+     * å®ç°æ–¹æ³•ï¼šé¡ºåºè°ƒç”¨ loadAccountPreference ä¸ loadSyncButtonã€‚
      */
     private void refreshUI() {
         loadAccountPreference();
@@ -245,8 +245,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£ºµ¯³öÕËºÅÑ¡Ôñ¶Ô»°¿ò¡£
-     * ÊµÏÖ·½·¨£º¼ÓÔØ Google ÕËºÅÁĞ±íÎªµ¥Ñ¡Ïî£¬Ñ¡ÔñºóÉèÖÃÍ¬²½ÕËºÅ£»Ö§³ÖÌø×ªÏµÍ³¡°Ìí¼ÓÕËºÅ¡±Ò³Ãæ¡£
+     * ä½œç”¨ï¼šå¼¹å‡ºè´¦å·é€‰æ‹©å¯¹è¯æ¡†ã€‚
+     * å®ç°æ–¹æ³•ï¼šåŠ è½½ Google è´¦å·åˆ—è¡¨ä¸ºå•é€‰é¡¹ï¼Œé€‰æ‹©åè®¾ç½®åŒæ­¥è´¦å·ï¼›æ”¯æŒè·³è½¬ç³»ç»Ÿâ€œæ·»åŠ è´¦å·â€é¡µé¢ã€‚
      */
     private void showSelectAccountAlertDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -305,8 +305,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£ºµ¯³ö¡°¸ü»»/ÒÆ³ıÕËºÅ¡±·çÏÕÈ·ÈÏ¶Ô»°¿ò¡£
-     * ÊµÏÖ·½·¨£ºÌá¹©¸ü»»ÕËºÅ¡¢ÒÆ³ıÕËºÅºÍÈ¡ÏûÈı¸öÈë¿Ú£¬²¢Ö´ĞĞ¶ÔÓ¦²Ù×÷¡£
+     * ä½œç”¨ï¼šå¼¹å‡ºâ€œæ›´æ¢/ç§»é™¤è´¦å·â€é£é™©ç¡®è®¤å¯¹è¯æ¡†ã€‚
+     * å®ç°æ–¹æ³•ï¼šæä¾›æ›´æ¢è´¦å·ã€ç§»é™¤è´¦å·å’Œå–æ¶ˆä¸‰ä¸ªå…¥å£ï¼Œå¹¶æ‰§è¡Œå¯¹åº”æ“ä½œã€‚
      */
     private void showChangeAccountConfirmAlertDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -338,8 +338,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º»ñÈ¡Éè±¸ÉÏµÄ Google ÕËºÅÁĞ±í¡£
-     * ÊµÏÖ·½·¨£ºÍ¨¹ı AccountManager.getAccountsByType("com.google") ·µ»Ø½á¹û¡£
+     * ä½œç”¨ï¼šè·å–è®¾å¤‡ä¸Šçš„ Google è´¦å·åˆ—è¡¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šé€šè¿‡ AccountManager.getAccountsByType("com.google") è¿”å›ç»“æœã€‚
      */
     private Account[] getGoogleAccounts() {
         AccountManager accountManager = AccountManager.get(this);
@@ -347,8 +347,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃµ±Ç°Í¬²½ÕËºÅ¡£
-     * ÊµÏÖ·½·¨£ºĞ´ÈëÕËºÅÆ«ºÃ£¬Çå¿Õ×î½üÍ¬²½Ê±¼ä£¬²¢Òì²½ÇåÀí±¾µØ gtask ¹ØÁª×Ö¶Î¡£
+     * ä½œç”¨ï¼šè®¾ç½®å½“å‰åŒæ­¥è´¦å·ã€‚
+     * å®ç°æ–¹æ³•ï¼šå†™å…¥è´¦å·åå¥½ï¼Œæ¸…ç©ºæœ€è¿‘åŒæ­¥æ—¶é—´ï¼Œå¹¶å¼‚æ­¥æ¸…ç†æœ¬åœ° gtask å…³è”å­—æ®µã€‚
      */
     private void setSyncAccount(String account) {
         if (!getSyncAccountName(this).equals(account)) {
@@ -381,8 +381,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£ºÒÆ³ıµ±Ç°Í¬²½ÕËºÅÅäÖÃ¡£
-     * ÊµÏÖ·½·¨£ºÉ¾³ıÕËºÅÃûºÍ×îºóÍ¬²½Ê±¼äÆ«ºÃ£¬²¢Òì²½Çå¿Õ±¾µØ gtask ¹ØÁª×Ö¶Î¡£
+     * ä½œç”¨ï¼šç§»é™¤å½“å‰åŒæ­¥è´¦å·é…ç½®ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ é™¤è´¦å·åå’Œæœ€ååŒæ­¥æ—¶é—´åå¥½ï¼Œå¹¶å¼‚æ­¥æ¸…ç©ºæœ¬åœ° gtask å…³è”å­—æ®µã€‚
      */
     private void removeSyncAccount() {
         SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -407,8 +407,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º¶ÁÈ¡µ±Ç°Í¬²½ÕËºÅÃû¡£
-     * ÊµÏÖ·½·¨£º´ÓÖ¸¶¨Æ«ºÃÎÄ¼şÖĞ¶ÁÈ¡ PREFERENCE_SYNC_ACCOUNT_NAME¡£
+     * ä½œç”¨ï¼šè¯»å–å½“å‰åŒæ­¥è´¦å·åã€‚
+     * å®ç°æ–¹æ³•ï¼šä»æŒ‡å®šåå¥½æ–‡ä»¶ä¸­è¯»å– PREFERENCE_SYNC_ACCOUNT_NAMEã€‚
      */
     public static String getSyncAccountName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -417,8 +417,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º±£´æ×î½üÍ¬²½Ê±¼ä¡£
-     * ÊµÏÖ·½·¨£º°ÑÊ±¼ä´ÁĞ´Èë PREFERENCE_LAST_SYNC_TIME¡£
+     * ä½œç”¨ï¼šä¿å­˜æœ€è¿‘åŒæ­¥æ—¶é—´ã€‚
+     * å®ç°æ–¹æ³•ï¼šæŠŠæ—¶é—´æˆ³å†™å…¥ PREFERENCE_LAST_SYNC_TIMEã€‚
      */
     public static void setLastSyncTime(Context context, long time) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -429,8 +429,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º¶ÁÈ¡×î½üÍ¬²½Ê±¼ä¡£
-     * ÊµÏÖ·½·¨£º´ÓÆ«ºÃÎÄ¼ş¶ÁÈ¡ PREFERENCE_LAST_SYNC_TIME£¬Ä¬ÈÏ·µ»Ø 0¡£
+     * ä½œç”¨ï¼šè¯»å–æœ€è¿‘åŒæ­¥æ—¶é—´ã€‚
+     * å®ç°æ–¹æ³•ï¼šä»åå¥½æ–‡ä»¶è¯»å– PREFERENCE_LAST_SYNC_TIMEï¼Œé»˜è®¤è¿”å› 0ã€‚
      */
     public static long getLastSyncTime(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -439,15 +439,15 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º½ÓÊÕÍ¬²½·şÎñ¹ã²¥²¢Ë¢ĞÂ½çÃæ×´Ì¬¡£
-     * ÊµÏÖ·½·¨£ºÃ¿´ÎÊÕµ½¹ã²¥ÏÈ refreshUI£¬ÈôÕıÔÚÍ¬²½Ôò¸üĞÂ½ø¶ÈÎÄ±¾¡£
+     * ä½œç”¨ï¼šæ¥æ”¶åŒæ­¥æœåŠ¡å¹¿æ’­å¹¶åˆ·æ–°ç•Œé¢çŠ¶æ€ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ¯æ¬¡æ”¶åˆ°å¹¿æ’­å…ˆ refreshUIï¼Œè‹¥æ­£åœ¨åŒæ­¥åˆ™æ›´æ–°è¿›åº¦æ–‡æœ¬ã€‚
      */
     private class GTaskReceiver extends BroadcastReceiver {
 
         @Override
         /*
-         * ×÷ÓÃ£º´¦ÀíÍ¬²½×´Ì¬¹ã²¥¡£
-         * ÊµÏÖ·½·¨£º¸ù¾İ¹ã²¥×Ö¶Î¸üĞÂÍ¬²½½ø¶ÈÎÄ°¸²¢Ë¢ĞÂ°´Å¥×´Ì¬¡£
+         * ä½œç”¨ï¼šå¤„ç†åŒæ­¥çŠ¶æ€å¹¿æ’­ã€‚
+         * å®ç°æ–¹æ³•ï¼šæ ¹æ®å¹¿æ’­å­—æ®µæ›´æ–°åŒæ­¥è¿›åº¦æ–‡æ¡ˆå¹¶åˆ·æ–°æŒ‰é’®çŠ¶æ€ã€‚
          */
         public void onReceive(Context context, Intent intent) {
             refreshUI();
@@ -461,8 +461,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * ×÷ÓÃ£º´¦Àí ActionBar ·µ»Ø°´Å¥µã»÷¡£
-     * ÊµÏÖ·½·¨£ºµã»÷ home Ê±»Øµ½ÁĞ±íÒ³²¢ÇåÀíÖĞ¼äÒ³ÃæÕ»¡£
+     * ä½œç”¨ï¼šå¤„ç† ActionBar è¿”å›æŒ‰é’®ç‚¹å‡»ã€‚
+     * å®ç°æ–¹æ³•ï¼šç‚¹å‡» home æ—¶å›åˆ°åˆ—è¡¨é¡µå¹¶æ¸…ç†ä¸­é—´é¡µé¢æ ˆã€‚
      */
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

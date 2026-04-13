@@ -27,7 +27,7 @@ import net.micode.notes.tool.DataUtils;
 
 
 public class NoteItemData {
-    // ±ãÇ©ÁĞ±í²éÑ¯Ê¹ÓÃµÄ×Ö¶ÎÍ¶Ó°£¬Ë³Ğò±ØĞëÓëÏÂ·½ *_COLUMN Ë÷ÒıÒ»Ò»¶ÔÓ¦¡£
+    // ä¾¿ç­¾åˆ—è¡¨æŸ¥è¯¢ä½¿ç”¨çš„å­—æ®µæŠ•å½±ï¼Œé¡ºåºå¿…é¡»ä¸ä¸‹æ–¹ *_COLUMN ç´¢å¼•ä¸€ä¸€å¯¹åº”ã€‚
     static final String [] PROJECTION = new String [] {
         NoteColumns.ID,
         NoteColumns.ALERTED_DATE,
@@ -78,10 +78,10 @@ public class NoteItemData {
     private boolean mIsMultiNotesFollowingFolder;
 
     /**
-     * ±ãÇ©ÁĞ±íµ¥ĞĞÊı¾İµÄ UI Ä£ĞÍ¡£
+     * ä¾¿ç­¾åˆ—è¡¨å•è¡Œæ•°æ®çš„ UI æ¨¡å‹ã€‚
      *
-     * ¸ÃÀà¸ºÔğ°Ñ Cursor µ±Ç°ĞĞÓ³ÉäÎªÇ¿ÀàĞÍ×Ö¶Î£¬
-     * ²¢¼ÆËãÁĞ±íäÖÈ¾ĞèÒªµÄ¸½¼ÓÏÔÊ¾×´Ì¬¡£
+     * è¯¥ç±»è´Ÿè´£æŠŠ Cursor å½“å‰è¡Œæ˜ å°„ä¸ºå¼ºç±»å‹å­—æ®µï¼Œ
+     * å¹¶è®¡ç®—åˆ—è¡¨æ¸²æŸ“éœ€è¦çš„é™„åŠ æ˜¾ç¤ºçŠ¶æ€ã€‚
      */
     public NoteItemData(Context context, Cursor cursor) {
         mId = cursor.getLong(ID_COLUMN);
@@ -93,7 +93,7 @@ public class NoteItemData {
         mNotesCount = cursor.getInt(NOTES_COUNT_COLUMN);
         mParentId = cursor.getLong(PARENT_ID_COLUMN);
         mSnippet = cursor.getString(SNIPPET_COLUMN);
-        // ÁĞ±íÕ¹Ê¾Ç°£¬ÒÆ³ıÇåµ¥Ä£Ê½µÄ¹´Ñ¡±ê¼ÇÎÄ±¾¡£
+        // åˆ—è¡¨å±•ç¤ºå‰ï¼Œç§»é™¤æ¸…å•æ¨¡å¼çš„å‹¾é€‰æ ‡è®°æ–‡æœ¬ã€‚
         mSnippet = mSnippet.replace(NoteEditActivity.TAG_CHECKED, "").replace(
                 NoteEditActivity.TAG_UNCHECKED, "");
         mType = cursor.getInt(TYPE_COLUMN);
@@ -101,7 +101,7 @@ public class NoteItemData {
         mWidgetType = cursor.getInt(WIDGET_TYPE_COLUMN);
 
         mPhoneNumber = "";
-        // Í¨»°¼ÇÂ¼ÎÄ¼ş¼ĞÏÂµÄÌõÄ¿£¬¸ù¾İºÅÂë½âÎöÁªÏµÈËÕ¹Ê¾Ãû¡£
+        // é€šè¯è®°å½•æ–‡ä»¶å¤¹ä¸‹çš„æ¡ç›®ï¼Œæ ¹æ®å·ç è§£æè”ç³»äººå±•ç¤ºåã€‚
         if (mParentId == Notes.ID_CALL_RECORD_FOLDER) {
             mPhoneNumber = DataUtils.getCallNumberByNoteId(context.getContentResolver(), mId);
             if (!TextUtils.isEmpty(mPhoneNumber)) {
@@ -118,7 +118,7 @@ public class NoteItemData {
         checkPostion(cursor);
     }
 
-    // ¼ÆËãÁĞ±íÊ×Î²/ÁÚ½Ó×´Ì¬£¬ÓÃÓÚ±³¾°ºÍ·Ö¸ôÑùÊ½äÖÈ¾¡£
+    // è®¡ç®—åˆ—è¡¨é¦–å°¾/é‚»æ¥çŠ¶æ€ï¼Œç”¨äºèƒŒæ™¯å’Œåˆ†éš”æ ·å¼æ¸²æŸ“ã€‚
     private void checkPostion(Cursor cursor) {
         mIsLastItem = cursor.isLast() ? true : false;
         mIsFirstItem = cursor.isFirst() ? true : false;
@@ -126,7 +126,7 @@ public class NoteItemData {
         mIsMultiNotesFollowingFolder = false;
         mIsOneNoteFollowingFolder = false;
 
-        // ÅĞ¶Ïµ±Ç°±ãÇ©ÊÇ·ñ½ô¸úÔÚÎÄ¼ş¼Ğ»òÏµÍ³·Ö×éÌõÄ¿Ö®ºó¡£
+        // åˆ¤æ–­å½“å‰ä¾¿ç­¾æ˜¯å¦ç´§è·Ÿåœ¨æ–‡ä»¶å¤¹æˆ–ç³»ç»Ÿåˆ†ç»„æ¡ç›®ä¹‹åã€‚
         if (mType == Notes.TYPE_NOTE && !mIsFirstItem) {
             int position = cursor.getPosition();
             if (cursor.moveToPrevious()) {
@@ -146,112 +146,112 @@ public class NoteItemData {
     }
 
     public boolean isOneFollowingFolder() {
-        // µ±Ç°ÌõÄ¿ÊÇ·ñÎª¡°ÎÄ¼ş¼Ğ/ÏµÍ³·Ö×éºó½öÓĞµÄÒ»Ìõ±ãÇ©¡±¡£
+        // å½“å‰æ¡ç›®æ˜¯å¦ä¸ºâ€œæ–‡ä»¶å¤¹/ç³»ç»Ÿåˆ†ç»„åä»…æœ‰çš„ä¸€æ¡ä¾¿ç­¾â€ã€‚
         return mIsOneNoteFollowingFolder;
     }
 
     public boolean isMultiFollowingFolder() {
-        // µ±Ç°ÌõÄ¿ÊÇ·ñÎª¡°ÎÄ¼ş¼Ğ/ÏµÍ³·Ö×éºó¶àÌõ±ãÇ©ÖĞµÄµÚÒ»Ìõ¡±¡£
+        // å½“å‰æ¡ç›®æ˜¯å¦ä¸ºâ€œæ–‡ä»¶å¤¹/ç³»ç»Ÿåˆ†ç»„åå¤šæ¡ä¾¿ç­¾ä¸­çš„ç¬¬ä¸€æ¡â€ã€‚
         return mIsMultiNotesFollowingFolder;
     }
 
     public boolean isLast() {
-        // µ±Ç°ÌõÄ¿ÊÇ·ñÎ»ÓÚÁĞ±íÄ©Î²¡£
+        // å½“å‰æ¡ç›®æ˜¯å¦ä½äºåˆ—è¡¨æœ«å°¾ã€‚
         return mIsLastItem;
     }
 
     public String getCallName() {
-        // »ñÈ¡Í¨»°¼ÇÂ¼ÌõÄ¿¶ÔÓ¦µÄÁªÏµÈËÃû³Æ£¨ÎŞÔòÎª¿Õ´®£©¡£
+        // è·å–é€šè¯è®°å½•æ¡ç›®å¯¹åº”çš„è”ç³»äººåç§°ï¼ˆæ— åˆ™ä¸ºç©ºä¸²ï¼‰ã€‚
         return mName;
     }
 
     public boolean isFirst() {
-        // µ±Ç°ÌõÄ¿ÊÇ·ñÎ»ÓÚÁĞ±í¿ªÍ·¡£
+        // å½“å‰æ¡ç›®æ˜¯å¦ä½äºåˆ—è¡¨å¼€å¤´ã€‚
         return mIsFirstItem;
     }
 
     public boolean isSingle() {
-        // µ±Ç°ÁĞ±íÊÇ·ñ½öÓĞÒ»¸öÌõÄ¿¡£
+        // å½“å‰åˆ—è¡¨æ˜¯å¦ä»…æœ‰ä¸€ä¸ªæ¡ç›®ã€‚
         return mIsOnlyOneItem;
     }
 
     public long getId() {
-        // »ñÈ¡±ãÇ©Ö÷¼ü ID¡£
+        // è·å–ä¾¿ç­¾ä¸»é”® IDã€‚
         return mId;
     }
 
     public long getAlertDate() {
-        // »ñÈ¡ÌáĞÑÊ±¼ä´Á£¨ºÁÃë£©¡£
+        // è·å–æé†’æ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰ã€‚
         return mAlertDate;
     }
 
     public long getCreatedDate() {
-        // »ñÈ¡´´½¨Ê±¼ä´Á£¨ºÁÃë£©¡£
+        // è·å–åˆ›å»ºæ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰ã€‚
         return mCreatedDate;
     }
 
     public boolean hasAttachment() {
-        // ÊÇ·ñ°üº¬¸½¼ş¡£
+        // æ˜¯å¦åŒ…å«é™„ä»¶ã€‚
         return mHasAttachment;
     }
 
     public long getModifiedDate() {
-        // »ñÈ¡×îºóĞŞ¸ÄÊ±¼ä´Á£¨ºÁÃë£©¡£
+        // è·å–æœ€åä¿®æ”¹æ—¶é—´æˆ³ï¼ˆæ¯«ç§’ï¼‰ã€‚
         return mModifiedDate;
     }
 
     public int getBgColorId() {
-        // »ñÈ¡±ãÇ©±³¾°ÑÕÉ« ID¡£
+        // è·å–ä¾¿ç­¾èƒŒæ™¯é¢œè‰² IDã€‚
         return mBgColorId;
     }
 
     public long getParentId() {
-        // »ñÈ¡¸¸¼¶ÎÄ¼ş¼Ğ ID¡£
+        // è·å–çˆ¶çº§æ–‡ä»¶å¤¹ IDã€‚
         return mParentId;
     }
 
     public int getNotesCount() {
-        // »ñÈ¡ÎÄ¼ş¼ĞÏÂ±ãÇ©ÊıÁ¿£¨µ±Ç°ÌõÄ¿ÎªÎÄ¼ş¼ĞÊ±ÓĞÒâÒå£©¡£
+        // è·å–æ–‡ä»¶å¤¹ä¸‹ä¾¿ç­¾æ•°é‡ï¼ˆå½“å‰æ¡ç›®ä¸ºæ–‡ä»¶å¤¹æ—¶æœ‰æ„ä¹‰ï¼‰ã€‚
         return mNotesCount;
     }
 
     public long getFolderId () {
-        // ¼æÈİµ÷ÓÃ·½ÃüÃû£¬Êµ¼Ê·µ»Ø¸¸¼¶ÎÄ¼ş¼Ğ ID¡£
+        // å…¼å®¹è°ƒç”¨æ–¹å‘½åï¼Œå®é™…è¿”å›çˆ¶çº§æ–‡ä»¶å¤¹ IDã€‚
         return mParentId;
     }
 
     public int getType() {
-        // »ñÈ¡ÌõÄ¿ÀàĞÍ£¨±ãÇ©/ÎÄ¼ş¼Ğ/ÏµÍ³·Ö×é£©¡£
+        // è·å–æ¡ç›®ç±»å‹ï¼ˆä¾¿ç­¾/æ–‡ä»¶å¤¹/ç³»ç»Ÿåˆ†ç»„ï¼‰ã€‚
         return mType;
     }
 
     public int getWidgetType() {
-        // »ñÈ¡¹ØÁªĞ¡×é¼şÀàĞÍ¡£
+        // è·å–å…³è”å°ç»„ä»¶ç±»å‹ã€‚
         return mWidgetType;
     }
 
     public int getWidgetId() {
-        // »ñÈ¡¹ØÁªĞ¡×é¼şÊµÀı ID¡£
+        // è·å–å…³è”å°ç»„ä»¶å®ä¾‹ IDã€‚
         return mWidgetId;
     }
 
     public String getSnippet() {
-        // »ñÈ¡ÓÃÓÚÁĞ±íÕ¹Ê¾µÄÕªÒªÎÄ±¾¡£
+        // è·å–ç”¨äºåˆ—è¡¨å±•ç¤ºçš„æ‘˜è¦æ–‡æœ¬ã€‚
         return mSnippet;
     }
 
     public boolean hasAlert() {
-        // ÊÇ·ñÒÑÉèÖÃÌáĞÑÊ±¼ä¡£
+        // æ˜¯å¦å·²è®¾ç½®æé†’æ—¶é—´ã€‚
         return (mAlertDate > 0);
     }
 
     public boolean isCallRecord() {
-        // ÊÇ·ñÎªÍ¨»°¼ÇÂ¼ÎÄ¼ş¼ĞÏÂÇÒºÅÂëÓĞĞ§µÄÌõÄ¿¡£
+        // æ˜¯å¦ä¸ºé€šè¯è®°å½•æ–‡ä»¶å¤¹ä¸‹ä¸”å·ç æœ‰æ•ˆçš„æ¡ç›®ã€‚
         return (mParentId == Notes.ID_CALL_RECORD_FOLDER && !TextUtils.isEmpty(mPhoneNumber));
     }
 
     public static int getNoteType(Cursor cursor) {
-        // ´Ó Cursor µ±Ç°ĞĞÖ±½Ó¶ÁÈ¡ÌõÄ¿ÀàĞÍ£¬¹©ÊÊÅäÆ÷¿ìËÙÅĞ¶Ï¡£
+        // ä» Cursor å½“å‰è¡Œç›´æ¥è¯»å–æ¡ç›®ç±»å‹ï¼Œä¾›é€‚é…å™¨å¿«é€Ÿåˆ¤æ–­ã€‚
         return cursor.getInt(TYPE_COLUMN);
     }
 }

@@ -30,13 +30,13 @@ import net.micode.notes.data.Notes.NoteColumns;
 
 
 /*
- * ×÷ÓÃ£ºÎªÎÄ¼ş¼ĞÁĞ±íÌá¹©»ùÓÚ Cursor µÄÊı¾İÊÊÅäÓëÊÓÍ¼°ó¶¨¡£
- * ÊµÏÖ·½·¨£º¼Ì³Ğ CursorAdapter£¬´´½¨ÌõÄ¿ÊÓÍ¼²¢ÔÚ°ó¶¨½×¶Î½«Êı¾İ¿â×Ö¶ÎÓ³Éäµ½½çÃæ¡£
+ * ä½œç”¨ï¼šä¸ºæ–‡ä»¶å¤¹åˆ—è¡¨æä¾›åŸºäº Cursor çš„æ•°æ®é€‚é…ä¸è§†å›¾ç»‘å®šã€‚
+ * å®ç°æ–¹æ³•ï¼šç»§æ‰¿ CursorAdapterï¼Œåˆ›å»ºæ¡ç›®è§†å›¾å¹¶åœ¨ç»‘å®šé˜¶æ®µå°†æ•°æ®åº“å­—æ®µæ˜ å°„åˆ°ç•Œé¢ã€‚
  */
 public class FoldersListAdapter extends CursorAdapter {
     /*
-     * ×÷ÓÃ£º¶¨Òå²éÑ¯ÎÄ¼ş¼ĞÁĞ±íÊ±ĞèÒª·µ»ØµÄ×Ö¶Î¼¯ºÏ¡£
-     * ÊµÏÖ·½·¨£ºÍ¨¹ı¹Ì¶¨×Ö¶ÎÊı×é£¬Ô¼Êø Cursor µÄÁĞË³ĞòÓëÄÚÈİ¡£
+     * ä½œç”¨ï¼šå®šä¹‰æŸ¥è¯¢æ–‡ä»¶å¤¹åˆ—è¡¨æ—¶éœ€è¦è¿”å›çš„å­—æ®µé›†åˆã€‚
+     * å®ç°æ–¹æ³•ï¼šé€šè¿‡å›ºå®šå­—æ®µæ•°ç»„ï¼Œçº¦æŸ Cursor çš„åˆ—é¡ºåºä¸å†…å®¹ã€‚
      */
     public static final String [] PROJECTION = {
         NoteColumns.ID,
@@ -44,19 +44,19 @@ public class FoldersListAdapter extends CursorAdapter {
     };
 
     /*
-     * ×÷ÓÃ£º±êÊ¶ÎÄ¼ş¼Ğ ID ÔÚ Cursor ÖĞµÄÁĞË÷Òı¡£
-     * ÊµÏÖ·½·¨£ºÊ¹ÓÃ³£Á¿Óë PROJECTION µÄ×Ö¶ÎË³Ğò±£³ÖÒ»ÖÂ¡£
+     * ä½œç”¨ï¼šæ ‡è¯†æ–‡ä»¶å¤¹ ID åœ¨ Cursor ä¸­çš„åˆ—ç´¢å¼•ã€‚
+     * å®ç°æ–¹æ³•ï¼šä½¿ç”¨å¸¸é‡ä¸ PROJECTION çš„å­—æ®µé¡ºåºä¿æŒä¸€è‡´ã€‚
      */
     public static final int ID_COLUMN   = 0;
     /*
-     * ×÷ÓÃ£º±êÊ¶ÎÄ¼ş¼ĞÃû³ÆÔÚ Cursor ÖĞµÄÁĞË÷Òı¡£
-     * ÊµÏÖ·½·¨£ºÊ¹ÓÃ³£Á¿Óë PROJECTION µÄ×Ö¶ÎË³Ğò±£³ÖÒ»ÖÂ¡£
+     * ä½œç”¨ï¼šæ ‡è¯†æ–‡ä»¶å¤¹åç§°åœ¨ Cursor ä¸­çš„åˆ—ç´¢å¼•ã€‚
+     * å®ç°æ–¹æ³•ï¼šä½¿ç”¨å¸¸é‡ä¸ PROJECTION çš„å­—æ®µé¡ºåºä¿æŒä¸€è‡´ã€‚
      */
     public static final int NAME_COLUMN = 1;
 
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯ÎÄ¼ş¼ĞÁĞ±íÊÊÅäÆ÷¡£
-     * ÊµÏÖ·½·¨£º½«ÉÏÏÂÎÄÓë³õÊ¼ Cursor ½»¸ø¸¸Àà CursorAdapter ½øĞĞ¹ÜÀí¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–æ–‡ä»¶å¤¹åˆ—è¡¨é€‚é…å™¨ã€‚
+     * å®ç°æ–¹æ³•ï¼šå°†ä¸Šä¸‹æ–‡ä¸åˆå§‹ Cursor äº¤ç»™çˆ¶ç±» CursorAdapter è¿›è¡Œç®¡ç†ã€‚
      */
     public FoldersListAdapter(Context context, Cursor c) {
         super(context, c);
@@ -64,8 +64,8 @@ public class FoldersListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º´´½¨ÁĞ±íÖĞÃ¿Ò»ĞĞ¶ÔÓ¦µÄÊÓÍ¼¶ÔÏó¡£
-     * ÊµÏÖ·½·¨£º·µ»Ø×Ô¶¨ÒåµÄ FolderListItem ×÷Îªµ¥ĞĞ²¼¾ÖÈİÆ÷¡£
+     * ä½œç”¨ï¼šåˆ›å»ºåˆ—è¡¨ä¸­æ¯ä¸€è¡Œå¯¹åº”çš„è§†å›¾å¯¹è±¡ã€‚
+     * å®ç°æ–¹æ³•ï¼šè¿”å›è‡ªå®šä¹‰çš„ FolderListItem ä½œä¸ºå•è¡Œå¸ƒå±€å®¹å™¨ã€‚
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
@@ -73,14 +73,14 @@ public class FoldersListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º½«µ±Ç° Cursor ĞĞµÄÊı¾İ°ó¶¨µ½ÌõÄ¿ÊÓÍ¼¡£
-     * ÊµÏÖ·½·¨£ºÅĞ¶ÏÊÇ·ñÎª¸ùÄ¿Â¼ ID£¬ÊÇÔòÊ¹ÓÃ¡°ÉÏ¼¶Ä¿Â¼¡±ÎÄ°¸£¬·ñÔòÊ¹ÓÃÊı¾İ¿âÖĞµÄÎÄ¼ş¼ĞÃû³Æ¡£
+     * ä½œç”¨ï¼šå°†å½“å‰ Cursor è¡Œçš„æ•°æ®ç»‘å®šåˆ°æ¡ç›®è§†å›¾ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ¤æ–­æ˜¯å¦ä¸ºæ ¹ç›®å½• IDï¼Œæ˜¯åˆ™ä½¿ç”¨â€œä¸Šçº§ç›®å½•â€æ–‡æ¡ˆï¼Œå¦åˆ™ä½¿ç”¨æ•°æ®åº“ä¸­çš„æ–‡ä»¶å¤¹åç§°ã€‚
      */
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
         if (view instanceof FolderListItem) {
-            // ×÷ÓÃ£ºÍ³Ò»´¦Àí¸ùÄ¿Â¼ÓëÆÕÍ¨Ä¿Â¼Ãû³ÆÕ¹Ê¾¡£
-            // ÊµÏÖ·½·¨£º¸ù¾İ ID_COLUMN Óë¸ùÄ¿Â¼³£Á¿±È½ÏºóÑ¡Ôñ¶ÔÓ¦ÎÄ°¸¡£
+            // ä½œç”¨ï¼šç»Ÿä¸€å¤„ç†æ ¹ç›®å½•ä¸æ™®é€šç›®å½•åç§°å±•ç¤ºã€‚
+            // å®ç°æ–¹æ³•ï¼šæ ¹æ® ID_COLUMN ä¸æ ¹ç›®å½•å¸¸é‡æ¯”è¾ƒåé€‰æ‹©å¯¹åº”æ–‡æ¡ˆã€‚
             String folderName = (cursor.getLong(ID_COLUMN) == Notes.ID_ROOT_FOLDER) ? context
                     .getString(R.string.menu_move_parent_folder) : cursor.getString(NAME_COLUMN);
             ((FolderListItem) view).bind(folderName);
@@ -88,8 +88,8 @@ public class FoldersListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º°´ÁĞ±íÎ»ÖÃ»ñÈ¡ÓÃÓÚÕ¹Ê¾µÄÎÄ¼ş¼ĞÃû³Æ¡£
-     * ÊµÏÖ·½·¨£º¶ÁÈ¡¶ÔÓ¦Î»ÖÃµÄ Cursor£¬²¢¸´ÓÃ¸ùÄ¿Â¼ÓëÆÕÍ¨Ä¿Â¼µÄÃû³ÆÑ¡ÔñÂß¼­¡£
+     * ä½œç”¨ï¼šæŒ‰åˆ—è¡¨ä½ç½®è·å–ç”¨äºå±•ç¤ºçš„æ–‡ä»¶å¤¹åç§°ã€‚
+     * å®ç°æ–¹æ³•ï¼šè¯»å–å¯¹åº”ä½ç½®çš„ Cursorï¼Œå¹¶å¤ç”¨æ ¹ç›®å½•ä¸æ™®é€šç›®å½•çš„åç§°é€‰æ‹©é€»è¾‘ã€‚
      */
     public String getFolderName(Context context, int position) {
         Cursor cursor = (Cursor) getItem(position);
@@ -98,19 +98,19 @@ public class FoldersListAdapter extends CursorAdapter {
     }
 
     /*
-     * ×÷ÓÃ£º·â×°µ¥¸öÎÄ¼ş¼ĞÌõÄ¿µÄÊÓÍ¼ÓëÊı¾İ°ó¶¨Âß¼­¡£
-     * ÊµÏÖ·½·¨£º¼Ì³Ğ LinearLayout ²¢³ÖÓĞÃû³ÆÎÄ±¾¿Ø¼şÒÔ¸üĞÂÏÔÊ¾ÄÚÈİ¡£
+     * ä½œç”¨ï¼šå°è£…å•ä¸ªæ–‡ä»¶å¤¹æ¡ç›®çš„è§†å›¾ä¸æ•°æ®ç»‘å®šé€»è¾‘ã€‚
+     * å®ç°æ–¹æ³•ï¼šç»§æ‰¿ LinearLayout å¹¶æŒæœ‰åç§°æ–‡æœ¬æ§ä»¶ä»¥æ›´æ–°æ˜¾ç¤ºå†…å®¹ã€‚
      */
     private class FolderListItem extends LinearLayout {
         /*
-         * ×÷ÓÃ£º³ÖÓĞÎÄ¼ş¼ĞÃû³ÆÏÔÊ¾¿Ø¼ş¡£
-         * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôì½×¶ÎÍ¨¹ı²¼¾ÖÖĞµÄ ID ²éÕÒ²¢»º´æ TextView ÒıÓÃ¡£
+         * ä½œç”¨ï¼šæŒæœ‰æ–‡ä»¶å¤¹åç§°æ˜¾ç¤ºæ§ä»¶ã€‚
+         * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ é˜¶æ®µé€šè¿‡å¸ƒå±€ä¸­çš„ ID æŸ¥æ‰¾å¹¶ç¼“å­˜ TextView å¼•ç”¨ã€‚
          */
         private TextView mName;
 
         /*
-         * ×÷ÓÃ£º³õÊ¼»¯µ¥ÌõÎÄ¼ş¼ĞÊÓÍ¼½á¹¹¡£
-         * ÊµÏÖ·½·¨£º¼ÓÔØ folder_list_item ²¼¾Ö²¢°ó¶¨Ãû³ÆÎÄ±¾¿Ø¼ş¡£
+         * ä½œç”¨ï¼šåˆå§‹åŒ–å•æ¡æ–‡ä»¶å¤¹è§†å›¾ç»“æ„ã€‚
+         * å®ç°æ–¹æ³•ï¼šåŠ è½½ folder_list_item å¸ƒå±€å¹¶ç»‘å®šåç§°æ–‡æœ¬æ§ä»¶ã€‚
          */
         public FolderListItem(Context context) {
             super(context);
@@ -119,8 +119,8 @@ public class FoldersListAdapter extends CursorAdapter {
         }
 
         /*
-         * ×÷ÓÃ£ºÉèÖÃ²¢Ë¢ĞÂµ±Ç°ÌõÄ¿µÄÎÄ¼ş¼ĞÃû³Æ¡£
-         * ÊµÏÖ·½·¨£º½«´«Èë×Ö·û´®Ö±½ÓĞ´ÈëÃû³Æ TextView¡£
+         * ä½œç”¨ï¼šè®¾ç½®å¹¶åˆ·æ–°å½“å‰æ¡ç›®çš„æ–‡ä»¶å¤¹åç§°ã€‚
+         * å®ç°æ–¹æ³•ï¼šå°†ä¼ å…¥å­—ç¬¦ä¸²ç›´æ¥å†™å…¥åç§° TextViewã€‚
          */
         public void bind(String name) {
             mName.setText(name);

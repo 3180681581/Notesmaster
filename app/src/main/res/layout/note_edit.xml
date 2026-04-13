@@ -109,6 +109,43 @@
                 </LinearLayout>
             </ScrollView>
 
+            <!-- 便签内联图片预览区：有图片附件时展示缩略图与名称。 -->
+            <LinearLayout
+                android:id="@+id/image_attachment_preview_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="12dip"
+                android:paddingRight="12dip"
+                android:paddingTop="8dip"
+                android:paddingBottom="8dip"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tv_image_attachment_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/image_attachment_preview_title"
+                    android:textAppearance="@style/TextAppearanceSecondaryItem" />
+
+                <TextView
+                    android:id="@+id/tv_image_attachment_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dip"
+                    android:textAppearance="@style/TextAppearanceSecondaryItem" />
+
+                <ImageView
+                    android:id="@+id/iv_image_attachment_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="180dip"
+                    android:layout_marginTop="8dip"
+                    android:adjustViewBounds="true"
+                    android:scaleType="centerCrop"
+                    android:background="@android:color/darker_gray"
+                    android:contentDescription="@string/image_attachment_preview_title" />
+            </LinearLayout>
+
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="7dip"

@@ -79,109 +79,109 @@ import java.io.InputStreamReader;
 import java.util.HashSet;
 
 /*
- * ×÷ÓÃ£º
- * ±ãÇ©ÁĞ±íÖ÷Ò³Ãæ£¬¸ºÔğÁĞ±íÕ¹Ê¾ºÍ´ó²¿·ÖÈë¿Ú½»»¥¡£
- * ÊµÏÖ·½·¨£º
- * ÓÉ onCreate/initResources ³õÊ¼»¯ÁĞ±íÓë½»»¥×é¼ş£¬onStart/startAsyncNotesListQuery Çı¶¯Òì²½¼ÓÔØ£»
- * Í¨¹ı onClick¡¢onItemLongClick¡¢onOptionsItemSelected¡¢onContextItemSelected ·Ö·¢ÓÃ»§²Ù×÷£¬
- * ²¢ÓÉ openNode/openFolder¡¢batchDelete/deleteFolder¡¢exportNoteToText¡¢startQueryDestinationFolders µÈ·½·¨Ö´ĞĞ¾ßÌåÒµÎñ£¬
- * ²ÉÓÃ mState Óë mCurrentFolderId µÄ×´Ì¬Çı¶¯Âß¼­¾ö¶¨½çÃæÓëÊı¾İĞĞÎª¡£
- * Âß¼­Ê¾Òâ£ºonCreate(savedInstanceState) -> initResources() -> onStart() -> startAsyncNotesListQuery()
- * -> BackgroundQueryHandler.onQueryComplete(token, cookie, cursor) -> ÁĞ±í½»»¥·Ö·¢(onClick/onItemLongClick/onOptionsItemSelected)
+ * ä½œç”¨ï¼š
+ * ä¾¿ç­¾åˆ—è¡¨ä¸»é¡µé¢ï¼Œè´Ÿè´£åˆ—è¡¨å±•ç¤ºå’Œå¤§éƒ¨åˆ†å…¥å£äº¤äº’ã€‚
+ * å®ç°æ–¹æ³•ï¼š
+ * ç”± onCreate/initResources åˆå§‹åŒ–åˆ—è¡¨ä¸äº¤äº’ç»„ä»¶ï¼ŒonStart/startAsyncNotesListQuery é©±åŠ¨å¼‚æ­¥åŠ è½½ï¼›
+ * é€šè¿‡ onClickã€onItemLongClickã€onOptionsItemSelectedã€onContextItemSelected åˆ†å‘ç”¨æˆ·æ“ä½œï¼Œ
+ * å¹¶ç”± openNode/openFolderã€batchDelete/deleteFolderã€exportNoteToTextã€startQueryDestinationFolders ç­‰æ–¹æ³•æ‰§è¡Œå…·ä½“ä¸šåŠ¡ï¼Œ
+ * é‡‡ç”¨ mState ä¸ mCurrentFolderId çš„çŠ¶æ€é©±åŠ¨é€»è¾‘å†³å®šç•Œé¢ä¸æ•°æ®è¡Œä¸ºã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šonCreate(savedInstanceState) -> initResources() -> onStart() -> startAsyncNotesListQuery()
+ * -> BackgroundQueryHandler.onQueryComplete(token, cookie, cursor) -> åˆ—è¡¨äº¤äº’åˆ†å‘(onClick/onItemLongClick/onOptionsItemSelected)
  * -> openNode(data)/openFolder(data)/batchDelete()/deleteFolder(folderId)/exportNoteToText()
  */
 public class NotesListActivity extends Activity implements OnClickListener, OnItemLongClickListener {
-    // Òì²½²éÑ¯ token£º²éÑ¯¡°µ±Ç°ÎÄ¼ş¼ĞÏÂ±ãÇ©ÁĞ±í¡±
+    // å¼‚æ­¥æŸ¥è¯¢ tokenï¼šæŸ¥è¯¢â€œå½“å‰æ–‡ä»¶å¤¹ä¸‹ä¾¿ç­¾åˆ—è¡¨â€
     private static final int FOLDER_NOTE_LIST_QUERY_TOKEN = 0;
 
-    // Òì²½²éÑ¯ token£º²éÑ¯¡°¿ÉÒÆ¶¯µ½µÄÄ¿±êÎÄ¼ş¼ĞÁĞ±í¡±
+    // å¼‚æ­¥æŸ¥è¯¢ tokenï¼šæŸ¥è¯¢â€œå¯ç§»åŠ¨åˆ°çš„ç›®æ ‡æ–‡ä»¶å¤¹åˆ—è¡¨â€
     private static final int FOLDER_LIST_QUERY_TOKEN      = 1;
 
-    // ÎÄ¼ş¼Ğ³¤°´²Ëµ¥ id£ºÉ¾³ıÎÄ¼ş¼Ğ
+    // æ–‡ä»¶å¤¹é•¿æŒ‰èœå• idï¼šåˆ é™¤æ–‡ä»¶å¤¹
     private static final int MENU_FOLDER_DELETE = 0;
 
-    // ÎÄ¼ş¼Ğ³¤°´²Ëµ¥ id£º²é¿´/½øÈëÎÄ¼ş¼Ğ
+    // æ–‡ä»¶å¤¹é•¿æŒ‰èœå• idï¼šæŸ¥çœ‹/è¿›å…¥æ–‡ä»¶å¤¹
     private static final int MENU_FOLDER_VIEW = 1;
 
-    // ÎÄ¼ş¼Ğ³¤°´²Ëµ¥ id£ºÖØÃüÃûÎÄ¼ş¼Ğ
+    // æ–‡ä»¶å¤¹é•¿æŒ‰èœå• idï¼šé‡å‘½åæ–‡ä»¶å¤¹
     private static final int MENU_FOLDER_CHANGE_NAME = 2;
 
-    // SharedPreferences ¼ü£ºÊÇ·ñÒÑ¾­²åÈë¹ı¡°Ê×´ÎÊ¹ÓÃ½éÉÜ¡±±ãÇ©
+    // SharedPreferences é”®ï¼šæ˜¯å¦å·²ç»æ’å…¥è¿‡â€œé¦–æ¬¡ä½¿ç”¨ä»‹ç»â€ä¾¿ç­¾
     private static final String PREFERENCE_ADD_INTRODUCTION = "net.micode.notes.introduction";
 
-    // µ±Ç°ÁĞ±í½çÃæËù´¦×´Ì¬
+    // å½“å‰åˆ—è¡¨ç•Œé¢æ‰€å¤„çŠ¶æ€
     private enum ListEditState {
-        // ¸ùÄ¿Â¼±ãÇ©ÁĞ±í
+        // æ ¹ç›®å½•ä¾¿ç­¾åˆ—è¡¨
         NOTE_LIST, SUB_FOLDER, CALL_RECORD_FOLDER
     };
 
-    // µ±Ç°Ò³Ãæ×´Ì¬£¨¸ùÄ¿Â¼/×ÓÎÄ¼ş¼Ğ/Í¨»°¼ÇÂ¼ÎÄ¼ş¼Ğ£©
+    // å½“å‰é¡µé¢çŠ¶æ€ï¼ˆæ ¹ç›®å½•/å­æ–‡ä»¶å¤¹/é€šè¯è®°å½•æ–‡ä»¶å¤¹ï¼‰
     private ListEditState mState;
 
-    // Òì²½Êı¾İ¿â²éÑ¯´¦ÀíÆ÷
+    // å¼‚æ­¥æ•°æ®åº“æŸ¥è¯¢å¤„ç†å™¨
     private BackgroundQueryHandler mBackgroundQueryHandler;
 
-    // ÁĞ±íÊÊÅäÆ÷£º°ÑÊı¾İ¿âÊı¾İ°ó¶¨µ½ ListView
+    // åˆ—è¡¨é€‚é…å™¨ï¼šæŠŠæ•°æ®åº“æ•°æ®ç»‘å®šåˆ° ListView
     private NotesListAdapter mNotesListAdapter;
 
-    // ÁĞ±í¿Ø¼ş
+    // åˆ—è¡¨æ§ä»¶
     private ListView mNotesListView;
 
-    // ¡°ĞÂ½¨±ãÇ©¡±°´Å¥
+    // â€œæ–°å»ºä¾¿ç­¾â€æŒ‰é’®
     private Button mAddNewNote;
 
-    // ÊÇ·ñÕıÔÚ°Ñ°´Å¥´¥ÃşÊÂ¼ş×ª·¢¸øÏÂ²ã ListView
+    // æ˜¯å¦æ­£åœ¨æŠŠæŒ‰é’®è§¦æ‘¸äº‹ä»¶è½¬å‘ç»™ä¸‹å±‚ ListView
     private boolean mDispatch;
 
-    // ´¥ÃşÊÂ¼ş³õÊ¼ y ×ø±ê£¨ÓÃÓÚ¼ÆËãÒÆ¶¯Á¿£©
+    // è§¦æ‘¸äº‹ä»¶åˆå§‹ y åæ ‡ï¼ˆç”¨äºè®¡ç®—ç§»åŠ¨é‡ï¼‰
     private int mOriginY;
 
-    // ×ª·¢¸ø ListView µÄ y ×ø±ê
+    // è½¬å‘ç»™ ListView çš„ y åæ ‡
     private int mDispatchY;
 
-    // ¶¥²¿±êÌâÀ¸£¨½øÈë×ÓÎÄ¼ş¼ĞÊ±ÏÔÊ¾£©
+    // é¡¶éƒ¨æ ‡é¢˜æ ï¼ˆè¿›å…¥å­æ–‡ä»¶å¤¹æ—¶æ˜¾ç¤ºï¼‰
     private TextView mTitleBar;
 
-    // µ±Ç°²é¿´µÄÎÄ¼ş¼Ğ id
+    // å½“å‰æŸ¥çœ‹çš„æ–‡ä»¶å¤¹ id
     private long mCurrentFolderId;
 
-    // ÄÚÈİ½âÎöÆ÷£ºÍ¨¹ı ContentProvider ¶ÁĞ´Êı¾İ
+    // å†…å®¹è§£æå™¨ï¼šé€šè¿‡ ContentProvider è¯»å†™æ•°æ®
     private ContentResolver mContentResolver;
 
-    // ¶àÑ¡Ä£Ê½»Øµ÷£¨ActionMode£©
+    // å¤šé€‰æ¨¡å¼å›è°ƒï¼ˆActionModeï¼‰
     private ModeCallback mModeCallBack;
 
-    // ÈÕÖ¾ tag
+    // æ—¥å¿— tag
     private static final String TAG = "NotesListActivity";
 
-    // ÁĞ±í¹ö¶¯ËÙÂÊ³£Á¿£¨ÀúÊ·´úÂë±£Áô£©
+    // åˆ—è¡¨æ»šåŠ¨é€Ÿç‡å¸¸é‡ï¼ˆå†å²ä»£ç ä¿ç•™ï¼‰
     public static final int NOTES_LISTVIEW_SCROLL_RATE = 30;
 
-    // µ±Ç°³¤°´¾Û½¹µÄÊı¾İÏî£¨±ãÇ©»òÎÄ¼ş¼Ğ£©
+    // å½“å‰é•¿æŒ‰èšç„¦çš„æ•°æ®é¡¹ï¼ˆä¾¿ç­¾æˆ–æ–‡ä»¶å¤¹ï¼‰
     private NoteItemData mFocusNoteDataItem;
 
-    // ÆÕÍ¨²éÑ¯Ìõ¼ş£º¸¸ÎÄ¼ş¼ĞµÈÓÚµ±Ç°ÎÄ¼ş¼Ğ
+    // æ™®é€šæŸ¥è¯¢æ¡ä»¶ï¼šçˆ¶æ–‡ä»¶å¤¹ç­‰äºå½“å‰æ–‡ä»¶å¤¹
     private static final String NORMAL_SELECTION = NoteColumns.PARENT_ID + "=?";
 
-    // ¸ùÄ¿Â¼²éÑ¯Ìõ¼ş£º
-    // 1) ·ÇÏµÍ³ÏîÇÒ¸¸Ä¿Â¼Îª¸ùÄ¿Â¼
-    // 2) »òÕß¡°Í¨»°¼ÇÂ¼¡±ÎÄ¼ş¼ĞÇÒÓĞÄÚÈİ
+    // æ ¹ç›®å½•æŸ¥è¯¢æ¡ä»¶ï¼š
+    // 1) éç³»ç»Ÿé¡¹ä¸”çˆ¶ç›®å½•ä¸ºæ ¹ç›®å½•
+    // 2) æˆ–è€…â€œé€šè¯è®°å½•â€æ–‡ä»¶å¤¹ä¸”æœ‰å†…å®¹
     private static final String ROOT_FOLDER_SELECTION = "(" + NoteColumns.TYPE + "<>"
             + Notes.TYPE_SYSTEM + " AND " + NoteColumns.PARENT_ID + "=?)" + " OR ("
             + NoteColumns.ID + "=" + Notes.ID_CALL_RECORD_FOLDER + " AND "
             + NoteColumns.NOTES_COUNT + ">0)";
 
-    // startActivityForResult ÇëÇóÂë£º´ò¿ªÒÑÓĞ±ãÇ©
+    // startActivityForResult è¯·æ±‚ç ï¼šæ‰“å¼€å·²æœ‰ä¾¿ç­¾
     private final static int REQUEST_CODE_OPEN_NODE = 102;
-    // startActivityForResult ÇëÇóÂë£ºĞÂ½¨±ãÇ©
+    // startActivityForResult è¯·æ±‚ç ï¼šæ–°å»ºä¾¿ç­¾
     private final static int REQUEST_CODE_NEW_NODE  = 103;
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * Activity ´´½¨Èë¿Ú£¬Íê³ÉÒ³Ãæ³õÊ¼´î½¨¡£
-        * ÊµÏÖ·½·¨£º
-        * ÉèÖÃ²¼¾Öºóµ÷ÓÃ initResources ³õÊ¼»¯¿Ø¼şÓë¼àÌı£¬ÔÙµ÷ÓÃ setAppInfoFromRawRes ´¦ÀíÊ×´Î½éÉÜ±ãÇ©¡£
+        * ä½œç”¨ï¼š
+        * Activity åˆ›å»ºå…¥å£ï¼Œå®Œæˆé¡µé¢åˆå§‹æ­å»ºã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * è®¾ç½®å¸ƒå±€åè°ƒç”¨ initResources åˆå§‹åŒ–æ§ä»¶ä¸ç›‘å¬ï¼Œå†è°ƒç”¨ setAppInfoFromRawRes å¤„ç†é¦–æ¬¡ä»‹ç»ä¾¿ç­¾ã€‚
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -196,13 +196,13 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ´¦Àí´Ó±à¼­Ò³·µ»ØºóµÄË¢ĞÂÂß¼­¡£
-        * ÊµÏÖ·½·¨£º
-        * ÅĞ¶Ï requestCode/resultCode£¬Ö»ÓĞ±ãÇ©´ò¿ª»òĞÂ½¨³É¹¦Ê±²ÅË¢ĞÂÁĞ±íÓÎ±ê¡£
+        * ä½œç”¨ï¼š
+        * å¤„ç†ä»ç¼–è¾‘é¡µè¿”å›åçš„åˆ·æ–°é€»è¾‘ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åˆ¤æ–­ requestCode/resultCodeï¼Œåªæœ‰ä¾¿ç­¾æ‰“å¼€æˆ–æ–°å»ºæˆåŠŸæ—¶æ‰åˆ·æ–°åˆ—è¡¨æ¸¸æ ‡ã€‚
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // Ö»ÓĞ±à¼­Ò³¡°±£´æ³É¹¦·µ»Ø¡±Ê±²ÅË¢ĞÂÁĞ±í£»ÆäËûÇé¿ö±£³ÖÄ¬ÈÏ´¦Àí
+        // åªæœ‰ç¼–è¾‘é¡µâ€œä¿å­˜æˆåŠŸè¿”å›â€æ—¶æ‰åˆ·æ–°åˆ—è¡¨ï¼›å…¶ä»–æƒ…å†µä¿æŒé»˜è®¤å¤„ç†
         if (resultCode == RESULT_OK
                 && (requestCode == REQUEST_CODE_OPEN_NODE || requestCode == REQUEST_CODE_NEW_NODE)) {
             mNotesListAdapter.changeCursor(null);
@@ -212,32 +212,32 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * Ê×´ÎÆô¶¯Ê±²åÈë¡°Ó¦ÓÃ½éÉÜ¡±±ãÇ©¡£
-        * ÊµÏÖ·½·¨£º
-        * ¶ÁÈ¡ raw/introduction ÎÄ±¾£¬´´½¨ WorkingNote ²¢±£´æ£¬×îºóÓÃ SharedPreferences ¼ÇÂ¼ÒÑÍê³É±ê¼Ç¡£
+        * ä½œç”¨ï¼š
+        * é¦–æ¬¡å¯åŠ¨æ—¶æ’å…¥â€œåº”ç”¨ä»‹ç»â€ä¾¿ç­¾ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * è¯»å– raw/introduction æ–‡æœ¬ï¼Œåˆ›å»º WorkingNote å¹¶ä¿å­˜ï¼Œæœ€åç”¨ SharedPreferences è®°å½•å·²å®Œæˆæ ‡è®°ã€‚
      */
     private void setAppInfoFromRawRes() {
-        // Ä¬ÈÏÅäÖÃ´æ´¢£¬ÓÃÀ´¼ÇÂ¼¡°ÊÇ·ñÒÑ¾­²åÈë¹ı½éÉÜ±ãÇ©¡±
+        // é»˜è®¤é…ç½®å­˜å‚¨ï¼Œç”¨æ¥è®°å½•â€œæ˜¯å¦å·²ç»æ’å…¥è¿‡ä»‹ç»ä¾¿ç­¾â€
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        // Èç¹ûÒÑ¾­²åÈë¹ı½éÉÜ±ãÇ©£¬ÔòÖ±½ÓÌø¹ı
+        // å¦‚æœå·²ç»æ’å…¥è¿‡ä»‹ç»ä¾¿ç­¾ï¼Œåˆ™ç›´æ¥è·³è¿‡
         if (!sp.getBoolean(PREFERENCE_ADD_INTRODUCTION, false)) {
-            // Æ´½Ó¶ÁÈ¡µ½µÄ½éÉÜÎÄ±¾
+            // æ‹¼æ¥è¯»å–åˆ°çš„ä»‹ç»æ–‡æœ¬
             StringBuilder sb = new StringBuilder();
-            // Ô­Ê¼×ÊÔ´ÊäÈëÁ÷
+            // åŸå§‹èµ„æºè¾“å…¥æµ
             InputStream in = null;
             try {
-                // ´ò¿ª raw/introduction ÎÄ¼ş
+                // æ‰“å¼€ raw/introduction æ–‡ä»¶
                 in = getResources().openRawResource(R.raw.introduction);
-                // ¶ÁÈ¡³É¹¦²Å¼ÌĞø´¦Àí£»·ñÔòÖ±½Ó±¨´í·µ»Ø
+                // è¯»å–æˆåŠŸæ‰ç»§ç»­å¤„ç†ï¼›å¦åˆ™ç›´æ¥æŠ¥é”™è¿”å›
                 if (in != null) {
-                    // ×Ö·ûÁ÷¶ÁÈ¡Æ÷
+                    // å­—ç¬¦æµè¯»å–å™¨
                     InputStreamReader isr = new InputStreamReader(in);
-                    // ´ø»º³åµÄ¶ÁÈ¡Æ÷£¬ÌáÉı¶ÁÈ¡Ğ§ÂÊ
+                    // å¸¦ç¼“å†²çš„è¯»å–å™¨ï¼Œæå‡è¯»å–æ•ˆç‡
                     BufferedReader br = new BufferedReader(isr);
-                    // ÁÙÊ±»º³åÇø
+                    // ä¸´æ—¶ç¼“å†²åŒº
                     char [] buf = new char[1024];
-                    // Ã¿´ÎÊµ¼Ê¶ÁÈ¡³¤¶È
+                    // æ¯æ¬¡å®é™…è¯»å–é•¿åº¦
                     int len = 0;
                     while ((len = br.read(buf)) > 0) {
                         sb.append(buf, 0, len);
@@ -260,12 +260,12 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                 }
             }
 
-                // ´´½¨Ò»Ìõ¿Õ°×¹¤×÷±ãÇ©£¬ÔÙĞ´Èë½éÉÜÎÄ±¾
+                // åˆ›å»ºä¸€æ¡ç©ºç™½å·¥ä½œä¾¿ç­¾ï¼Œå†å†™å…¥ä»‹ç»æ–‡æœ¬
             WorkingNote note = WorkingNote.createEmptyNote(this, Notes.ID_ROOT_FOLDER,
                     AppWidgetManager.INVALID_APPWIDGET_ID, Notes.TYPE_WIDGET_INVALIDE,
                     ResourceParser.RED);
             note.setWorkingText(sb.toString());
-            // ½éÉÜ±ãÇ©±£´æ³É¹¦ºó£¬¼ÇÂ¼¡°ÒÑ²åÈë¡±±ê¼Ç
+            // ä»‹ç»ä¾¿ç­¾ä¿å­˜æˆåŠŸåï¼Œè®°å½•â€œå·²æ’å…¥â€æ ‡è®°
             if (note.saveNote()) {
                 sp.edit().putBoolean(PREFERENCE_ADD_INTRODUCTION, true).commit();
             } else {
@@ -277,10 +277,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * Ò³Ãæ½øÈë¿É¼û×´Ì¬Ê±Ë¢ĞÂÁĞ±í¡£
-        * ÊµÏÖ·½·¨£º
-        * ÔÚ onStart ÖĞµ÷ÓÃ startAsyncNotesListQuery ·¢ÆğÒì²½²éÑ¯¡£
+        * ä½œç”¨ï¼š
+        * é¡µé¢è¿›å…¥å¯è§çŠ¶æ€æ—¶åˆ·æ–°åˆ—è¡¨ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åœ¨ onStart ä¸­è°ƒç”¨ startAsyncNotesListQuery å‘èµ·å¼‚æ­¥æŸ¥è¯¢ã€‚
      */
     protected void onStart() {
         super.onStart();
@@ -288,70 +288,70 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ³õÊ¼»¯Ò³ÃæÒÀÀµ¶ÔÏóºÍ½»»¥¼àÌı¡£
-        * ÊµÏÖ·½·¨£º
-        * ³õÊ¼»¯ ContentResolver¡¢QueryHandler¡¢ListView¡¢Adapter¡¢°´Å¥¼àÌıºÍ×´Ì¬±äÁ¿¡£
+        * ä½œç”¨ï¼š
+        * åˆå§‹åŒ–é¡µé¢ä¾èµ–å¯¹è±¡å’Œäº¤äº’ç›‘å¬ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åˆå§‹åŒ– ContentResolverã€QueryHandlerã€ListViewã€Adapterã€æŒ‰é’®ç›‘å¬å’ŒçŠ¶æ€å˜é‡ã€‚
      */
     private void initResources() {
-        // Êı¾İ·ÃÎÊÈë¿Ú
+        // æ•°æ®è®¿é—®å…¥å£
         mContentResolver = this.getContentResolver();
-        // Òì²½²éÑ¯Æ÷£¬±ÜÃâÖ÷Ïß³Ì×èÈû
+        // å¼‚æ­¥æŸ¥è¯¢å™¨ï¼Œé¿å…ä¸»çº¿ç¨‹é˜»å¡
         mBackgroundQueryHandler = new BackgroundQueryHandler(this.getContentResolver());
-        // Ä¬ÈÏ½øÈë¸ùÄ¿Â¼
+        // é»˜è®¤è¿›å…¥æ ¹ç›®å½•
         mCurrentFolderId = Notes.ID_ROOT_FOLDER;
-        // ÁĞ±í¿Ø¼ş
+        // åˆ—è¡¨æ§ä»¶
         mNotesListView = (ListView) findViewById(R.id.notes_list);
-        // Ìí¼Óµ×²¿Õ¼Î»/×°ÊÎÊÓÍ¼
+        // æ·»åŠ åº•éƒ¨å ä½/è£…é¥°è§†å›¾
         mNotesListView.addFooterView(LayoutInflater.from(this).inflate(R.layout.note_list_footer, null),
                 null, false);
-        // µã»÷Óë³¤°´¼àÌı
+        // ç‚¹å‡»ä¸é•¿æŒ‰ç›‘å¬
         mNotesListView.setOnItemClickListener(new OnListItemClickListener());
         mNotesListView.setOnItemLongClickListener(this);
-        // ÊÊÅäÆ÷°ó¶¨
+        // é€‚é…å™¨ç»‘å®š
         mNotesListAdapter = new NotesListAdapter(this);
         mNotesListView.setAdapter(mNotesListAdapter);
-        // ĞÂ½¨°´Å¥¼°¼àÌı
+        // æ–°å»ºæŒ‰é’®åŠç›‘å¬
         mAddNewNote = (Button) findViewById(R.id.btn_new_note);
         mAddNewNote.setOnClickListener(this);
         mAddNewNote.setOnTouchListener(new NewNoteOnTouchListener());
-        // ´¥Ãş×ª·¢×´Ì¬³õÊ¼»¯
+        // è§¦æ‘¸è½¬å‘çŠ¶æ€åˆå§‹åŒ–
         mDispatch = false;
         mDispatchY = 0;
         mOriginY = 0;
-        // ¶¥²¿±êÌâÀ¸
+        // é¡¶éƒ¨æ ‡é¢˜æ 
         mTitleBar = (TextView) findViewById(R.id.tv_title_bar);
-        // ³õÊ¼×´Ì¬Îª¸ùÄ¿Â¼ÁĞ±í
+        // åˆå§‹çŠ¶æ€ä¸ºæ ¹ç›®å½•åˆ—è¡¨
         mState = ListEditState.NOTE_LIST;
-        // ¶àÑ¡Ä£Ê½¿ØÖÆÆ÷
+        // å¤šé€‰æ¨¡å¼æ§åˆ¶å™¨
         mModeCallBack = new ModeCallback();
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ·â×°ÁĞ±í¶àÑ¡Ä£Ê½£¨ActionMode£©µÄĞĞÎª¡£
-        * ÊµÏÖ·½·¨£º
-        * ÔÚ»Øµ÷ÖĞ¹ÜÀí²Ëµ¥³õÊ¼»¯¡¢¹´Ñ¡×´Ì¬¡¢É¾³ı/ÒÆ¶¯¶¯×÷ÒÔ¼°¶àÑ¡Ä£Ê½½øÈëÍË³ö¡£
+        * ä½œç”¨ï¼š
+        * å°è£…åˆ—è¡¨å¤šé€‰æ¨¡å¼ï¼ˆActionModeï¼‰çš„è¡Œä¸ºã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åœ¨å›è°ƒä¸­ç®¡ç†èœå•åˆå§‹åŒ–ã€å‹¾é€‰çŠ¶æ€ã€åˆ é™¤/ç§»åŠ¨åŠ¨ä½œä»¥åŠå¤šé€‰æ¨¡å¼è¿›å…¥é€€å‡ºã€‚
      */
     private class ModeCallback implements ListView.MultiChoiceModeListener, OnMenuItemClickListener {
-        // ¶¥²¿ÏÂÀ­²Ëµ¥£¨ÏÔÊ¾ÒÑÑ¡ÊıÁ¿¡¢È«Ñ¡/È¡ÏûÈ«Ñ¡£©
+        // é¡¶éƒ¨ä¸‹æ‹‰èœå•ï¼ˆæ˜¾ç¤ºå·²é€‰æ•°é‡ã€å…¨é€‰/å–æ¶ˆå…¨é€‰ï¼‰
         private DropdownMenu mDropDownMenu;
-        // µ±Ç° ActionMode ÊµÀı
+        // å½“å‰ ActionMode å®ä¾‹
         private ActionMode mActionMode;
-        // ¡°ÒÆ¶¯µ½ÎÄ¼ş¼Ğ¡±²Ëµ¥Ïî
+        // â€œç§»åŠ¨åˆ°æ–‡ä»¶å¤¹â€èœå•é¡¹
         private MenuItem mMoveMenu;
 
         /*
-         * ×÷ÓÃ£º
-         * ½øÈë¶àÑ¡Ä£Ê½Ê±³õÊ¼»¯²Ëµ¥ UI¡£
-         * ÊµÏÖ·½·¨£º
-         * ¼ÓÔØ²Ëµ¥×ÊÔ´£¬°´Ìõ¼şÏÔÊ¾ÒÆ¶¯²Ëµ¥£¬²¢ÅäÖÃÏÂÀ­Ñ¡Ôñ²Ëµ¥Óë×Ô¶¨ÒåÊÓÍ¼¡£
+         * ä½œç”¨ï¼š
+         * è¿›å…¥å¤šé€‰æ¨¡å¼æ—¶åˆå§‹åŒ–èœå• UIã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * åŠ è½½èœå•èµ„æºï¼ŒæŒ‰æ¡ä»¶æ˜¾ç¤ºç§»åŠ¨èœå•ï¼Œå¹¶é…ç½®ä¸‹æ‹‰é€‰æ‹©èœå•ä¸è‡ªå®šä¹‰è§†å›¾ã€‚
          */
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             getMenuInflater().inflate(R.menu.note_list_options, menu);
             menu.findItem(R.id.delete).setOnMenuItemClickListener(this);
             mMoveMenu = menu.findItem(R.id.move);
-            // Í¨»°¼ÇÂ¼Ä¿Â¼»òÃ»ÓĞ¿ÉÓÃÎÄ¼ş¼ĞÊ±£¬Òş²Ø¡°ÒÆ¶¯¡±°´Å¥
+            // é€šè¯è®°å½•ç›®å½•æˆ–æ²¡æœ‰å¯ç”¨æ–‡ä»¶å¤¹æ—¶ï¼Œéšè—â€œç§»åŠ¨â€æŒ‰é’®
             if (mFocusNoteDataItem.getParentId() == Notes.ID_CALL_RECORD_FOLDER
                     || DataUtils.getUserFolderCount(mContentResolver) == 0) {
                 mMoveMenu.setVisible(false);
@@ -382,19 +382,19 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         }
 
         /*
-         * ×÷ÓÃ£º
-         * ¸üĞÂ¶àÑ¡²Ëµ¥±êÌâºÍÈ«Ñ¡°´Å¥×´Ì¬¡£
-         * ÊµÏÖ·½·¨£º
-         * ¸ù¾İÊÊÅäÆ÷µ±Ç°Ñ¡ÖĞÊıÁ¿ÓëÊÇ·ñÈ«Ñ¡£¬¶¯Ì¬ÉèÖÃÎÄ°¸ºÍ¹´Ñ¡×´Ì¬¡£
+         * ä½œç”¨ï¼š
+         * æ›´æ–°å¤šé€‰èœå•æ ‡é¢˜å’Œå…¨é€‰æŒ‰é’®çŠ¶æ€ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * æ ¹æ®é€‚é…å™¨å½“å‰é€‰ä¸­æ•°é‡ä¸æ˜¯å¦å…¨é€‰ï¼ŒåŠ¨æ€è®¾ç½®æ–‡æ¡ˆå’Œå‹¾é€‰çŠ¶æ€ã€‚
          */
         private void updateMenu() {
-            // µ±Ç°Ñ¡ÖĞÊıÁ¿
+            // å½“å‰é€‰ä¸­æ•°é‡
             int selectedCount = mNotesListAdapter.getSelectedCount();
             // Update dropdown menu
             String format = getResources().getString(R.string.menu_select_title, selectedCount);
             mDropDownMenu.setTitle(format);
             MenuItem item = mDropDownMenu.findItem(R.id.action_select_all);
-            // Ö»ÓĞÕÒµÃµ½²Ëµ¥Ïî²Å¸üĞÂÆä¹´Ñ¡×´Ì¬ÓëÎÄ°¸
+            // åªæœ‰æ‰¾å¾—åˆ°èœå•é¡¹æ‰æ›´æ–°å…¶å‹¾é€‰çŠ¶æ€ä¸æ–‡æ¡ˆ
             if (item != null) {
                 if (mNotesListAdapter.isAllSelected()) {
                     item.setChecked(true);
@@ -417,10 +417,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         }
 
         /*
-         * ×÷ÓÃ£º
-         * ÍË³ö¶àÑ¡Ä£Ê½ºó»Ö¸´ÆÕÍ¨ÁĞ±í½»»¥¡£
-         * ÊµÏÖ·½·¨£º
-         * ¹Ø±Õ choiceMode£¬»Ö¸´ÁĞ±í³¤°´ÄÜÁ¦£¬²¢ÖØĞÂÏÔÊ¾¡°ĞÂ½¨±ãÇ©¡±°´Å¥¡£
+         * ä½œç”¨ï¼š
+         * é€€å‡ºå¤šé€‰æ¨¡å¼åæ¢å¤æ™®é€šåˆ—è¡¨äº¤äº’ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * å…³é—­ choiceModeï¼Œæ¢å¤åˆ—è¡¨é•¿æŒ‰èƒ½åŠ›ï¼Œå¹¶é‡æ–°æ˜¾ç¤ºâ€œæ–°å»ºä¾¿ç­¾â€æŒ‰é’®ã€‚
          */
         public void onDestroyActionMode(ActionMode mode) {
             mNotesListAdapter.setChoiceMode(false);
@@ -429,20 +429,20 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         }
 
         /*
-         * ×÷ÓÃ£º
-         * Ìá¹©Íâ²¿Ö÷¶¯½áÊø¶àÑ¡Ä£Ê½µÄÈë¿Ú¡£
-         * ÊµÏÖ·½·¨£º
-         * Ö±½Óµ÷ÓÃ ActionMode.finish()¡£
+         * ä½œç”¨ï¼š
+         * æä¾›å¤–éƒ¨ä¸»åŠ¨ç»“æŸå¤šé€‰æ¨¡å¼çš„å…¥å£ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * ç›´æ¥è°ƒç”¨ ActionMode.finish()ã€‚
          */
         public void finishActionMode() {
             mActionMode.finish();
         }
 
         /*
-         * ×÷ÓÃ£º
-         * ÏìÓ¦ÁĞ±íÏî¹´Ñ¡±ä»¯¡£
-         * ÊµÏÖ·½·¨£º
-         * ½«¹´Ñ¡×´Ì¬Í¬²½µ½ÊÊÅäÆ÷ºóË¢ĞÂ²Ëµ¥ÏÔÊ¾¡£
+         * ä½œç”¨ï¼š
+         * å“åº”åˆ—è¡¨é¡¹å‹¾é€‰å˜åŒ–ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * å°†å‹¾é€‰çŠ¶æ€åŒæ­¥åˆ°é€‚é…å™¨ååˆ·æ–°èœå•æ˜¾ç¤ºã€‚
          */
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
                 boolean checked) {
@@ -451,13 +451,13 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         }
 
         /*
-         * ×÷ÓÃ£º
-         * ´¦Àí¶àÑ¡²Ëµ¥µã»÷ÊÂ¼ş¡£
-         * ÊµÏÖ·½·¨£º
-         * ÏÈĞ£ÑéÊÇ·ñÓĞÑ¡ÖĞÏî£¬ÔÙ°´²Ëµ¥ id ·Ö·¢É¾³ı»òÒÆ¶¯Á÷³Ì¡£
+         * ä½œç”¨ï¼š
+         * å¤„ç†å¤šé€‰èœå•ç‚¹å‡»äº‹ä»¶ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * å…ˆæ ¡éªŒæ˜¯å¦æœ‰é€‰ä¸­é¡¹ï¼Œå†æŒ‰èœå• id åˆ†å‘åˆ é™¤æˆ–ç§»åŠ¨æµç¨‹ã€‚
          */
         public boolean onMenuItemClick(MenuItem item) {
-            // Ã»ÓĞÑ¡ÖĞÈÎºÎÌõÄ¿Ê±£¬²»Ö´ĞĞÉ¾³ı/ÒÆ¶¯
+            // æ²¡æœ‰é€‰ä¸­ä»»ä½•æ¡ç›®æ—¶ï¼Œä¸æ‰§è¡Œåˆ é™¤/ç§»åŠ¨
             if (mNotesListAdapter.getSelectedCount() == 0) {
                 Toast.makeText(NotesListActivity.this, getString(R.string.menu_select_none),
                         Toast.LENGTH_SHORT).show();
@@ -489,7 +489,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 //            }
             int itemId = item.getItemId();
 
-            // ´¦Àí¡°É¾³ı¡±²Ëµ¥
+            // å¤„ç†â€œåˆ é™¤â€èœå•
             if (itemId == R.id.delete) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
                 builder.setTitle(getString(R.string.alert_title_delete));
@@ -506,7 +506,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                 builder.setNegativeButton(android.R.string.cancel, null);
                 builder.show();
                 return true;
-            // ´¦Àí¡°ÒÆ¶¯¡±²Ëµ¥
+            // å¤„ç†â€œç§»åŠ¨â€èœå•
             } else if (itemId == R.id.move) {
                 startQueryDestinationFolders();
                 return true;
@@ -518,30 +518,30 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´¦Àí¡°ĞÂ½¨±ãÇ©¡±°´Å¥´¥ÃşÏ¸½Ú¡£
-        * ÊµÏÖ·½·¨£º
-        * ¶ÔÍ¸Ã÷ÇøÓò´¥Ãş½øĞĞ×ø±ê»»Ëã²¢Í¸´«µ½ ListView£¬±£Ö¤µ×²ãÁĞ±í¿ÉÒÔ¼ÌĞø¹ö¶¯¡£
+        * ä½œç”¨ï¼š
+        * å¤„ç†â€œæ–°å»ºä¾¿ç­¾â€æŒ‰é’®è§¦æ‘¸ç»†èŠ‚ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * å¯¹é€æ˜åŒºåŸŸè§¦æ‘¸è¿›è¡Œåæ ‡æ¢ç®—å¹¶é€ä¼ åˆ° ListViewï¼Œä¿è¯åº•å±‚åˆ—è¡¨å¯ä»¥ç»§ç»­æ»šåŠ¨ã€‚
      */
     private class NewNoteOnTouchListener implements OnTouchListener {
 
         /*
-         * ×÷ÓÃ£º
-         * ·Ö·¢²¢×ª·¢´¥ÃşÊÂ¼ş¡£
-         * ÊµÏÖ·½·¨£º
-         * ÔÚ ACTION_DOWN/ACTION_MOVE/ACTION_UP(Ä¬ÈÏ·ÖÖ§)ÖĞÎ¬»¤×ª·¢×´Ì¬ºÍ×ø±ê¡£
+         * ä½œç”¨ï¼š
+         * åˆ†å‘å¹¶è½¬å‘è§¦æ‘¸äº‹ä»¶ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * åœ¨ ACTION_DOWN/ACTION_MOVE/ACTION_UP(é»˜è®¤åˆ†æ”¯)ä¸­ç»´æŠ¤è½¬å‘çŠ¶æ€å’Œåæ ‡ã€‚
          */
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN: {
-                    // ÆÁÄ»¸ß¶È
+                    // å±å¹•é«˜åº¦
                     Display display = getWindowManager().getDefaultDisplay();
                     int screenHeight = display.getHeight();
-                    // ĞÂ½¨°´Å¥¸ß¶È
+                    // æ–°å»ºæŒ‰é’®é«˜åº¦
                     int newNoteViewHeight = mAddNewNote.getHeight();
-                    // °´Å¥ÔÚÆÁÄ»ÖĞµÄÆğÊ¼ y
+                    // æŒ‰é’®åœ¨å±å¹•ä¸­çš„èµ·å§‹ y
                     int start = screenHeight - newNoteViewHeight;
-                    // ´¥ÃşµãÔÚÆÁÄ»ÖĞµÄ y
+                    // è§¦æ‘¸ç‚¹åœ¨å±å¹•ä¸­çš„ y
                     int eventY = start + (int) event.getY();
                     /*
                      * Minus TitleBar's height
@@ -553,20 +553,20 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                     /*
                      * HACKME:When click the transparent part of "New Note" button, dispatch
                      * the event to the list view behind this button. The transparent part of
-                     * "New Note" button could be expressed by formula y=-0.12x+94£¨Unit:pixel£©
+                     * "New Note" button could be expressed by formula y=-0.12x+94ï¼ˆUnit:pixelï¼‰
                      * and the line top of the button. The coordinate based on left of the "New
                      * Note" button. The 94 represents maximum height of the transparent part.
                      * Notice that, if the background of the button changes, the formula should
                      * also change. This is very bad, just for the UI designer's strong requirement.
                      */
                     if (event.getY() < (event.getX() * (-0.12) + 94)) {
-                        // »ñÈ¡µ×²¿¿É¼û×ÓÏî£¨²»Ëã footer£©
+                        // è·å–åº•éƒ¨å¯è§å­é¡¹ï¼ˆä¸ç®— footerï¼‰
                         View view = mNotesListView.getChildAt(mNotesListView.getChildCount() - 1
                                 - mNotesListView.getFooterViewsCount());
-                        // Ö»ÓĞ°´Å¥¸²¸Çµ½ÁĞ±í¿É¼ûÇøÓòÊ±²Å×ª·¢´¥Ãş
+                        // åªæœ‰æŒ‰é’®è¦†ç›–åˆ°åˆ—è¡¨å¯è§åŒºåŸŸæ—¶æ‰è½¬å‘è§¦æ‘¸
                         if (view != null && view.getBottom() > start
                                 && (view.getTop() < (start + 94))) {
-                            // ¼ÇÂ¼³õÊ¼´¥ÃşĞÅÏ¢£¬¿ªÊ¼°ÑÊÂ¼ş×ª·¢¸ø ListView
+                            // è®°å½•åˆå§‹è§¦æ‘¸ä¿¡æ¯ï¼Œå¼€å§‹æŠŠäº‹ä»¶è½¬å‘ç»™ ListView
                             mOriginY = (int) event.getY();
                             mDispatchY = eventY;
                             event.setLocation(event.getX(), mDispatchY);
@@ -578,7 +578,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                 }
                 case MotionEvent.ACTION_MOVE: {
                     if (mDispatch) {
-                        // ¸ù¾İÒÆ¶¯ÔöÁ¿¸üĞÂ×ª·¢×ø±ê
+                        // æ ¹æ®ç§»åŠ¨å¢é‡æ›´æ–°è½¬å‘åæ ‡
                         mDispatchY += (int) event.getY() - mOriginY;
                         event.setLocation(event.getX(), mDispatchY);
                         return mNotesListView.dispatchTouchEvent(event);
@@ -600,13 +600,13 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     };
 
     /*
-        * ×÷ÓÃ£º
-        * Òì²½²éÑ¯µ±Ç°Ä¿Â¼µÄÁĞ±íÊı¾İ¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸ù¾İ mCurrentFolderId Ñ¡Ôñ²éÑ¯Ìõ¼ş²¢Æô¶¯ AsyncQueryHandler ²éÑ¯¡£
+        * ä½œç”¨ï¼š
+        * å¼‚æ­¥æŸ¥è¯¢å½“å‰ç›®å½•çš„åˆ—è¡¨æ•°æ®ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ ¹æ® mCurrentFolderId é€‰æ‹©æŸ¥è¯¢æ¡ä»¶å¹¶å¯åŠ¨ AsyncQueryHandler æŸ¥è¯¢ã€‚
      */
     private void startAsyncNotesListQuery() {
-        // ¸ùÄ¿Â¼Óë×ÓÄ¿Â¼Ê¹ÓÃ²»Í¬²éÑ¯Ìõ¼ş
+        // æ ¹ç›®å½•ä¸å­ç›®å½•ä½¿ç”¨ä¸åŒæŸ¥è¯¢æ¡ä»¶
         String selection = (mCurrentFolderId == Notes.ID_ROOT_FOLDER) ? ROOT_FOLDER_SELECTION
                 : NORMAL_SELECTION;
         mBackgroundQueryHandler.startQuery(FOLDER_NOTE_LIST_QUERY_TOKEN, null,
@@ -616,17 +616,17 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ³Ğ½ÓÒì²½²éÑ¯·µ»Ø½á¹û¡£
-        * ÊµÏÖ·½·¨£º
-        * °´ token Çø·Ö¡°ÁĞ±í²éÑ¯¡±ºÍ¡°ÎÄ¼ş¼Ğ²éÑ¯¡±£¬·Ö±ğË¢ĞÂÁĞ±í»òµ¯³öÎÄ¼ş¼Ğ²Ëµ¥¡£
+        * ä½œç”¨ï¼š
+        * æ‰¿æ¥å¼‚æ­¥æŸ¥è¯¢è¿”å›ç»“æœã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æŒ‰ token åŒºåˆ†â€œåˆ—è¡¨æŸ¥è¯¢â€å’Œâ€œæ–‡ä»¶å¤¹æŸ¥è¯¢â€ï¼Œåˆ†åˆ«åˆ·æ–°åˆ—è¡¨æˆ–å¼¹å‡ºæ–‡ä»¶å¤¹èœå•ã€‚
      */
     private final class BackgroundQueryHandler extends AsyncQueryHandler {
         /*
-         * ×÷ÓÃ£º
-         * ³õÊ¼»¯Òì²½²éÑ¯´¦ÀíÆ÷¡£
-         * ÊµÏÖ·½·¨£º
-         * Í¨¹ı super(contentResolver) ½»¸ø AsyncQueryHandler Ê¹ÓÃ¡£
+         * ä½œç”¨ï¼š
+         * åˆå§‹åŒ–å¼‚æ­¥æŸ¥è¯¢å¤„ç†å™¨ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * é€šè¿‡ super(contentResolver) äº¤ç»™ AsyncQueryHandler ä½¿ç”¨ã€‚
          */
         public BackgroundQueryHandler(ContentResolver contentResolver) {
             super(contentResolver);
@@ -634,19 +634,19 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         @Override
         /*
-         * ×÷ÓÃ£º
-         * ´¦Àí²éÑ¯Íê³É»Øµ÷¡£
-         * ÊµÏÖ·½·¨£º
-         * switch(token) ·Ö·¢´¦Àí£¬²»Í¬ token Ö´ĞĞ²»Í¬ UI ¸üĞÂ¡£
+         * ä½œç”¨ï¼š
+         * å¤„ç†æŸ¥è¯¢å®Œæˆå›è°ƒã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * switch(token) åˆ†å‘å¤„ç†ï¼Œä¸åŒ token æ‰§è¡Œä¸åŒ UI æ›´æ–°ã€‚
          */
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             switch (token) {
                 case FOLDER_NOTE_LIST_QUERY_TOKEN:
-                    // ±ãÇ©ÁĞ±í²éÑ¯Íê³É£ºÖ±½ÓË¢ĞÂÊÊÅäÆ÷Êı¾İ
+                    // ä¾¿ç­¾åˆ—è¡¨æŸ¥è¯¢å®Œæˆï¼šç›´æ¥åˆ·æ–°é€‚é…å™¨æ•°æ®
                     mNotesListAdapter.changeCursor(cursor);
                     break;
                 case FOLDER_LIST_QUERY_TOKEN:
-                    // Ä¿±êÎÄ¼ş¼Ğ²éÑ¯Íê³É£ºÓĞÊı¾İ²Åµ¯³öÑ¡Ôñ²Ëµ¥
+                    // ç›®æ ‡æ–‡ä»¶å¤¹æŸ¥è¯¢å®Œæˆï¼šæœ‰æ•°æ®æ‰å¼¹å‡ºé€‰æ‹©èœå•
                     if (cursor != null && cursor.getCount() > 0) {
                         showFolderListMenu(cursor);
                     } else {
@@ -660,15 +660,15 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * Õ¹Ê¾Ä¿±êÎÄ¼ş¼ĞÑ¡Ôñµ¯´°¡£
-        * ÊµÏÖ·½·¨£º
-        * ÓÃ FoldersListAdapter °ó¶¨¶Ô»°¿òÁĞ±í£¬µã»÷ºóµ÷ÓÃÅúÁ¿ÒÆ¶¯²¢ÍË³ö¶àÑ¡Ä£Ê½¡£
+        * ä½œç”¨ï¼š
+        * å±•ç¤ºç›®æ ‡æ–‡ä»¶å¤¹é€‰æ‹©å¼¹çª—ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * ç”¨ FoldersListAdapter ç»‘å®šå¯¹è¯æ¡†åˆ—è¡¨ï¼Œç‚¹å‡»åè°ƒç”¨æ‰¹é‡ç§»åŠ¨å¹¶é€€å‡ºå¤šé€‰æ¨¡å¼ã€‚
      */
     private void showFolderListMenu(Cursor cursor) {
         AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
         builder.setTitle(R.string.menu_title_select_folder);
-        // ÎÄ¼ş¼ĞÁĞ±íÊÊÅäÆ÷
+        // æ–‡ä»¶å¤¹åˆ—è¡¨é€‚é…å™¨
         final FoldersListAdapter adapter = new FoldersListAdapter(this, cursor);
         builder.setAdapter(adapter, new DialogInterface.OnClickListener() {
 
@@ -688,10 +688,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´ò¿ª¡°ĞÂ½¨±ãÇ©¡±±à¼­Ò³¡£
-        * ÊµÏÖ·½·¨£º
-        * ¹¹Ôì Intent(ACTION_INSERT_OR_EDIT) ²¢Ğ¯´øµ±Ç° folderId£¬Ê¹ÓÃ startActivityForResult Æô¶¯¡£
+        * ä½œç”¨ï¼š
+        * æ‰“å¼€â€œæ–°å»ºä¾¿ç­¾â€ç¼–è¾‘é¡µã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ„é€  Intent(ACTION_INSERT_OR_EDIT) å¹¶æºå¸¦å½“å‰ folderIdï¼Œä½¿ç”¨ startActivityForResult å¯åŠ¨ã€‚
      */
     private void createNewNote() {
         Intent intent = new Intent(this, NoteEditActivity.class);
@@ -701,17 +701,17 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ÅúÁ¿´¦ÀíÒÑÑ¡±ãÇ©µÄÉ¾³ıÂß¼­¡£
-        * ÊµÏÖ·½·¨£º
-        * ÔÚºóÌ¨Ïß³ÌÖĞ°´Í¬²½Ä£Ê½Ö´ĞĞ¡°Ö±½ÓÉ¾³ı¡±»ò¡°ÒÆÈë»ØÊÕÕ¾¡±£¬Ç°Ì¨Ïß³ÌË¢ĞÂÊÜÓ°ÏìĞ¡×é¼ş²¢½áÊø¶àÑ¡¡£
+        * ä½œç”¨ï¼š
+        * æ‰¹é‡å¤„ç†å·²é€‰ä¾¿ç­¾çš„åˆ é™¤é€»è¾‘ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åœ¨åå°çº¿ç¨‹ä¸­æŒ‰åŒæ­¥æ¨¡å¼æ‰§è¡Œâ€œç›´æ¥åˆ é™¤â€æˆ–â€œç§»å…¥å›æ”¶ç«™â€ï¼Œå‰å°çº¿ç¨‹åˆ·æ–°å—å½±å“å°ç»„ä»¶å¹¶ç»“æŸå¤šé€‰ã€‚
      */
     private void batchDelete() {
         new AsyncTask<Void, Void, HashSet<AppWidgetAttribute>>() {
             protected HashSet<AppWidgetAttribute> doInBackground(Void... unused) {
-                // ÏÈ¼ÇÂ¼ÊÜÓ°ÏìµÄĞ¡×é¼ş£¬ºóĞøÓÃÓÚË¢ĞÂ
+                // å…ˆè®°å½•å—å½±å“çš„å°ç»„ä»¶ï¼Œåç»­ç”¨äºåˆ·æ–°
                 HashSet<AppWidgetAttribute> widgets = mNotesListAdapter.getSelectedWidget();
-                // Î´¿ªÆôÍ¬²½ÕËºÅ£ºÖ±½ÓÉ¾³ı±¾µØÊı¾İ
+                // æœªå¼€å¯åŒæ­¥è´¦å·ï¼šç›´æ¥åˆ é™¤æœ¬åœ°æ•°æ®
                 if (!isSyncMode()) {
                     // if not synced, delete notes directly
                     if (DataUtils.batchDeleteNotes(mContentResolver, mNotesListAdapter
@@ -732,10 +732,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
             @Override
             protected void onPostExecute(HashSet<AppWidgetAttribute> widgets) {
-                // É¾³ıºóË¢ĞÂÏà¹Ø×ÀÃæĞ¡×é¼ş
+                // åˆ é™¤ååˆ·æ–°ç›¸å…³æ¡Œé¢å°ç»„ä»¶
                 if (widgets != null) {
                     for (AppWidgetAttribute widget : widgets) {
-                        // ¹ıÂËµôÎŞĞ§ widget£¬±ÜÃâ·¢ËÍÎŞÒâÒå¸üĞÂ
+                        // è¿‡æ»¤æ‰æ— æ•ˆ widgetï¼Œé¿å…å‘é€æ— æ„ä¹‰æ›´æ–°
                         if (widget.widgetId != AppWidgetManager.INVALID_APPWIDGET_ID
                                 && widget.widgetType != Notes.TYPE_WIDGET_INVALIDE) {
                             updateWidget(widget.widgetId, widget.widgetType);
@@ -748,25 +748,25 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * É¾³ıµ¥¸öÎÄ¼ş¼Ğ²¢´¦ÀíÁª¶¯¸üĞÂ¡£
-        * ÊµÏÖ·½·¨£º
-        * ÏÈ±£»¤¸ùÄ¿Â¼£¬ÔÙ°´Í¬²½Ä£Ê½É¾³ı/ÒÆÈë»ØÊÕÕ¾£¬×îºóË¢ĞÂ¹ØÁª widget¡£
+        * ä½œç”¨ï¼š
+        * åˆ é™¤å•ä¸ªæ–‡ä»¶å¤¹å¹¶å¤„ç†è”åŠ¨æ›´æ–°ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * å…ˆä¿æŠ¤æ ¹ç›®å½•ï¼Œå†æŒ‰åŒæ­¥æ¨¡å¼åˆ é™¤/ç§»å…¥å›æ”¶ç«™ï¼Œæœ€ååˆ·æ–°å…³è” widgetã€‚
      */
     private void deleteFolder(long folderId) {
-        // ¸ùÄ¿Â¼ÊÇÏµÍ³Ä¿Â¼£¬½ûÖ¹É¾³ı
+        // æ ¹ç›®å½•æ˜¯ç³»ç»Ÿç›®å½•ï¼Œç¦æ­¢åˆ é™¤
         if (folderId == Notes.ID_ROOT_FOLDER) {
             Log.e(TAG, "Wrong folder id, should not happen " + folderId);
             return;
         }
 
-        // ×é×°´ı´¦Àí id ¼¯ºÏ£¨¹¤¾ß·½·¨Ê¹ÓÃÅú´¦Àí½Ó¿Ú£©
+        // ç»„è£…å¾…å¤„ç† id é›†åˆï¼ˆå·¥å…·æ–¹æ³•ä½¿ç”¨æ‰¹å¤„ç†æ¥å£ï¼‰
         HashSet<Long> ids = new HashSet<Long>();
         ids.add(folderId);
-        // ÕÒµ½¸ÃÎÄ¼ş¼ĞÏà¹ØµÄĞ¡×é¼ş
+        // æ‰¾åˆ°è¯¥æ–‡ä»¶å¤¹ç›¸å…³çš„å°ç»„ä»¶
         HashSet<AppWidgetAttribute> widgets = DataUtils.getFolderNoteWidget(mContentResolver,
                 folderId);
-        // ÓëÅúÁ¿É¾³ıÒ»ÖÂ£ºÍ¬²½Ä£Ê½ÏÂ¸ÄÎªÒÆÈë»ØÊÕÕ¾
+        // ä¸æ‰¹é‡åˆ é™¤ä¸€è‡´ï¼šåŒæ­¥æ¨¡å¼ä¸‹æ”¹ä¸ºç§»å…¥å›æ”¶ç«™
         if (!isSyncMode()) {
             // if not synced, delete folder directly
             DataUtils.batchDeleteNotes(mContentResolver, ids);
@@ -776,7 +776,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         }
         if (widgets != null) {
             for (AppWidgetAttribute widget : widgets) {
-                // ½öË¢ĞÂÓĞĞ§µÄĞ¡×é¼şÊµÀı
+                // ä»…åˆ·æ–°æœ‰æ•ˆçš„å°ç»„ä»¶å®ä¾‹
                 if (widget.widgetId != AppWidgetManager.INVALID_APPWIDGET_ID
                         && widget.widgetType != Notes.TYPE_WIDGET_INVALIDE) {
                     updateWidget(widget.widgetId, widget.widgetType);
@@ -786,10 +786,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´ò¿ªÄ³Ìõ±ãÇ©ÏêÇéÒ³¡£
-        * ÊµÏÖ·½·¨£º
-        * Í¨¹ı ACTION_VIEW Ğ¯´ø±ãÇ© id£¬Æô¶¯ NoteEditActivity¡£
+        * ä½œç”¨ï¼š
+        * æ‰“å¼€æŸæ¡ä¾¿ç­¾è¯¦æƒ…é¡µã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * é€šè¿‡ ACTION_VIEW æºå¸¦ä¾¿ç­¾ idï¼Œå¯åŠ¨ NoteEditActivityã€‚
      */
     private void openNode(NoteItemData data) {
         Intent intent = new Intent(this, NoteEditActivity.class);
@@ -799,22 +799,22 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ½øÈëÖ¸¶¨ÎÄ¼ş¼Ğ²¢ÇĞ»»Ò³Ãæ×´Ì¬¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸üĞÂµ±Ç° folderId ºóÖØ²éÁĞ±í£¬ÔÙ¸ù¾İÎÄ¼ş¼ĞÀàĞÍµ÷Õû±êÌâÓë¡°ĞÂ½¨¡±°´Å¥¿É¼ûĞÔ¡£
+        * ä½œç”¨ï¼š
+        * è¿›å…¥æŒ‡å®šæ–‡ä»¶å¤¹å¹¶åˆ‡æ¢é¡µé¢çŠ¶æ€ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ›´æ–°å½“å‰ folderId åé‡æŸ¥åˆ—è¡¨ï¼Œå†æ ¹æ®æ–‡ä»¶å¤¹ç±»å‹è°ƒæ•´æ ‡é¢˜ä¸â€œæ–°å»ºâ€æŒ‰é’®å¯è§æ€§ã€‚
      */
     private void openFolder(NoteItemData data) {
         mCurrentFolderId = data.getId();
         startAsyncNotesListQuery();
-        // Í¨»°¼ÇÂ¼Ä¿Â¼²»¿ÉĞÂ½¨ÆÕÍ¨±ãÇ©£¬Òò´ËÒş²ØĞÂ½¨°´Å¥
+        // é€šè¯è®°å½•ç›®å½•ä¸å¯æ–°å»ºæ™®é€šä¾¿ç­¾ï¼Œå› æ­¤éšè—æ–°å»ºæŒ‰é’®
         if (data.getId() == Notes.ID_CALL_RECORD_FOLDER) {
             mState = ListEditState.CALL_RECORD_FOLDER;
             mAddNewNote.setVisibility(View.GONE);
         } else {
             mState = ListEditState.SUB_FOLDER;
         }
-        // ±êÌâÀ¸ÏÔÊ¾µ±Ç°Ä¿Â¼Ãû³Æ
+        // æ ‡é¢˜æ æ˜¾ç¤ºå½“å‰ç›®å½•åç§°
         if (data.getId() == Notes.ID_CALL_RECORD_FOLDER) {
             mTitleBar.setText(R.string.call_record_folder_name);
         } else {
@@ -824,10 +824,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´¦ÀíÒ³Ãæµã»÷ÊÂ¼şÈë¿Ú¡£
-        * ÊµÏÖ·½·¨£º
-        * Í¨¹ı view id ·Ö·¢¶¯×÷£¬Ä¿Ç°Ö÷Òª´¦Àí¡°ĞÂ½¨±ãÇ©¡±¡£
+        * ä½œç”¨ï¼š
+        * å¤„ç†é¡µé¢ç‚¹å‡»äº‹ä»¶å…¥å£ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * é€šè¿‡ view id åˆ†å‘åŠ¨ä½œï¼Œç›®å‰ä¸»è¦å¤„ç†â€œæ–°å»ºä¾¿ç­¾â€ã€‚
      */
     public void onClick(View v) {
 //        switch (v.getId()) {
@@ -838,18 +838,18 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 //                break;
 //        }
         int id = v.getId();
-        // µã»÷¡°ĞÂ½¨±ãÇ©¡±°´Å¥
+        // ç‚¹å‡»â€œæ–°å»ºä¾¿ç­¾â€æŒ‰é’®
         if (id == R.id.btn_new_note) {
             createNewNote();
         }
-// Èç¹ûÓĞÆäËû°´Å¥£¬¼ÌĞøÌí¼Ó else if
+// å¦‚æœæœ‰å…¶ä»–æŒ‰é’®ï¼Œç»§ç»­æ·»åŠ  else if
     }
 
     /*
-        * ×÷ÓÃ£º
-        * Ö÷¶¯ÏÔÊ¾Èí¼üÅÌ¡£
-        * ÊµÏÖ·½·¨£º
-        * »ñÈ¡ InputMethodManager ºóµ÷ÓÃ toggleSoftInput¡£
+        * ä½œç”¨ï¼š
+        * ä¸»åŠ¨æ˜¾ç¤ºè½¯é”®ç›˜ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * è·å– InputMethodManager åè°ƒç”¨ toggleSoftInputã€‚
      */
     private void showSoftInput() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -859,10 +859,10 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * Òş²ØÈí¼üÅÌ¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸ù¾İÄ¿±ê view µÄ windowToken µ÷ÓÃ hideSoftInputFromWindow¡£
+        * ä½œç”¨ï¼š
+        * éšè—è½¯é”®ç›˜ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ ¹æ®ç›®æ ‡ view çš„ windowToken è°ƒç”¨ hideSoftInputFromWindowã€‚
      */
     private void hideSoftInput(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -870,19 +870,19 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * µ¯³ö¡°ĞÂ½¨ÎÄ¼ş¼Ğ/ÖØÃüÃûÎÄ¼ş¼Ğ¡±¶Ô»°¿ò²¢´¦ÀíÌá½»¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸ù¾İ create ¾ö¶¨³õÊ¼»¯ÄÚÈİ£¬µã»÷È·¶¨Ê±Ğ£ÑéÃû³Æ²¢Ö´ĞĞ insert/update¡£
-     * @param create true ±íÊ¾ĞÂ½¨£»false ±íÊ¾ÖØÃüÃû
+        * ä½œç”¨ï¼š
+        * å¼¹å‡ºâ€œæ–°å»ºæ–‡ä»¶å¤¹/é‡å‘½åæ–‡ä»¶å¤¹â€å¯¹è¯æ¡†å¹¶å¤„ç†æäº¤ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ ¹æ® create å†³å®šåˆå§‹åŒ–å†…å®¹ï¼Œç‚¹å‡»ç¡®å®šæ—¶æ ¡éªŒåç§°å¹¶æ‰§è¡Œ insert/updateã€‚
+     * @param create true è¡¨ç¤ºæ–°å»ºï¼›false è¡¨ç¤ºé‡å‘½å
      */
     private void showCreateOrModifyFolderDialog(final boolean create) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_edit_text, null);
-        // ÎÄ¼ş¼ĞÃû³ÆÊäÈë¿ò
+        // æ–‡ä»¶å¤¹åç§°è¾“å…¥æ¡†
         final EditText etName = (EditText) view.findViewById(R.id.et_foler_name);
         showSoftInput();
-        // create=false Ê±×ß¡°ÖØÃüÃû¡±£¬ĞèÒªÏÈÌî³ä¾ÉÃû³Æ
+        // create=false æ—¶èµ°â€œé‡å‘½åâ€ï¼Œéœ€è¦å…ˆå¡«å……æ—§åç§°
         if (!create) {
             if (mFocusNoteDataItem != null) {
                 etName.setText(mFocusNoteDataItem.getSnippet());
@@ -904,21 +904,21 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         });
 
         final Dialog dialog = builder.setView(view).show();
-        // ¡°È·¶¨¡±°´Å¥
+        // â€œç¡®å®šâ€æŒ‰é’®
         final Button positive = (Button)dialog.findViewById(android.R.id.button1);
         positive.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                 hideSoftInput(etName);
-            // ÓÃ»§ÊäÈëµÄĞÂÃû³Æ
+            // ç”¨æˆ·è¾“å…¥çš„æ–°åç§°
                 String name = etName.getText().toString();
-                // Í¬¼¶Ä¿Â¼Ãû³Æ²»ÄÜÖØ¸´
+                // åŒçº§ç›®å½•åç§°ä¸èƒ½é‡å¤
                 if (DataUtils.checkVisibleFolderName(mContentResolver, name)) {
                     Toast.makeText(NotesListActivity.this, getString(R.string.folder_exist, name),
                             Toast.LENGTH_LONG).show();
                     etName.setSelection(0, etName.length());
                     return;
                 }
-                // ÖØÃüÃû£º¸üĞÂÒÑÓĞÎÄ¼ş¼Ğ¼ÇÂ¼
+                // é‡å‘½åï¼šæ›´æ–°å·²æœ‰æ–‡ä»¶å¤¹è®°å½•
                 if (!create) {
                     if (!TextUtils.isEmpty(name)) {
                         ContentValues values = new ContentValues();
@@ -930,7 +930,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                             String.valueOf(mFocusNoteDataItem.getId())
                         });
                     }
-                // ĞÂ½¨£º²åÈëÒ»ÌõÎÄ¼ş¼Ğ¼ÇÂ¼
+                // æ–°å»ºï¼šæ’å…¥ä¸€æ¡æ–‡ä»¶å¤¹è®°å½•
                 } else if (!TextUtils.isEmpty(name)) {
                     ContentValues values = new ContentValues();
                     values.put(NoteColumns.SNIPPET, name);
@@ -941,7 +941,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
             }
         });
 
-        // ÊäÈë¿òÎª¿ÕÊ±½ûÓÃ¡°È·¶¨¡±£¬±ÜÃâ´´½¨¿ÕÃû³ÆÎÄ¼ş¼Ğ
+        // è¾“å…¥æ¡†ä¸ºç©ºæ—¶ç¦ç”¨â€œç¡®å®šâ€ï¼Œé¿å…åˆ›å»ºç©ºåç§°æ–‡ä»¶å¤¹
         if (TextUtils.isEmpty(etName.getText())) {
             positive.setEnabled(false);
         }
@@ -955,7 +955,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
             }
 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // ÊµÊ±Ğ£Ñé£ºÓĞÄÚÈİ²ÅÔÊĞíµã»÷¡°È·¶¨¡±
+                // å®æ—¶æ ¡éªŒï¼šæœ‰å†…å®¹æ‰å…è®¸ç‚¹å‡»â€œç¡®å®šâ€
                 if (TextUtils.isEmpty(etName.getText())) {
                     positive.setEnabled(false);
                 } else {
@@ -972,22 +972,22 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ×Ô¶¨Òå·µ»Ø¼üĞĞÎª¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸ù¾İ mState ¾ö¶¨ÊÇ·µ»Ø¸ùÄ¿Â¼²¢Ë¢ĞÂÁĞ±í£¬»¹ÊÇµ÷ÓÃÏµÍ³Ä¬ÈÏ·µ»Ø¡£
+        * ä½œç”¨ï¼š
+        * è‡ªå®šä¹‰è¿”å›é”®è¡Œä¸ºã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ ¹æ® mState å†³å®šæ˜¯è¿”å›æ ¹ç›®å½•å¹¶åˆ·æ–°åˆ—è¡¨ï¼Œè¿˜æ˜¯è°ƒç”¨ç³»ç»Ÿé»˜è®¤è¿”å›ã€‚
      */
     public void onBackPressed() {
         switch (mState) {
             case SUB_FOLDER:
-                // ×ÓÄ¿Â¼·µ»Ø£º»Øµ½¸ùÄ¿Â¼ÁĞ±í£¬²»ÍË³ö Activity
+                // å­ç›®å½•è¿”å›ï¼šå›åˆ°æ ¹ç›®å½•åˆ—è¡¨ï¼Œä¸é€€å‡º Activity
                 mCurrentFolderId = Notes.ID_ROOT_FOLDER;
                 mState = ListEditState.NOTE_LIST;
                 startAsyncNotesListQuery();
                 mTitleBar.setVisibility(View.GONE);
                 break;
             case CALL_RECORD_FOLDER:
-                // Í¨»°¼ÇÂ¼Ä¿Â¼·µ»Ø£º»Ø¸ùÄ¿Â¼²¢»Ö¸´ĞÂ½¨°´Å¥
+                // é€šè¯è®°å½•ç›®å½•è¿”å›ï¼šå›æ ¹ç›®å½•å¹¶æ¢å¤æ–°å»ºæŒ‰é’®
                 mCurrentFolderId = Notes.ID_ROOT_FOLDER;
                 mState = ListEditState.NOTE_LIST;
                 mAddNewNote.setVisibility(View.VISIBLE);
@@ -995,7 +995,7 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
                 startAsyncNotesListQuery();
                 break;
             case NOTE_LIST:
-                // ¸ùÄ¿Â¼·µ»Ø£ºÖ´ĞĞÏµÍ³Ä¬ÈÏ·µ»ØĞĞÎª£¨Í¨³£ÊÇÍË³öÒ³Ãæ£©
+                // æ ¹ç›®å½•è¿”å›ï¼šæ‰§è¡Œç³»ç»Ÿé»˜è®¤è¿”å›è¡Œä¸ºï¼ˆé€šå¸¸æ˜¯é€€å‡ºé¡µé¢ï¼‰
                 super.onBackPressed();
                 break;
             default:
@@ -1004,14 +1004,14 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * Ë¢ĞÂÖ¸¶¨×ÀÃæĞ¡×é¼şÊµÀı¡£
-        * ÊµÏÖ·½·¨£º
-        * ¸ù¾İ widget ÀàĞÍÉèÖÃ Provider£¬·¢ËÍ APPWIDGET_UPDATE ¹ã²¥²¢»Ø´«½á¹û¡£
+        * ä½œç”¨ï¼š
+        * åˆ·æ–°æŒ‡å®šæ¡Œé¢å°ç»„ä»¶å®ä¾‹ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ ¹æ® widget ç±»å‹è®¾ç½® Providerï¼Œå‘é€ APPWIDGET_UPDATE å¹¿æ’­å¹¶å›ä¼ ç»“æœã€‚
      */
     private void updateWidget(int appWidgetId, int appWidgetType) {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-        // ¸ù¾İ widget ³ß´çÀàĞÍÑ¡Ôñ¶ÔÓ¦ Provider
+        // æ ¹æ® widget å°ºå¯¸ç±»å‹é€‰æ‹©å¯¹åº” Provider
         if (appWidgetType == Notes.TYPE_WIDGET_2X) {
             intent.setClass(this, NoteWidgetProvider_2x.class);
         } else if (appWidgetType == Notes.TYPE_WIDGET_4X) {
@@ -1030,14 +1030,14 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ÎªÎÄ¼ş¼Ğ³¤°´´´½¨ÉÏÏÂÎÄ²Ëµ¥¡£
-        * ÊµÏÖ·½·¨£º
-        * ÔÚ¼àÌıÆ÷ÖĞ»ùÓÚµ±Ç°½¹µãÏî¶¯Ì¬Ìí¼Ó¡°²é¿´/É¾³ı/ÖØÃüÃû¡±²Ëµ¥Ïî¡£
+        * ä½œç”¨ï¼š
+        * ä¸ºæ–‡ä»¶å¤¹é•¿æŒ‰åˆ›å»ºä¸Šä¸‹æ–‡èœå•ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åœ¨ç›‘å¬å™¨ä¸­åŸºäºå½“å‰ç„¦ç‚¹é¡¹åŠ¨æ€æ·»åŠ â€œæŸ¥çœ‹/åˆ é™¤/é‡å‘½åâ€èœå•é¡¹ã€‚
      */
     private final OnCreateContextMenuListener mFolderOnCreateContextMenuListener = new OnCreateContextMenuListener() {
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-            // Ö»ÓĞÓĞ½¹µãÊı¾İÏîÊ±²Å´´½¨²Ëµ¥
+            // åªæœ‰æœ‰ç„¦ç‚¹æ•°æ®é¡¹æ—¶æ‰åˆ›å»ºèœå•
             if (mFocusNoteDataItem != null) {
                 menu.setHeaderTitle(mFocusNoteDataItem.getSnippet());
                 menu.add(0, MENU_FOLDER_VIEW, 0, R.string.menu_folder_view);
@@ -1049,13 +1049,13 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ÉÏÏÂÎÄ²Ëµ¥¹Ø±ÕºóµÄÇåÀí¡£
-        * ÊµÏÖ·½·¨£º
-        * ÖÃ¿Õ OnCreateContextMenuListener£¬±ÜÃâÓ°ÏìºóĞø³¤°´Á÷³Ì¡£
+        * ä½œç”¨ï¼š
+        * ä¸Šä¸‹æ–‡èœå•å…³é—­åçš„æ¸…ç†ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * ç½®ç©º OnCreateContextMenuListenerï¼Œé¿å…å½±å“åç»­é•¿æŒ‰æµç¨‹ã€‚
      */
     public void onContextMenuClosed(Menu menu) {
-        // ²Ëµ¥¹Ø±Õºó½â³ı¼àÌı£¬±ÜÃâÓ°ÏìºóĞøÆÕÍ¨³¤°´
+        // èœå•å…³é—­åè§£é™¤ç›‘å¬ï¼Œé¿å…å½±å“åç»­æ™®é€šé•¿æŒ‰
         if (mNotesListView != null) {
             mNotesListView.setOnCreateContextMenuListener(null);
         }
@@ -1064,13 +1064,13 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ´¦ÀíÎÄ¼ş¼ĞÉÏÏÂÎÄ²Ëµ¥Ïîµã»÷¡£
-        * ÊµÏÖ·½·¨£º
-        * ÏÈĞ£Ñé½¹µãÏî£¬ÔÙ°´²Ëµ¥ id ·Ö·¢µ½²é¿´¡¢É¾³ıÈ·ÈÏ¡¢ÖØÃüÃû¡£
+        * ä½œç”¨ï¼š
+        * å¤„ç†æ–‡ä»¶å¤¹ä¸Šä¸‹æ–‡èœå•é¡¹ç‚¹å‡»ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * å…ˆæ ¡éªŒç„¦ç‚¹é¡¹ï¼Œå†æŒ‰èœå• id åˆ†å‘åˆ°æŸ¥çœ‹ã€åˆ é™¤ç¡®è®¤ã€é‡å‘½åã€‚
      */
     public boolean onContextItemSelected(MenuItem item) {
-        // Ã»ÓĞ½¹µãÏîÊ±ÎŞ·¨Ö´ĞĞÎÄ¼ş¼Ğ²Ëµ¥¶¯×÷
+        // æ²¡æœ‰ç„¦ç‚¹é¡¹æ—¶æ— æ³•æ‰§è¡Œæ–‡ä»¶å¤¹èœå•åŠ¨ä½œ
         if (mFocusNoteDataItem == null) {
             Log.e(TAG, "The long click data item is null");
             return false;
@@ -1105,23 +1105,23 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ¸ù¾İÒ³Ãæ×´Ì¬¶¯Ì¬×¼±¸¶¥²¿²Ëµ¥¡£
-        * ÊµÏÖ·½·¨£º
-        * Ã¿´ÎÏÈÇå¿Õ²Ëµ¥£¬ÔÙ°´ mState inflate ¶ÔÓ¦²Ëµ¥×ÊÔ´²¢¸üĞÂÍ¬²½ÎÄ°¸¡£
+        * ä½œç”¨ï¼š
+        * æ ¹æ®é¡µé¢çŠ¶æ€åŠ¨æ€å‡†å¤‡é¡¶éƒ¨èœå•ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ¯æ¬¡å…ˆæ¸…ç©ºèœå•ï¼Œå†æŒ‰ mState inflate å¯¹åº”èœå•èµ„æºå¹¶æ›´æ–°åŒæ­¥æ–‡æ¡ˆã€‚
      */
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
-        // ¸ùÄ¿Â¼ÏÔÊ¾ÍêÕû²Ëµ¥£¬²¢¸ù¾İÍ¬²½×´Ì¬¸üĞÂ¡°Í¬²½/È¡ÏûÍ¬²½¡±ÎÄ°¸
+        // æ ¹ç›®å½•æ˜¾ç¤ºå®Œæ•´èœå•ï¼Œå¹¶æ ¹æ®åŒæ­¥çŠ¶æ€æ›´æ–°â€œåŒæ­¥/å–æ¶ˆåŒæ­¥â€æ–‡æ¡ˆ
         if (mState == ListEditState.NOTE_LIST) {
             getMenuInflater().inflate(R.menu.note_list, menu);
             // set sync or sync_cancel
             menu.findItem(R.id.menu_sync).setTitle(
                     GTaskSyncService.isSyncing() ? R.string.menu_sync_cancel : R.string.menu_sync);
-        // ×ÓÄ¿Â¼Ê¹ÓÃ¾«¼ò²Ëµ¥
+        // å­ç›®å½•ä½¿ç”¨ç²¾ç®€èœå•
         } else if (mState == ListEditState.SUB_FOLDER) {
             getMenuInflater().inflate(R.menu.sub_folder, menu);
-        // Í¨»°¼ÇÂ¼Ä¿Â¼Ê¹ÓÃ×¨ÓÃ²Ëµ¥
+        // é€šè¯è®°å½•ç›®å½•ä½¿ç”¨ä¸“ç”¨èœå•
         } else if (mState == ListEditState.CALL_RECORD_FOLDER) {
             getMenuInflater().inflate(R.menu.call_record_folder, menu);
         } else {
@@ -1171,27 +1171,27 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 //    }
 @Override
 /*
- * ×÷ÓÃ£º
- * ´¦Àí¶¥²¿²Ëµ¥µã»÷ÊÂ¼ş¡£
- * ÊµÏÖ·½·¨£º
- * Í¨¹ı itemId ·Ö·¢µ½ĞÂ½¨ÎÄ¼ş¼Ğ¡¢µ¼³ö¡¢Í¬²½¡¢ÉèÖÃ¡¢ĞÂ½¨±ãÇ©¡¢ËÑË÷µÈ¶¯×÷¡£
+ * ä½œç”¨ï¼š
+ * å¤„ç†é¡¶éƒ¨èœå•ç‚¹å‡»äº‹ä»¶ã€‚
+ * å®ç°æ–¹æ³•ï¼š
+ * é€šè¿‡ itemId åˆ†å‘åˆ°æ–°å»ºæ–‡ä»¶å¤¹ã€å¯¼å‡ºã€åŒæ­¥ã€è®¾ç½®ã€æ–°å»ºä¾¿ç­¾ã€æœç´¢ç­‰åŠ¨ä½œã€‚
  */
 public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
 
-    // ĞÂ½¨ÎÄ¼ş¼Ğ
+    // æ–°å»ºæ–‡ä»¶å¤¹
     if (itemId == R.id.menu_new_folder) {
         showCreateOrModifyFolderDialog(true);
         return true;
     }
 
-    // µ¼³ö±ãÇ©µ½ÎÄ±¾ÎÄ¼ş
+    // å¯¼å‡ºä¾¿ç­¾åˆ°æ–‡æœ¬æ–‡ä»¶
     if (itemId == R.id.menu_export_text) {
         exportNoteToText();
         return true;
     }
 
-    // Í¬²½°´Å¥£ºÒÑÅäÖÃÕËºÅÔò¿ªÊ¼/È¡ÏûÍ¬²½£»Î´ÅäÖÃÔò´ò¿ªÉèÖÃ
+    // åŒæ­¥æŒ‰é’®ï¼šå·²é…ç½®è´¦å·åˆ™å¼€å§‹/å–æ¶ˆåŒæ­¥ï¼›æœªé…ç½®åˆ™æ‰“å¼€è®¾ç½®
     if (itemId == R.id.menu_sync) {
         if (isSyncMode()) {
             if (TextUtils.equals(item.getTitle(), getString(R.string.menu_sync))) {
@@ -1205,34 +1205,34 @@ public boolean onOptionsItemSelected(MenuItem item) {
         return true;
     }
 
-    // ´ò¿ªÉèÖÃ
+    // æ‰“å¼€è®¾ç½®
     if (itemId == R.id.menu_setting) {
         startPreferenceActivity();
         return true;
     }
 
-    // ĞÂ½¨±ãÇ©
+    // æ–°å»ºä¾¿ç­¾
     if (itemId == R.id.menu_new_note) {
         createNewNote();
         return true;
     }
 
-    // ´ò¿ªËÑË÷
+    // æ‰“å¼€æœç´¢
     if (itemId == R.id.menu_search) {
         onSearchRequested();
         return true;
     }
 
-    // ÀíÂÛÉÏ²»»áÖ´ĞĞµ½ÕâÀï£¬µ«±£ÁôÒÔ±£Ö¤Óï·¨ÕıÈ·
+    // ç†è®ºä¸Šä¸ä¼šæ‰§è¡Œåˆ°è¿™é‡Œï¼Œä½†ä¿ç•™ä»¥ä¿è¯è¯­æ³•æ­£ç¡®
     return true;
 }
 
     @Override
     /*
-        * ×÷ÓÃ£º
-        * ·¢ÆğÏµÍ³ËÑË÷Èë¿Ú¡£
-        * ÊµÏÖ·½·¨£º
-        * µ÷ÓÃ startSearch ²¢·µ»Ø true ±íÊ¾ÊÂ¼şÒÑ´¦Àí¡£
+        * ä½œç”¨ï¼š
+        * å‘èµ·ç³»ç»Ÿæœç´¢å…¥å£ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * è°ƒç”¨ startSearch å¹¶è¿”å› true è¡¨ç¤ºäº‹ä»¶å·²å¤„ç†ã€‚
      */
     public boolean onSearchRequested() {
         startSearch(null, false, null /* appData */, false);
@@ -1240,25 +1240,25 @@ public boolean onOptionsItemSelected(MenuItem item) {
     }
 
     /*
-        * ×÷ÓÃ£º
-        * µ¼³ö±ãÇ©µ½ÎÄ±¾ÎÄ¼ş¡£
-        * ÊµÏÖ·½·¨£º
-        * Ê¹ÓÃ AsyncTask ºóÌ¨µ÷ÓÃ BackupUtils.exportToText£¬Ç°Ì¨¸ù¾İ×´Ì¬Âëµ¯³ö½á¹û¶Ô»°¿ò¡£
+        * ä½œç”¨ï¼š
+        * å¯¼å‡ºä¾¿ç­¾åˆ°æ–‡æœ¬æ–‡ä»¶ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * ä½¿ç”¨ AsyncTask åå°è°ƒç”¨ BackupUtils.exportToTextï¼Œå‰å°æ ¹æ®çŠ¶æ€ç å¼¹å‡ºç»“æœå¯¹è¯æ¡†ã€‚
      */
     private void exportNoteToText() {
-        // ±¸·İ/µ¼³ö¹¤¾ßÀà
+        // å¤‡ä»½/å¯¼å‡ºå·¥å…·ç±»
         final BackupUtils backup = BackupUtils.getInstance(NotesListActivity.this);
         new AsyncTask<Void, Void, Integer>() {
 
             @Override
             protected Integer doInBackground(Void... unused) {
-                // ·µ»Øµ¼³ö×´Ì¬Âë
+                // è¿”å›å¯¼å‡ºçŠ¶æ€ç 
                 return backup.exportToText();
             }
 
             @Override
             protected void onPostExecute(Integer result) {
-                // SD ¿¨²»¿ÉÓÃ£ºÌáÊ¾Ê§°ÜÔ­Òò
+                // SD å¡ä¸å¯ç”¨ï¼šæç¤ºå¤±è´¥åŸå› 
                 if (result == BackupUtils.STATE_SD_CARD_UNMOUONTED) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
                     builder.setTitle(NotesListActivity.this
@@ -1267,7 +1267,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                             .getString(R.string.error_sdcard_unmounted));
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.show();
-                // µ¼³ö³É¹¦£ºÕ¹Ê¾ÎÄ¼şÃûÓëÂ·¾¶
+                // å¯¼å‡ºæˆåŠŸï¼šå±•ç¤ºæ–‡ä»¶åä¸è·¯å¾„
                 } else if (result == BackupUtils.STATE_SUCCESS) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
                     builder.setTitle(NotesListActivity.this
@@ -1277,7 +1277,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                                     .getExportedTextFileName(), backup.getExportedTextFileDir()));
                     builder.setPositiveButton(android.R.string.ok, null);
                     builder.show();
-                // ÆäËûÏµÍ³´íÎó£ºÍ³Ò»ÌáÊ¾µ¼³öÊ§°Ü
+                // å…¶ä»–ç³»ç»Ÿé”™è¯¯ï¼šç»Ÿä¸€æç¤ºå¯¼å‡ºå¤±è´¥
                 } else if (result == BackupUtils.STATE_SYSTEM_ERROR) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
                     builder.setTitle(NotesListActivity.this
@@ -1293,48 +1293,48 @@ public boolean onOptionsItemSelected(MenuItem item) {
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ÅĞ¶ÏÊÇ·ñ¿É½øÈëÍ¬²½Ä£Ê½¡£
-        * ÊµÏÖ·½·¨£º
-        * ¶ÁÈ¡Í¬²½ÕËºÅÃû£¬trim ºó³¤¶È´óÓÚ 0 ÊÓÎªÒÑÅäÖÃ¡£
+        * ä½œç”¨ï¼š
+        * åˆ¤æ–­æ˜¯å¦å¯è¿›å…¥åŒæ­¥æ¨¡å¼ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * è¯»å–åŒæ­¥è´¦å·åï¼Œtrim åé•¿åº¦å¤§äº 0 è§†ä¸ºå·²é…ç½®ã€‚
      */
     private boolean isSyncMode() {
         return NotesPreferenceActivity.getSyncAccountName(this).trim().length() > 0;
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´ò¿ªÉèÖÃÒ³Ãæ¡£
-        * ÊµÏÖ·½·¨£º
-        * ÓÅÏÈÊ¹ÓÃ¸¸ Activity ×÷ÎªÆô¶¯ÉÏÏÂÎÄ£¬·ñÔòÊ¹ÓÃµ±Ç° Activity¡£
+        * ä½œç”¨ï¼š
+        * æ‰“å¼€è®¾ç½®é¡µé¢ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * ä¼˜å…ˆä½¿ç”¨çˆ¶ Activity ä½œä¸ºå¯åŠ¨ä¸Šä¸‹æ–‡ï¼Œå¦åˆ™ä½¿ç”¨å½“å‰ Activityã€‚
      */
     private void startPreferenceActivity() {
-        // Èç¹ûÓĞ¸¸ Activity£¬Ôò´Ó¸¸ Activity ´ò¿ª£»·ñÔòµ±Ç°Ò³Ãæ´ò¿ª
+        // å¦‚æœæœ‰çˆ¶ Activityï¼Œåˆ™ä»çˆ¶ Activity æ‰“å¼€ï¼›å¦åˆ™å½“å‰é¡µé¢æ‰“å¼€
         Activity from = getParent() != null ? getParent() : this;
         Intent intent = new Intent(from, NotesPreferenceActivity.class);
         from.startActivityIfNeeded(intent, -1);
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ·â×°ÁĞ±íÏîµã»÷´¦ÀíÂß¼­¡£
-        * ÊµÏÖ·½·¨£º
-        * ÔÚ»Øµ÷ÖĞÇø·Ö¶àÑ¡×´Ì¬ÓëÒ³Ãæ×´Ì¬£¬¾ö¶¨ÊÇ¹´Ñ¡¡¢´ò¿ª±ãÇ©»¹ÊÇ½øÈëÎÄ¼ş¼Ğ¡£
+        * ä½œç”¨ï¼š
+        * å°è£…åˆ—è¡¨é¡¹ç‚¹å‡»å¤„ç†é€»è¾‘ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * åœ¨å›è°ƒä¸­åŒºåˆ†å¤šé€‰çŠ¶æ€ä¸é¡µé¢çŠ¶æ€ï¼Œå†³å®šæ˜¯å‹¾é€‰ã€æ‰“å¼€ä¾¿ç­¾è¿˜æ˜¯è¿›å…¥æ–‡ä»¶å¤¹ã€‚
      */
     private class OnListItemClickListener implements OnItemClickListener {
 
         /*
-         * ×÷ÓÃ£º
-         * ´¦Àíµ¥¸öÁĞ±íÏîµã»÷¡£
-         * ÊµÏÖ·½·¨£º
-         * ÏÈÅĞ¶ÏÊÇ·ñÎª NotesListItem£¬ÔÙ°´¡°¶àÑ¡Ä£Ê½/ÆÕÍ¨Ä£Ê½¡±ºÍÌõÄ¿ÀàĞÍ·Ö·¢ĞĞÎª¡£
+         * ä½œç”¨ï¼š
+         * å¤„ç†å•ä¸ªåˆ—è¡¨é¡¹ç‚¹å‡»ã€‚
+         * å®ç°æ–¹æ³•ï¼š
+         * å…ˆåˆ¤æ–­æ˜¯å¦ä¸º NotesListItemï¼Œå†æŒ‰â€œå¤šé€‰æ¨¡å¼/æ™®é€šæ¨¡å¼â€å’Œæ¡ç›®ç±»å‹åˆ†å‘è¡Œä¸ºã€‚
          */
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            // Ö»´¦Àí±ãÇ©ÁĞ±íÏîÊÓÍ¼£¬Ìø¹ı footer/header µÈÆäËûÊÓÍ¼
+            // åªå¤„ç†ä¾¿ç­¾åˆ—è¡¨é¡¹è§†å›¾ï¼Œè·³è¿‡ footer/header ç­‰å…¶ä»–è§†å›¾
             if (view instanceof NotesListItem) {
-                // µ±Ç°µã»÷µÄÊı¾İÏî
+                // å½“å‰ç‚¹å‡»çš„æ•°æ®é¡¹
                 NoteItemData item = ((NotesListItem) view).getItemData();
-                // ¶àÑ¡Ä£Ê½ÏÂ£ºµã»÷½öÇĞ»»¹´Ñ¡£¬²»´ò¿ªÏêÇé
+                // å¤šé€‰æ¨¡å¼ä¸‹ï¼šç‚¹å‡»ä»…åˆ‡æ¢å‹¾é€‰ï¼Œä¸æ‰“å¼€è¯¦æƒ…
                 if (mNotesListAdapter.isInChoiceMode()) {
                     if (item.getType() == Notes.TYPE_NOTE) {
                         position = position - mNotesListView.getHeaderViewsCount();
@@ -1346,7 +1346,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
                 switch (mState) {
                     case NOTE_LIST:
-                        // ¸ùÄ¿Â¼£º¿É½øÈëÎÄ¼ş¼Ğ£¬Ò²¿É´ò¿ª±ãÇ©
+                        // æ ¹ç›®å½•ï¼šå¯è¿›å…¥æ–‡ä»¶å¤¹ï¼Œä¹Ÿå¯æ‰“å¼€ä¾¿ç­¾
                         if (item.getType() == Notes.TYPE_FOLDER
                                 || item.getType() == Notes.TYPE_SYSTEM) {
                             openFolder(item);
@@ -1358,7 +1358,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                         break;
                     case SUB_FOLDER:
                     case CALL_RECORD_FOLDER:
-                        // ×ÓÄ¿Â¼£ºÕâÀïÖ»Ó¦¸Ã³öÏÖ±ãÇ©Ïî
+                        // å­ç›®å½•ï¼šè¿™é‡Œåªåº”è¯¥å‡ºç°ä¾¿ç­¾é¡¹
                         if (item.getType() == Notes.TYPE_NOTE) {
                             openNode(item);
                         } else {
@@ -1374,15 +1374,15 @@ public boolean onOptionsItemSelected(MenuItem item) {
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ²éÑ¯¡°ÒÆ¶¯±ãÇ©¡±¿ÉÑ¡Ä¿±êÎÄ¼ş¼Ğ¡£
-        * ÊµÏÖ·½·¨£º
-        * ¹¹Ôì selection£¨ÅÅ³ı»ØÊÕÕ¾Óëµ±Ç°Ä¿Â¼£¬±ØÒªÊ±°üº¬¸ùÄ¿Â¼£©²¢Òì²½²éÑ¯¡£
+        * ä½œç”¨ï¼š
+        * æŸ¥è¯¢â€œç§»åŠ¨ä¾¿ç­¾â€å¯é€‰ç›®æ ‡æ–‡ä»¶å¤¹ã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * æ„é€  selectionï¼ˆæ’é™¤å›æ”¶ç«™ä¸å½“å‰ç›®å½•ï¼Œå¿…è¦æ—¶åŒ…å«æ ¹ç›®å½•ï¼‰å¹¶å¼‚æ­¥æŸ¥è¯¢ã€‚
      */
     private void startQueryDestinationFolders() {
-        // »ù´¡Ìõ¼ş£ºÆÕÍ¨ÎÄ¼ş¼Ğ¡¢·Ç»ØÊÕÕ¾¡¢ÅÅ³ıµ±Ç°ÎÄ¼ş¼Ğ
+        // åŸºç¡€æ¡ä»¶ï¼šæ™®é€šæ–‡ä»¶å¤¹ã€éå›æ”¶ç«™ã€æ’é™¤å½“å‰æ–‡ä»¶å¤¹
         String selection = NoteColumns.TYPE + "=? AND " + NoteColumns.PARENT_ID + "<>? AND " + NoteColumns.ID + "<>?";
-        // ÔÚ×ÓÄ¿Â¼ÖĞÔÊĞíÒÆ¶¯µ½¸ùÄ¿Â¼£¬Òò´Ë¶îÍâÆ´Ò»¸ö OR Ìõ¼ş
+        // åœ¨å­ç›®å½•ä¸­å…è®¸ç§»åŠ¨åˆ°æ ¹ç›®å½•ï¼Œå› æ­¤é¢å¤–æ‹¼ä¸€ä¸ª OR æ¡ä»¶
         selection = (mState == ListEditState.NOTE_LIST) ? selection:
             "(" + selection + ") OR (" + NoteColumns.ID + "=" + Notes.ID_ROOT_FOLDER + ")";
 
@@ -1400,17 +1400,17 @@ public boolean onOptionsItemSelected(MenuItem item) {
     }
 
     /*
-        * ×÷ÓÃ£º
-        * ´¦ÀíÁĞ±íÏî³¤°´ĞĞÎª¡£
-        * ÊµÏÖ·½·¨£º
-        * ³¤°´±ãÇ©½øÈë ActionMode ¶àÑ¡£¬³¤°´ÎÄ¼ş¼ĞÔò×¢²á²¢ÏÔÊ¾ÉÏÏÂÎÄ²Ëµ¥¡£
+        * ä½œç”¨ï¼š
+        * å¤„ç†åˆ—è¡¨é¡¹é•¿æŒ‰è¡Œä¸ºã€‚
+        * å®ç°æ–¹æ³•ï¼š
+        * é•¿æŒ‰ä¾¿ç­¾è¿›å…¥ ActionMode å¤šé€‰ï¼Œé•¿æŒ‰æ–‡ä»¶å¤¹åˆ™æ³¨å†Œå¹¶æ˜¾ç¤ºä¸Šä¸‹æ–‡èœå•ã€‚
      */
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        // Ö»´¦Àí±ãÇ©ĞĞÊÓÍ¼
+        // åªå¤„ç†ä¾¿ç­¾è¡Œè§†å›¾
         if (view instanceof NotesListItem) {
-            // ¼ÇÂ¼µ±Ç°³¤°´Ïî£¬¹©ºóĞø²Ëµ¥²Ù×÷Ê¹ÓÃ
+            // è®°å½•å½“å‰é•¿æŒ‰é¡¹ï¼Œä¾›åç»­èœå•æ“ä½œä½¿ç”¨
             mFocusNoteDataItem = ((NotesListItem) view).getItemData();
-            // ³¤°´±ãÇ©£º½øÈë¶àÑ¡Ä£Ê½
+            // é•¿æŒ‰ä¾¿ç­¾ï¼šè¿›å…¥å¤šé€‰æ¨¡å¼
             if (mFocusNoteDataItem.getType() == Notes.TYPE_NOTE && !mNotesListAdapter.isInChoiceMode()) {
                 if (mNotesListView.startActionMode(mModeCallBack) != null) {
                     mModeCallBack.onItemCheckedStateChanged(null, position, id, true);
@@ -1418,7 +1418,7 @@ public boolean onOptionsItemSelected(MenuItem item) {
                 } else {
                     Log.e(TAG, "startActionMode fails");
                 }
-            // ³¤°´ÎÄ¼ş¼Ğ£ºÏÔÊ¾ÉÏÏÂÎÄ²Ëµ¥
+            // é•¿æŒ‰æ–‡ä»¶å¤¹ï¼šæ˜¾ç¤ºä¸Šä¸‹æ–‡èœå•
             } else if (mFocusNoteDataItem.getType() == Notes.TYPE_FOLDER) {
                 mNotesListView.setOnCreateContextMenuListener(mFolderOnCreateContextMenuListener);
             }

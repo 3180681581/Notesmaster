@@ -30,48 +30,48 @@ import android.text.format.DateFormat;
 import android.text.format.DateUtils;
 
 /*
- * ×÷ÓÃ£ºÈÕÆÚÊ±¼äÑ¡Ôñ¶Ô»°¿ò£¬·â×° DateTimePicker ²¢»Ø´«ÓÃ»§È·ÈÏ½á¹û¡£
- * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôìº¯ÊıÖĞ³õÊ¼»¯ DateTimePicker¡¢°´Å¥Óë±êÌâ£»
- * Í¨¹ı OnDateTimeChangedListener ÊµÊ±Í¬²½ mDate ²¢Ë¢ĞÂ±êÌâ£»
- * ÔÚ onClick ÖĞµ÷ÓÃ OnDateTimeSetListener ½«×îÖÕºÁÃëÖµ»Ø´«Íâ²¿¡£
- * Âß¼­Ê¾Òâ£ºDateTimePickerDialog(context, date) -> mDateTimePicker.setOnDateTimeChangedListener(...)
+ * ä½œç”¨ï¼šæ—¥æœŸæ—¶é—´é€‰æ‹©å¯¹è¯æ¡†ï¼Œå°è£… DateTimePicker å¹¶å›ä¼ ç”¨æˆ·ç¡®è®¤ç»“æœã€‚
+ * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ å‡½æ•°ä¸­åˆå§‹åŒ– DateTimePickerã€æŒ‰é’®ä¸æ ‡é¢˜ï¼›
+ * é€šè¿‡ OnDateTimeChangedListener å®æ—¶åŒæ­¥ mDate å¹¶åˆ·æ–°æ ‡é¢˜ï¼›
+ * åœ¨ onClick ä¸­è°ƒç”¨ OnDateTimeSetListener å°†æœ€ç»ˆæ¯«ç§’å€¼å›ä¼ å¤–éƒ¨ã€‚
+ * é€»è¾‘ç¤ºæ„ï¼šDateTimePickerDialog(context, date) -> mDateTimePicker.setOnDateTimeChangedListener(...)
  * -> updateTitle(date) -> setOnDateTimeSetListener(callback) -> onClick(dialog, which)
  * -> OnDateTimeSetListener.OnDateTimeSet(dialog, date)
  */
 public class DateTimePickerDialog extends AlertDialog implements OnClickListener {
 
     /*
-     * ×÷ÓÃ£º±£´æµ±Ç°¶Ô»°¿òÑ¡ÔñµÄÈÕÆÚÊ±¼ä¡£
-     * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôìº¯Êı³õÊ¼»¯£¬²¢ÔÚÈÕÆÚ±ä»¯¼àÌıÖĞ³ÖĞøÍ¬²½¡£
+     * ä½œç”¨ï¼šä¿å­˜å½“å‰å¯¹è¯æ¡†é€‰æ‹©çš„æ—¥æœŸæ—¶é—´ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ å‡½æ•°åˆå§‹åŒ–ï¼Œå¹¶åœ¨æ—¥æœŸå˜åŒ–ç›‘å¬ä¸­æŒç»­åŒæ­¥ã€‚
      */
     private Calendar mDate = Calendar.getInstance();
     /*
-     * ×÷ÓÃ£º¼ÇÂ¼µ±Ç°±êÌâÏÔÊ¾ÊÇ·ñ°´ 24 Ğ¡Ê±ÖÆ¸ñÊ½»¯¡£
-     * ÊµÏÖ·½·¨£ºÓÉ set24HourView ÉèÖÃ£¬¹© updateTitle Æ´½Ó¸ñÊ½±êÖ¾¡£
+     * ä½œç”¨ï¼šè®°å½•å½“å‰æ ‡é¢˜æ˜¾ç¤ºæ˜¯å¦æŒ‰ 24 å°æ—¶åˆ¶æ ¼å¼åŒ–ã€‚
+     * å®ç°æ–¹æ³•ï¼šç”± set24HourView è®¾ç½®ï¼Œä¾› updateTitle æ‹¼æ¥æ ¼å¼æ ‡å¿—ã€‚
      */
     private boolean mIs24HourView;
     /*
-     * ×÷ÓÃ£º±£´æÈ·¶¨°´Å¥»Øµ÷¡£
-     * ÊµÏÖ·½·¨£ºÓÉ setOnDateTimeSetListener ×¢Èë£¬ÔÚ onClick ÖĞ´¥·¢¡£
+     * ä½œç”¨ï¼šä¿å­˜ç¡®å®šæŒ‰é’®å›è°ƒã€‚
+     * å®ç°æ–¹æ³•ï¼šç”± setOnDateTimeSetListener æ³¨å…¥ï¼Œåœ¨ onClick ä¸­è§¦å‘ã€‚
      */
     private OnDateTimeSetListener mOnDateTimeSetListener;
     /*
-     * ×÷ÓÃ£ºÇ¶ÈëÊ½ÈÕÆÚÊ±¼äÑ¡Ôñ¿Ø¼ş¡£
-     * ÊµÏÖ·½·¨£ºÔÚ¹¹Ôìº¯Êı´´½¨²¢×÷Îª¶Ô»°¿òÄÚÈİÊÓÍ¼¡£
+     * ä½œç”¨ï¼šåµŒå…¥å¼æ—¥æœŸæ—¶é—´é€‰æ‹©æ§ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šåœ¨æ„é€ å‡½æ•°åˆ›å»ºå¹¶ä½œä¸ºå¯¹è¯æ¡†å†…å®¹è§†å›¾ã€‚
      */
     private DateTimePicker mDateTimePicker;
 
     /*
-     * ×÷ÓÃ£º¶¨Òå¶Ô»°¿òÈ·ÈÏºóµÄÊ±¼ä»Øµ÷½Ó¿Ú¡£
-     * ÊµÏÖ·½·¨£ºÍâ²¿ÊµÏÖ OnDateTimeSet ÒÔ½ÓÊÕ×îÖÕÊ±¼ä´Á¡£
+     * ä½œç”¨ï¼šå®šä¹‰å¯¹è¯æ¡†ç¡®è®¤åçš„æ—¶é—´å›è°ƒæ¥å£ã€‚
+     * å®ç°æ–¹æ³•ï¼šå¤–éƒ¨å®ç° OnDateTimeSet ä»¥æ¥æ”¶æœ€ç»ˆæ—¶é—´æˆ³ã€‚
      */
     public interface OnDateTimeSetListener {
         void OnDateTimeSet(AlertDialog dialog, long date);
     }
 
     /*
-     * ×÷ÓÃ£º³õÊ¼»¯ÈÕÆÚÊ±¼äÑ¡Ôñ¶Ô»°¿ò¡£
-     * ÊµÏÖ·½·¨£º´´½¨²¢°ó¶¨ DateTimePicker£¬ÉèÖÃÈ·ÈÏ/È¡Ïû°´Å¥£¬³õÊ¼»¯ 24 Ğ¡Ê±ÖÆÓë±êÌâ¡£
+     * ä½œç”¨ï¼šåˆå§‹åŒ–æ—¥æœŸæ—¶é—´é€‰æ‹©å¯¹è¯æ¡†ã€‚
+     * å®ç°æ–¹æ³•ï¼šåˆ›å»ºå¹¶ç»‘å®š DateTimePickerï¼Œè®¾ç½®ç¡®è®¤/å–æ¶ˆæŒ‰é’®ï¼Œåˆå§‹åŒ– 24 å°æ—¶åˆ¶ä¸æ ‡é¢˜ã€‚
      */
     public DateTimePickerDialog(Context context, long date) {
         super(context);
@@ -79,8 +79,8 @@ public class DateTimePickerDialog extends AlertDialog implements OnClickListener
         setView(mDateTimePicker);
         mDateTimePicker.setOnDateTimeChangedListener(new OnDateTimeChangedListener() {
             /*
-             * ×÷ÓÃ£ºÏìÓ¦ÄÚ²¿Ñ¡ÔñÆ÷Ê±¼ä±ä»¯¡£
-             * ÊµÏÖ·½·¨£º½«·ÖÁ¿Ğ´»Ø mDate ²¢µ÷ÓÃ updateTitle ÊµÊ±Ë¢ĞÂ¶Ô»°¿ò±êÌâ¡£
+             * ä½œç”¨ï¼šå“åº”å†…éƒ¨é€‰æ‹©å™¨æ—¶é—´å˜åŒ–ã€‚
+             * å®ç°æ–¹æ³•ï¼šå°†åˆ†é‡å†™å› mDate å¹¶è°ƒç”¨ updateTitle å®æ—¶åˆ·æ–°å¯¹è¯æ¡†æ ‡é¢˜ã€‚
              */
             public void onDateTimeChanged(DateTimePicker view, int year, int month,
                     int dayOfMonth, int hourOfDay, int minute) {
@@ -102,24 +102,24 @@ public class DateTimePickerDialog extends AlertDialog implements OnClickListener
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃ±êÌâ¸ñÊ½ËùÓÃµÄ 24 Ğ¡Ê±ÖÆ±êÖ¾¡£
-     * ÊµÏÖ·½·¨£º¸üĞÂ mIs24HourView ¹© updateTitle Ê¹ÓÃ¡£
+     * ä½œç”¨ï¼šè®¾ç½®æ ‡é¢˜æ ¼å¼æ‰€ç”¨çš„ 24 å°æ—¶åˆ¶æ ‡å¿—ã€‚
+     * å®ç°æ–¹æ³•ï¼šæ›´æ–° mIs24HourView ä¾› updateTitle ä½¿ç”¨ã€‚
      */
     public void set24HourView(boolean is24HourView) {
         mIs24HourView = is24HourView;
     }
 
     /*
-     * ×÷ÓÃ£ºÉèÖÃ¶Ô»°¿òÈ·ÈÏ»Øµ÷¡£
-     * ÊµÏÖ·½·¨£º±£´æÍâ²¿¼àÌıÆ÷£¬¹© onClick µ÷ÓÃ¡£
+     * ä½œç”¨ï¼šè®¾ç½®å¯¹è¯æ¡†ç¡®è®¤å›è°ƒã€‚
+     * å®ç°æ–¹æ³•ï¼šä¿å­˜å¤–éƒ¨ç›‘å¬å™¨ï¼Œä¾› onClick è°ƒç”¨ã€‚
      */
     public void setOnDateTimeSetListener(OnDateTimeSetListener callBack) {
         mOnDateTimeSetListener = callBack;
     }
 
     /*
-     * ×÷ÓÃ£ºË¢ĞÂ¶Ô»°¿ò±êÌâÏÔÊ¾¡£
-     * ÊµÏÖ·½·¨£º×éºÏÈÕÆÚÊ±¼ä¸ñÊ½±êÖ¾²¢Ê¹ÓÃ DateUtils.formatDateTime Éú³É±êÌâÎÄ±¾¡£
+     * ä½œç”¨ï¼šåˆ·æ–°å¯¹è¯æ¡†æ ‡é¢˜æ˜¾ç¤ºã€‚
+     * å®ç°æ–¹æ³•ï¼šç»„åˆæ—¥æœŸæ—¶é—´æ ¼å¼æ ‡å¿—å¹¶ä½¿ç”¨ DateUtils.formatDateTime ç”Ÿæˆæ ‡é¢˜æ–‡æœ¬ã€‚
      */
     private void updateTitle(long date) {
         int flag =
@@ -131,8 +131,8 @@ public class DateTimePickerDialog extends AlertDialog implements OnClickListener
     }
 
     /*
-     * ×÷ÓÃ£º´¦Àí¶Ô»°¿ò°´Å¥µã»÷ÊÂ¼ş¡£
-     * ÊµÏÖ·½·¨£ºÈ·ÈÏ¼àÌıÆ÷´æÔÚÊ±»Øµ÷µ±Ç° mDate Ê±¼ä´Á¡£
+     * ä½œç”¨ï¼šå¤„ç†å¯¹è¯æ¡†æŒ‰é’®ç‚¹å‡»äº‹ä»¶ã€‚
+     * å®ç°æ–¹æ³•ï¼šç¡®è®¤ç›‘å¬å™¨å­˜åœ¨æ—¶å›è°ƒå½“å‰ mDate æ—¶é—´æˆ³ã€‚
      */
     public void onClick(DialogInterface arg0, int arg1) {
         if (mOnDateTimeSetListener != null) {
