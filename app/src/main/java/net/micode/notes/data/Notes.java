@@ -49,7 +49,7 @@ public class Notes {
     public static class DataConstants {
         public static final String NOTE = TextNote.CONTENT_ITEM_TYPE;
         public static final String CALL_NOTE = CallNote.CONTENT_ITEM_TYPE;
-        // 图片附件在 data 表中的 MIME 标识。
+        // 图片附件在 data 表中的 MIME 标识
         public static final String IMAGE_NOTE = ImageNote.CONTENT_ITEM_TYPE;
     }
 
@@ -280,7 +280,7 @@ public class Notes {
     }
 
     public static final class ImageNote implements DataColumns {
-        // 仅用于标识“图片附件”数据行，不直接暴露独立 Provider 路由。
+        // 仅用于标识“图片附件”数据行，不直接暴露独立 Provider 路由
         public static final String CONTENT_TYPE = "vnd.android.cursor.dir/image_note";
 
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/image_note";

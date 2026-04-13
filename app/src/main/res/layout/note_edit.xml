@@ -109,7 +109,8 @@
                 </LinearLayout>
             </ScrollView>
 
-            <!-- 便签内联图片预览区：有图片附件时展示缩略图与名称。 -->
+            <!-- ==================== 图片插入功能前端预览说明部分 ==================== -->
+            <!-- 前端展示区：用于在编辑页直接可视化显示已插入图片与名称 -->
             <LinearLayout
                 android:id="@+id/image_attachment_preview_container"
                 android:layout_width="match_parent"
@@ -145,6 +146,7 @@
                     android:background="@android:color/darker_gray"
                     android:contentDescription="@string/image_attachment_preview_title" />
             </LinearLayout>
+                    <!-- ---------------------------------------- -->
 
             <ImageView
                 android:layout_width="fill_parent"

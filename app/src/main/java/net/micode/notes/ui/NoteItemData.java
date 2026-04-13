@@ -27,7 +27,7 @@ import net.micode.notes.tool.DataUtils;
 
 
 public class NoteItemData {
-    // 便签列表查询使用的字段投影，顺序必须与下方 *_COLUMN 索引一一对应。
+    // 便签列表查询使用的字段投影，顺序必须与下方 *_COLUMN 索引一一对应
     static final String [] PROJECTION = new String [] {
         NoteColumns.ID,
         NoteColumns.ALERTED_DATE,
@@ -78,10 +78,10 @@ public class NoteItemData {
     private boolean mIsMultiNotesFollowingFolder;
 
     /**
-     * 便签列表单行数据的 UI 模型。
+     * 便签列表单行数据的 UI 模型
      *
      * 该类负责把 Cursor 当前行映射为强类型字段，
-     * 并计算列表渲染需要的附加显示状态。
+     * 并计算列表渲染需要的附加显示状态
      */
     public NoteItemData(Context context, Cursor cursor) {
         mId = cursor.getLong(ID_COLUMN);
@@ -93,7 +93,7 @@ public class NoteItemData {
         mNotesCount = cursor.getInt(NOTES_COUNT_COLUMN);
         mParentId = cursor.getLong(PARENT_ID_COLUMN);
         mSnippet = cursor.getString(SNIPPET_COLUMN);
-        // 列表展示前，移除清单模式的勾选标记文本。
+        // 列表展示前，移除清单模式的勾选标记文本
         mSnippet = mSnippet.replace(NoteEditActivity.TAG_CHECKED, "").replace(
                 NoteEditActivity.TAG_UNCHECKED, "");
         mType = cursor.getInt(TYPE_COLUMN);
@@ -101,7 +101,7 @@ public class NoteItemData {
         mWidgetType = cursor.getInt(WIDGET_TYPE_COLUMN);
 
         mPhoneNumber = "";
-        // 通话记录文件夹下的条目，根据号码解析联系人展示名。
+        // 通话记录文件夹下的条目，根据号码解析联系人展示名
         if (mParentId == Notes.ID_CALL_RECORD_FOLDER) {
             mPhoneNumber = DataUtils.getCallNumberByNoteId(context.getContentResolver(), mId);
             if (!TextUtils.isEmpty(mPhoneNumber)) {
@@ -118,7 +118,7 @@ public class NoteItemData {
         checkPostion(cursor);
     }
 
-    // 计算列表首尾/邻接状态，用于背景和分隔样式渲染。
+    // 计算列表首尾/邻接状态，用于背景和分隔样式渲染
     private void checkPostion(Cursor cursor) {
         mIsLastItem = cursor.isLast() ? true : false;
         mIsFirstItem = cursor.isFirst() ? true : false;
@@ -126,7 +126,7 @@ public class NoteItemData {
         mIsMultiNotesFollowingFolder = false;
         mIsOneNoteFollowingFolder = false;
 
-        // 判断当前便签是否紧跟在文件夹或系统分组条目之后。
+        // 判断当前便签是否紧跟在文件夹或系统分组条目之后
         if (mType == Notes.TYPE_NOTE && !mIsFirstItem) {
             int position = cursor.getPosition();
             if (cursor.moveToPrevious()) {
@@ -146,112 +146,112 @@ public class NoteItemData {
     }
 
     public boolean isOneFollowingFolder() {
-        // 当前条目是否为“文件夹/系统分组后仅有的一条便签”。
+        // 当前条目是否为“文件夹/系统分组后仅有的一条便签”
         return mIsOneNoteFollowingFolder;
     }
 
     public boolean isMultiFollowingFolder() {
-        // 当前条目是否为“文件夹/系统分组后多条便签中的第一条”。
+        // 当前条目是否为“文件夹/系统分组后多条便签中的第一条”
         return mIsMultiNotesFollowingFolder;
     }
 
     public boolean isLast() {
-        // 当前条目是否位于列表末尾。
+        // 当前条目是否位于列表末尾
         return mIsLastItem;
     }
 
     public String getCallName() {
-        // 获取通话记录条目对应的联系人名称（无则为空串）。
+        // 获取通话记录条目对应的联系人名称（无则为空串）
         return mName;
     }
 
     public boolean isFirst() {
-        // 当前条目是否位于列表开头。
+        // 当前条目是否位于列表开头
         return mIsFirstItem;
     }
 
     public boolean isSingle() {
-        // 当前列表是否仅有一个条目。
+        // 当前列表是否仅有一个条目
         return mIsOnlyOneItem;
     }
 
     public long getId() {
-        // 获取便签主键 ID。
+        // 获取便签主键 ID
         return mId;
     }
 
     public long getAlertDate() {
-        // 获取提醒时间戳（毫秒）。
+        // 获取提醒时间戳（毫秒）
         return mAlertDate;
     }
 
     public long getCreatedDate() {
-        // 获取创建时间戳（毫秒）。
+        // 获取创建时间戳（毫秒）
         return mCreatedDate;
     }
 
     public boolean hasAttachment() {
-        // 是否包含附件。
+        // 是否包含附件
         return mHasAttachment;
     }
 
     public long getModifiedDate() {
-        // 获取最后修改时间戳（毫秒）。
+        // 获取最后修改时间戳（毫秒）
         return mModifiedDate;
     }
 
     public int getBgColorId() {
-        // 获取便签背景颜色 ID。
+        // 获取便签背景颜色 ID
         return mBgColorId;
     }
 
     public long getParentId() {
-        // 获取父级文件夹 ID。
+        // 获取父级文件夹 ID
         return mParentId;
     }
 
     public int getNotesCount() {
-        // 获取文件夹下便签数量（当前条目为文件夹时有意义）。
+        // 获取文件夹下便签数量（当前条目为文件夹时有意义）
         return mNotesCount;
     }
 
     public long getFolderId () {
-        // 兼容调用方命名，实际返回父级文件夹 ID。
+        // 兼容调用方命名，实际返回父级文件夹 ID
         return mParentId;
     }
 
     public int getType() {
-        // 获取条目类型（便签/文件夹/系统分组）。
+        // 获取条目类型（便签/文件夹/系统分组）
         return mType;
     }
 
     public int getWidgetType() {
-        // 获取关联小组件类型。
+        // 获取关联小组件类型
         return mWidgetType;
     }
 
     public int getWidgetId() {
-        // 获取关联小组件实例 ID。
+        // 获取关联小组件实例 ID
         return mWidgetId;
     }
 
     public String getSnippet() {
-        // 获取用于列表展示的摘要文本。
+        // 获取用于列表展示的摘要文本
         return mSnippet;
     }
 
     public boolean hasAlert() {
-        // 是否已设置提醒时间。
+        // 是否已设置提醒时间
         return (mAlertDate > 0);
     }
 
     public boolean isCallRecord() {
-        // 是否为通话记录文件夹下且号码有效的条目。
+        // 是否为通话记录文件夹下且号码有效的条目
         return (mParentId == Notes.ID_CALL_RECORD_FOLDER && !TextUtils.isEmpty(mPhoneNumber));
     }
 
     public static int getNoteType(Cursor cursor) {
-        // 从 Cursor 当前行直接读取条目类型，供适配器快速判断。
+        // 从 Cursor 当前行直接读取条目类型，供适配器快速判断
         return cursor.getInt(TYPE_COLUMN);
     }
 }

@@ -215,7 +215,7 @@ public class WorkingNote {
     }
 
     public synchronized boolean ensureNoteExists() {
-        // 附件可能先于正文保存，需先确保 note 主记录存在。
+        // 附件可能先于正文保存，需先确保 note 主记录存在
         if (existInDatabase()) {
             return true;
         }
