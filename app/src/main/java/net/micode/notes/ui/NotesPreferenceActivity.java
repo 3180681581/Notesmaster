@@ -49,31 +49,31 @@ import net.micode.notes.gtask.remote.GTaskSyncService;
 
 
 /*
- * 作用：便签设置页面，负责同步账号管理、手动同步控制与同步状态展示。
+ * 作用：便签设置页面，负责同步账号管理、手动同步控制与同步状态展示
  * 实现方法：在 onCreate 初始化偏好项和广播接收器；
  * 通过 onResume/refreshUI/loadAccountPreference/loadSyncButton 刷新账号与按钮状态；
  * 通过 showSelectAccountAlertDialog/showChangeAccountConfirmAlertDialog/setSyncAccount/removeSyncAccount 管理账号配置；
- * 通过 GTaskReceiver.onReceive 实时更新同步进度展示。
+ * 通过 GTaskReceiver.onReceive 实时更新同步进度展示
  * 逻辑示意：onCreate(icicle) -> onResume() -> refreshUI() -> loadAccountPreference()/loadSyncButton()
  * -> showSelectAccountAlertDialog()/showChangeAccountConfirmAlertDialog() -> setSyncAccount(account)/removeSyncAccount()
  * -> GTaskReceiver.onReceive(context, intent) -> refreshUI().
  */
 public class NotesPreferenceActivity extends PreferenceActivity {
     /*
-     * 作用：SharedPreferences 文件名。
-     * 实现方法：用于读写同步账号与最近同步时间。
+     * 作用：SharedPreferences 文件名
+     * 实现方法：用于读写同步账号与最近同步时间
      */
     public static final String PREFERENCE_NAME = "notes_preferences";
 
     /*
-     * 作用：同步账号名键名。
-     * 实现方法：在 setSyncAccount/getSyncAccountName 中作为持久化键使用。
+     * 作用：同步账号名键名
+     * 实现方法：在 setSyncAccount/getSyncAccountName 中作为持久化键使用
      */
     public static final String PREFERENCE_SYNC_ACCOUNT_NAME = "pref_key_account_name";
 
     /*
-     * 作用：最后同步时间键名。
-     * 实现方法：在 setLastSyncTime/getLastSyncTime 中存取时间戳。
+     * 作用：最后同步时间键名
+     * 实现方法：在 setLastSyncTime/getLastSyncTime 中存取时间戳
      */
     public static final String PREFERENCE_LAST_SYNC_TIME = "pref_last_sync_time";
 
@@ -93,8 +93,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * 作用：设置页创建入口。
-     * 实现方法：启用返回导航，加载偏好资源，初始化账号分类与同步广播监听，并添加头部视图。
+     * 作用：设置页创建入口
+     * 实现方法：启用返回导航，加载偏好资源，初始化账号分类与同步广播监听，并添加头部视图
      */
     protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
@@ -116,8 +116,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * 作用：页面恢复前台时处理账号变化并刷新界面。
-     * 实现方法：若用户刚新增账号则自动识别并设置为同步账号，随后刷新 UI。
+     * 作用：页面恢复前台时处理账号变化并刷新界面
+     * 实现方法：若用户刚新增账号则自动识别并设置为同步账号，随后刷新 UI
      */
     protected void onResume() {
         super.onResume();
@@ -148,8 +148,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
 
     @Override
     /*
-     * 作用：页面销毁时释放广播监听资源。
-     * 实现方法：判空后注销接收器，再调用父类销毁。
+     * 作用：页面销毁时释放广播监听资源
+     * 实现方法：判空后注销接收器，再调用父类销毁
      */
     protected void onDestroy() {
         if (mReceiver != null) {
@@ -159,8 +159,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：加载并配置账号选择偏好项。
-     * 实现方法：重建账号 Preference，点击时按是否已有账号决定弹出选择对话框或风险确认对话框。
+     * 作用：加载并配置账号选择偏好项
+     * 实现方法：重建账号 Preference，点击时按是否已有账号决定弹出选择对话框或风险确认对话框
      */
     private void loadAccountPreference() {
         mAccountCategory.removeAll();
@@ -193,8 +193,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：加载并刷新“立即同步/取消同步”按钮与同步状态文本。
-     * 实现方法：按当前是否正在同步切换按钮行为，并根据最近同步时间或进度信息更新状态文本。
+     * 作用：加载并刷新“立即同步/取消同步”按钮与同步状态文本
+     * 实现方法：按当前是否正在同步切换按钮行为，并根据最近同步时间或进度信息更新状态文本
      */
     private void loadSyncButton() {
         Button syncButton = (Button) findViewById(R.id.preference_sync_button);
@@ -236,8 +236,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：统一刷新设置页界面。
-     * 实现方法：顺序调用 loadAccountPreference 与 loadSyncButton。
+     * 作用：统一刷新设置页界面
+     * 实现方法：顺序调用 loadAccountPreference 与 loadSyncButton
      */
     private void refreshUI() {
         loadAccountPreference();
@@ -245,8 +245,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：弹出账号选择对话框。
-     * 实现方法：加载 Google 账号列表为单选项，选择后设置同步账号；支持跳转系统“添加账号”页面。
+     * 作用：弹出账号选择对话框
+     * 实现方法：加载 Google 账号列表为单选项，选择后设置同步账号；支持跳转系统“添加账号”页面
      */
     private void showSelectAccountAlertDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -305,8 +305,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：弹出“更换/移除账号”风险确认对话框。
-     * 实现方法：提供更换账号、移除账号和取消三个入口，并执行对应操作。
+     * 作用：弹出“更换/移除账号”风险确认对话框
+     * 实现方法：提供更换账号、移除账号和取消三个入口，并执行对应操作
      */
     private void showChangeAccountConfirmAlertDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
@@ -338,8 +338,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：获取设备上的 Google 账号列表。
-     * 实现方法：通过 AccountManager.getAccountsByType("com.google") 返回结果。
+     * 作用：获取设备上的 Google 账号列表
+     * 实现方法：通过 AccountManager.getAccountsByType("com.google") 返回结果
      */
     private Account[] getGoogleAccounts() {
         AccountManager accountManager = AccountManager.get(this);
@@ -347,8 +347,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：设置当前同步账号。
-     * 实现方法：写入账号偏好，清空最近同步时间，并异步清理本地 gtask 关联字段。
+     * 作用：设置当前同步账号
+     * 实现方法：写入账号偏好，清空最近同步时间，并异步清理本地 gtask 关联字段
      */
     private void setSyncAccount(String account) {
         if (!getSyncAccountName(this).equals(account)) {
@@ -381,8 +381,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：移除当前同步账号配置。
-     * 实现方法：删除账号名和最后同步时间偏好，并异步清空本地 gtask 关联字段。
+     * 作用：移除当前同步账号配置
+     * 实现方法：删除账号名和最后同步时间偏好，并异步清空本地 gtask 关联字段
      */
     private void removeSyncAccount() {
         SharedPreferences settings = getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
@@ -407,8 +407,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：读取当前同步账号名。
-     * 实现方法：从指定偏好文件中读取 PREFERENCE_SYNC_ACCOUNT_NAME。
+     * 作用：读取当前同步账号名
+     * 实现方法：从指定偏好文件中读取 PREFERENCE_SYNC_ACCOUNT_NAME
      */
     public static String getSyncAccountName(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -417,8 +417,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：保存最近同步时间。
-     * 实现方法：把时间戳写入 PREFERENCE_LAST_SYNC_TIME。
+     * 作用：保存最近同步时间
+     * 实现方法：把时间戳写入 PREFERENCE_LAST_SYNC_TIME
      */
     public static void setLastSyncTime(Context context, long time) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -429,8 +429,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：读取最近同步时间。
-     * 实现方法：从偏好文件读取 PREFERENCE_LAST_SYNC_TIME，默认返回 0。
+     * 作用：读取最近同步时间
+     * 实现方法：从偏好文件读取 PREFERENCE_LAST_SYNC_TIME，默认返回 0
      */
     public static long getLastSyncTime(Context context) {
         SharedPreferences settings = context.getSharedPreferences(PREFERENCE_NAME,
@@ -439,15 +439,15 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：接收同步服务广播并刷新界面状态。
-     * 实现方法：每次收到广播先 refreshUI，若正在同步则更新进度文本。
+     * 作用：接收同步服务广播并刷新界面状态
+     * 实现方法：每次收到广播先 refreshUI，若正在同步则更新进度文本
      */
     private class GTaskReceiver extends BroadcastReceiver {
 
         @Override
         /*
-         * 作用：处理同步状态广播。
-         * 实现方法：根据广播字段更新同步进度文案并刷新按钮状态。
+         * 作用：处理同步状态广播
+         * 实现方法：根据广播字段更新同步进度文案并刷新按钮状态
          */
         public void onReceive(Context context, Intent intent) {
             refreshUI();
@@ -461,8 +461,8 @@ public class NotesPreferenceActivity extends PreferenceActivity {
     }
 
     /*
-     * 作用：处理 ActionBar 返回按钮点击。
-     * 实现方法：点击 home 时回到列表页并清理中间页面栈。
+     * 作用：处理 ActionBar 返回按钮点击
+     * 实现方法：点击 home 时回到列表页并清理中间页面栈
      */
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {

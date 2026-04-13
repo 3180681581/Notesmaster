@@ -80,12 +80,12 @@ import java.util.HashSet;
 
 /*
  * 作用：
- * 便签列表主页面，负责列表展示和大部分入口交互。
+ * 便签列表主页面，负责列表展示和大部分入口交互
  * 实现方法：
  * 由 onCreate/initResources 初始化列表与交互组件，onStart/startAsyncNotesListQuery 驱动异步加载；
  * 通过 onClick、onItemLongClick、onOptionsItemSelected、onContextItemSelected 分发用户操作，
  * 并由 openNode/openFolder、batchDelete/deleteFolder、exportNoteToText、startQueryDestinationFolders 等方法执行具体业务，
- * 采用 mState 与 mCurrentFolderId 的状态驱动逻辑决定界面与数据行为。
+ * 采用 mState 与 mCurrentFolderId 的状态驱动逻辑决定界面与数据行为
  * 逻辑示意：onCreate(savedInstanceState) -> initResources() -> onStart() -> startAsyncNotesListQuery()
  * -> BackgroundQueryHandler.onQueryComplete(token, cookie, cursor) -> 列表交互分发(onClick/onItemLongClick/onOptionsItemSelected)
  * -> openNode(data)/openFolder(data)/batchDelete()/deleteFolder(folderId)/exportNoteToText()
@@ -179,9 +179,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * Activity 创建入口，完成页面初始搭建。
+        * Activity 创建入口，完成页面初始搭建
         * 实现方法：
-        * 设置布局后调用 initResources 初始化控件与监听，再调用 setAppInfoFromRawRes 处理首次介绍便签。
+        * 设置布局后调用 initResources 初始化控件与监听，再调用 setAppInfoFromRawRes 处理首次介绍便签
      */
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +197,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 处理从编辑页返回后的刷新逻辑。
+        * 处理从编辑页返回后的刷新逻辑
         * 实现方法：
-        * 判断 requestCode/resultCode，只有便签打开或新建成功时才刷新列表游标。
+        * 判断 requestCode/resultCode，只有便签打开或新建成功时才刷新列表游标
      */
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // 只有编辑页“保存成功返回”时才刷新列表；其他情况保持默认处理
@@ -213,9 +213,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 首次启动时插入“应用介绍”便签。
+        * 首次启动时插入“应用介绍”便签
         * 实现方法：
-        * 读取 raw/introduction 文本，创建 WorkingNote 并保存，最后用 SharedPreferences 记录已完成标记。
+        * 读取 raw/introduction 文本，创建 WorkingNote 并保存，最后用 SharedPreferences 记录已完成标记
      */
     private void setAppInfoFromRawRes() {
         // 默认配置存储，用来记录“是否已经插入过介绍便签”
@@ -278,9 +278,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 页面进入可见状态时刷新列表。
+        * 页面进入可见状态时刷新列表
         * 实现方法：
-        * 在 onStart 中调用 startAsyncNotesListQuery 发起异步查询。
+        * 在 onStart 中调用 startAsyncNotesListQuery 发起异步查询
      */
     protected void onStart() {
         super.onStart();
@@ -289,9 +289,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 初始化页面依赖对象和交互监听。
+        * 初始化页面依赖对象和交互监听
         * 实现方法：
-        * 初始化 ContentResolver、QueryHandler、ListView、Adapter、按钮监听和状态变量。
+        * 初始化 ContentResolver、QueryHandler、ListView、Adapter、按钮监听和状态变量
      */
     private void initResources() {
         // 数据访问入口
@@ -329,9 +329,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 封装列表多选模式（ActionMode）的行为。
+        * 封装列表多选模式（ActionMode）的行为
         * 实现方法：
-        * 在回调中管理菜单初始化、勾选状态、删除/移动动作以及多选模式进入退出。
+        * 在回调中管理菜单初始化、勾选状态、删除/移动动作以及多选模式进入退出
      */
     private class ModeCallback implements ListView.MultiChoiceModeListener, OnMenuItemClickListener {
         // 顶部下拉菜单（显示已选数量、全选/取消全选）
@@ -343,9 +343,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 进入多选模式时初始化菜单 UI。
+         * 进入多选模式时初始化菜单 UI
          * 实现方法：
-         * 加载菜单资源，按条件显示移动菜单，并配置下拉选择菜单与自定义视图。
+         * 加载菜单资源，按条件显示移动菜单，并配置下拉选择菜单与自定义视图
          */
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             getMenuInflater().inflate(R.menu.note_list_options, menu);
@@ -383,9 +383,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 更新多选菜单标题和全选按钮状态。
+         * 更新多选菜单标题和全选按钮状态
          * 实现方法：
-         * 根据适配器当前选中数量与是否全选，动态设置文案和勾选状态。
+         * 根据适配器当前选中数量与是否全选，动态设置文案和勾选状态
          */
         private void updateMenu() {
             // 当前选中数量
@@ -418,9 +418,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 退出多选模式后恢复普通列表交互。
+         * 退出多选模式后恢复普通列表交互
          * 实现方法：
-         * 关闭 choiceMode，恢复列表长按能力，并重新显示“新建便签”按钮。
+         * 关闭 choiceMode，恢复列表长按能力，并重新显示“新建便签”按钮
          */
         public void onDestroyActionMode(ActionMode mode) {
             mNotesListAdapter.setChoiceMode(false);
@@ -430,9 +430,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 提供外部主动结束多选模式的入口。
+         * 提供外部主动结束多选模式的入口
          * 实现方法：
-         * 直接调用 ActionMode.finish()。
+         * 直接调用 ActionMode.finish()
          */
         public void finishActionMode() {
             mActionMode.finish();
@@ -440,9 +440,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 响应列表项勾选变化。
+         * 响应列表项勾选变化
          * 实现方法：
-         * 将勾选状态同步到适配器后刷新菜单显示。
+         * 将勾选状态同步到适配器后刷新菜单显示
          */
         public void onItemCheckedStateChanged(ActionMode mode, int position, long id,
                 boolean checked) {
@@ -452,9 +452,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
         /*
          * 作用：
-         * 处理多选菜单点击事件。
+         * 处理多选菜单点击事件
          * 实现方法：
-         * 先校验是否有选中项，再按菜单 id 分发删除或移动流程。
+         * 先校验是否有选中项，再按菜单 id 分发删除或移动流程
          */
         public boolean onMenuItemClick(MenuItem item) {
             // 没有选中任何条目时，不执行删除/移动
@@ -519,17 +519,17 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 处理“新建便签”按钮触摸细节。
+        * 处理“新建便签”按钮触摸细节
         * 实现方法：
-        * 对透明区域触摸进行坐标换算并透传到 ListView，保证底层列表可以继续滚动。
+        * 对透明区域触摸进行坐标换算并透传到 ListView，保证底层列表可以继续滚动
      */
     private class NewNoteOnTouchListener implements OnTouchListener {
 
         /*
          * 作用：
-         * 分发并转发触摸事件。
+         * 分发并转发触摸事件
          * 实现方法：
-         * 在 ACTION_DOWN/ACTION_MOVE/ACTION_UP(默认分支)中维护转发状态和坐标。
+         * 在 ACTION_DOWN/ACTION_MOVE/ACTION_UP(默认分支)中维护转发状态和坐标
          */
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
@@ -601,9 +601,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 异步查询当前目录的列表数据。
+        * 异步查询当前目录的列表数据
         * 实现方法：
-        * 根据 mCurrentFolderId 选择查询条件并启动 AsyncQueryHandler 查询。
+        * 根据 mCurrentFolderId 选择查询条件并启动 AsyncQueryHandler 查询
      */
     private void startAsyncNotesListQuery() {
         // 根目录与子目录使用不同查询条件
@@ -617,16 +617,16 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 承接异步查询返回结果。
+        * 承接异步查询返回结果
         * 实现方法：
-        * 按 token 区分“列表查询”和“文件夹查询”，分别刷新列表或弹出文件夹菜单。
+        * 按 token 区分“列表查询”和“文件夹查询”，分别刷新列表或弹出文件夹菜单
      */
     private final class BackgroundQueryHandler extends AsyncQueryHandler {
         /*
          * 作用：
-         * 初始化异步查询处理器。
+         * 初始化异步查询处理器
          * 实现方法：
-         * 通过 super(contentResolver) 交给 AsyncQueryHandler 使用。
+         * 通过 super(contentResolver) 交给 AsyncQueryHandler 使用
          */
         public BackgroundQueryHandler(ContentResolver contentResolver) {
             super(contentResolver);
@@ -635,9 +635,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
         @Override
         /*
          * 作用：
-         * 处理查询完成回调。
+         * 处理查询完成回调
          * 实现方法：
-         * switch(token) 分发处理，不同 token 执行不同 UI 更新。
+         * switch(token) 分发处理，不同 token 执行不同 UI 更新
          */
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             switch (token) {
@@ -661,9 +661,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 展示目标文件夹选择弹窗。
+        * 展示目标文件夹选择弹窗
         * 实现方法：
-        * 用 FoldersListAdapter 绑定对话框列表，点击后调用批量移动并退出多选模式。
+        * 用 FoldersListAdapter 绑定对话框列表，点击后调用批量移动并退出多选模式
      */
     private void showFolderListMenu(Cursor cursor) {
         AlertDialog.Builder builder = new AlertDialog.Builder(NotesListActivity.this);
@@ -689,9 +689,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 打开“新建便签”编辑页。
+        * 打开“新建便签”编辑页
         * 实现方法：
-        * 构造 Intent(ACTION_INSERT_OR_EDIT) 并携带当前 folderId，使用 startActivityForResult 启动。
+        * 构造 Intent(ACTION_INSERT_OR_EDIT) 并携带当前 folderId，使用 startActivityForResult 启动
      */
     private void createNewNote() {
         Intent intent = new Intent(this, NoteEditActivity.class);
@@ -702,9 +702,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 批量处理已选便签的删除逻辑。
+        * 批量处理已选便签的删除逻辑
         * 实现方法：
-        * 在后台线程中按同步模式执行“直接删除”或“移入回收站”，前台线程刷新受影响小组件并结束多选。
+        * 在后台线程中按同步模式执行“直接删除”或“移入回收站”，前台线程刷新受影响小组件并结束多选
      */
     private void batchDelete() {
         new AsyncTask<Void, Void, HashSet<AppWidgetAttribute>>() {
@@ -749,9 +749,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 删除单个文件夹并处理联动更新。
+        * 删除单个文件夹并处理联动更新
         * 实现方法：
-        * 先保护根目录，再按同步模式删除/移入回收站，最后刷新关联 widget。
+        * 先保护根目录，再按同步模式删除/移入回收站，最后刷新关联 widget
      */
     private void deleteFolder(long folderId) {
         // 根目录是系统目录，禁止删除
@@ -787,9 +787,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 打开某条便签详情页。
+        * 打开某条便签详情页
         * 实现方法：
-        * 通过 ACTION_VIEW 携带便签 id，启动 NoteEditActivity。
+        * 通过 ACTION_VIEW 携带便签 id，启动 NoteEditActivity
      */
     private void openNode(NoteItemData data) {
         Intent intent = new Intent(this, NoteEditActivity.class);
@@ -800,9 +800,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 进入指定文件夹并切换页面状态。
+        * 进入指定文件夹并切换页面状态
         * 实现方法：
-        * 更新当前 folderId 后重查列表，再根据文件夹类型调整标题与“新建”按钮可见性。
+        * 更新当前 folderId 后重查列表，再根据文件夹类型调整标题与“新建”按钮可见性
      */
     private void openFolder(NoteItemData data) {
         mCurrentFolderId = data.getId();
@@ -825,9 +825,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 处理页面点击事件入口。
+        * 处理页面点击事件入口
         * 实现方法：
-        * 通过 view id 分发动作，目前主要处理“新建便签”。
+        * 通过 view id 分发动作，目前主要处理“新建便签”
      */
     public void onClick(View v) {
 //        switch (v.getId()) {
@@ -847,9 +847,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 主动显示软键盘。
+        * 主动显示软键盘
         * 实现方法：
-        * 获取 InputMethodManager 后调用 toggleSoftInput。
+        * 获取 InputMethodManager 后调用 toggleSoftInput
      */
     private void showSoftInput() {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -860,9 +860,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 隐藏软键盘。
+        * 隐藏软键盘
         * 实现方法：
-        * 根据目标 view 的 windowToken 调用 hideSoftInputFromWindow。
+        * 根据目标 view 的 windowToken 调用 hideSoftInputFromWindow
      */
     private void hideSoftInput(View view) {
         InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -871,9 +871,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 弹出“新建文件夹/重命名文件夹”对话框并处理提交。
+        * 弹出“新建文件夹/重命名文件夹”对话框并处理提交
         * 实现方法：
-        * 根据 create 决定初始化内容，点击确定时校验名称并执行 insert/update。
+        * 根据 create 决定初始化内容，点击确定时校验名称并执行 insert/update
      * @param create true 表示新建；false 表示重命名
      */
     private void showCreateOrModifyFolderDialog(final boolean create) {
@@ -973,9 +973,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 自定义返回键行为。
+        * 自定义返回键行为
         * 实现方法：
-        * 根据 mState 决定是返回根目录并刷新列表，还是调用系统默认返回。
+        * 根据 mState 决定是返回根目录并刷新列表，还是调用系统默认返回
      */
     public void onBackPressed() {
         switch (mState) {
@@ -1005,9 +1005,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 刷新指定桌面小组件实例。
+        * 刷新指定桌面小组件实例
         * 实现方法：
-        * 根据 widget 类型设置 Provider，发送 APPWIDGET_UPDATE 广播并回传结果。
+        * 根据 widget 类型设置 Provider，发送 APPWIDGET_UPDATE 广播并回传结果
      */
     private void updateWidget(int appWidgetId, int appWidgetType) {
         Intent intent = new Intent(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
@@ -1031,9 +1031,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 
     /*
         * 作用：
-        * 为文件夹长按创建上下文菜单。
+        * 为文件夹长按创建上下文菜单
         * 实现方法：
-        * 在监听器中基于当前焦点项动态添加“查看/删除/重命名”菜单项。
+        * 在监听器中基于当前焦点项动态添加“查看/删除/重命名”菜单项
      */
     private final OnCreateContextMenuListener mFolderOnCreateContextMenuListener = new OnCreateContextMenuListener() {
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
@@ -1050,9 +1050,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 上下文菜单关闭后的清理。
+        * 上下文菜单关闭后的清理
         * 实现方法：
-        * 置空 OnCreateContextMenuListener，避免影响后续长按流程。
+        * 置空 OnCreateContextMenuListener，避免影响后续长按流程
      */
     public void onContextMenuClosed(Menu menu) {
         // 菜单关闭后解除监听，避免影响后续普通长按
@@ -1065,9 +1065,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 处理文件夹上下文菜单项点击。
+        * 处理文件夹上下文菜单项点击
         * 实现方法：
-        * 先校验焦点项，再按菜单 id 分发到查看、删除确认、重命名。
+        * 先校验焦点项，再按菜单 id 分发到查看、删除确认、重命名
      */
     public boolean onContextItemSelected(MenuItem item) {
         // 没有焦点项时无法执行文件夹菜单动作
@@ -1106,9 +1106,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
     @Override
     /*
         * 作用：
-        * 根据页面状态动态准备顶部菜单。
+        * 根据页面状态动态准备顶部菜单
         * 实现方法：
-        * 每次先清空菜单，再按 mState inflate 对应菜单资源并更新同步文案。
+        * 每次先清空菜单，再按 mState inflate 对应菜单资源并更新同步文案
      */
     public boolean onPrepareOptionsMenu(Menu menu) {
         menu.clear();
@@ -1172,9 +1172,9 @@ public class NotesListActivity extends Activity implements OnClickListener, OnIt
 @Override
 /*
  * 作用：
- * 处理顶部菜单点击事件。
+ * 处理顶部菜单点击事件
  * 实现方法：
- * 通过 itemId 分发到新建文件夹、导出、同步、设置、新建便签、搜索等动作。
+ * 通过 itemId 分发到新建文件夹、导出、同步、设置、新建便签、搜索等动作
  */
 public boolean onOptionsItemSelected(MenuItem item) {
     int itemId = item.getItemId();
@@ -1230,9 +1230,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
     @Override
     /*
         * 作用：
-        * 发起系统搜索入口。
+        * 发起系统搜索入口
         * 实现方法：
-        * 调用 startSearch 并返回 true 表示事件已处理。
+        * 调用 startSearch 并返回 true 表示事件已处理
      */
     public boolean onSearchRequested() {
         startSearch(null, false, null /* appData */, false);
@@ -1241,9 +1241,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 导出便签到文本文件。
+        * 导出便签到文本文件
         * 实现方法：
-        * 使用 AsyncTask 后台调用 BackupUtils.exportToText，前台根据状态码弹出结果对话框。
+        * 使用 AsyncTask 后台调用 BackupUtils.exportToText，前台根据状态码弹出结果对话框
      */
     private void exportNoteToText() {
         // 备份/导出工具类
@@ -1294,9 +1294,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 判断是否可进入同步模式。
+        * 判断是否可进入同步模式
         * 实现方法：
-        * 读取同步账号名，trim 后长度大于 0 视为已配置。
+        * 读取同步账号名，trim 后长度大于 0 视为已配置
      */
     private boolean isSyncMode() {
         return NotesPreferenceActivity.getSyncAccountName(this).trim().length() > 0;
@@ -1304,9 +1304,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 打开设置页面。
+        * 打开设置页面
         * 实现方法：
-        * 优先使用父 Activity 作为启动上下文，否则使用当前 Activity。
+        * 优先使用父 Activity 作为启动上下文，否则使用当前 Activity
      */
     private void startPreferenceActivity() {
         // 如果有父 Activity，则从父 Activity 打开；否则当前页面打开
@@ -1317,17 +1317,17 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 封装列表项点击处理逻辑。
+        * 封装列表项点击处理逻辑
         * 实现方法：
-        * 在回调中区分多选状态与页面状态，决定是勾选、打开便签还是进入文件夹。
+        * 在回调中区分多选状态与页面状态，决定是勾选、打开便签还是进入文件夹
      */
     private class OnListItemClickListener implements OnItemClickListener {
 
         /*
          * 作用：
-         * 处理单个列表项点击。
+         * 处理单个列表项点击
          * 实现方法：
-         * 先判断是否为 NotesListItem，再按“多选模式/普通模式”和条目类型分发行为。
+         * 先判断是否为 NotesListItem，再按“多选模式/普通模式”和条目类型分发行为
          */
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             // 只处理便签列表项视图，跳过 footer/header 等其他视图
@@ -1375,9 +1375,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 查询“移动便签”可选目标文件夹。
+        * 查询“移动便签”可选目标文件夹
         * 实现方法：
-        * 构造 selection（排除回收站与当前目录，必要时包含根目录）并异步查询。
+        * 构造 selection（排除回收站与当前目录，必要时包含根目录）并异步查询
      */
     private void startQueryDestinationFolders() {
         // 基础条件：普通文件夹、非回收站、排除当前文件夹
@@ -1401,9 +1401,9 @@ public boolean onOptionsItemSelected(MenuItem item) {
 
     /*
         * 作用：
-        * 处理列表项长按行为。
+        * 处理列表项长按行为
         * 实现方法：
-        * 长按便签进入 ActionMode 多选，长按文件夹则注册并显示上下文菜单。
+        * 长按便签进入 ActionMode 多选，长按文件夹则注册并显示上下文菜单
      */
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         // 只处理便签行视图
