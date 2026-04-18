@@ -37,12 +37,40 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
+/**
+ * SqlNote 类是笔记数据的数据库操作封装类。
+ * 该类提供了对笔记（包括普通笔记和文件夹）的增删改查操作，
+ * 支持JSON格式的数据转换、版本控制和Google Tasks同步。
+ *
+ * 主要功能：
+ * - 从数据库加载笔记信息和关联的数据项
+ * - 将笔记转换为JSON格式用于云端同步
+ * - 从JSON数据设置笔记属性
+ * - 提交笔记到数据库（插入或更新）
+ * - 支持版本验证的并发控制
+ * - 管理笔记的附件数据列表
+ *
+ * 支持的笔记类型：
+ * - 普通笔记（TYPE_NOTE）：包含内容和附件数据
+ * - 文件夹（TYPE_FOLDER）：用于组织笔记的层级结构
+ * - 系统文件夹（TYPE_SYSTEM）：特殊的系统预定义文件夹
+ */
 public class SqlNote {
+    /**
+     * 日志标签，用于调试和错误日志记录。
+     * 使用类名作为标签，便于在日志中识别来源。
+     */
     private static final String TAG = SqlNote.class.getSimpleName();
 
+    /**
+     * 无效ID常量，用于表示未设置或无效的笔记ID。
+     */
     private static final int INVALID_ID = -99999;
 
+    /**
+     * 笔记查询投影数组，定义了从数据库查询时需要返回的列。
+     * 包含笔记的所有基本属性字段，用于完整的笔记信息查询。
+     */
     public static final String[] PROJECTION_NOTE = new String[] {
             NoteColumns.ID, NoteColumns.ALERTED_DATE, NoteColumns.BG_COLOR_ID,
             NoteColumns.CREATED_DATE, NoteColumns.HAS_ATTACHMENT, NoteColumns.MODIFIED_DATE,
@@ -52,76 +80,189 @@ public class SqlNote {
             NoteColumns.VERSION
     };
 
+    /**
+     * 投影数组中ID列的索引位置。
+     */
     public static final int ID_COLUMN = 0;
 
+    /**
+     * 投影数组中提醒日期列的索引位置。
+     */
     public static final int ALERTED_DATE_COLUMN = 1;
 
+    /**
+     * 投影数组中背景颜色ID列的索引位置。
+     */
     public static final int BG_COLOR_ID_COLUMN = 2;
 
+    /**
+     * 投影数组中创建日期列的索引位置。
+     */
     public static final int CREATED_DATE_COLUMN = 3;
 
+    /**
+     * 投影数组中是否有附件列的索引位置。
+     */
     public static final int HAS_ATTACHMENT_COLUMN = 4;
 
+    /**
+     * 投影数组中修改日期列的索引位置。
+     */
     public static final int MODIFIED_DATE_COLUMN = 5;
 
+    /**
+     * 投影数组中子笔记数量列的索引位置。
+     */
     public static final int NOTES_COUNT_COLUMN = 6;
 
+    /**
+     * 投影数组中父文件夹ID列的索引位置。
+     */
     public static final int PARENT_ID_COLUMN = 7;
 
+    /**
+     * 投影数组中摘要内容列的索引位置。
+     */
     public static final int SNIPPET_COLUMN = 8;
 
+    /**
+     * 投影数组中类型列的索引位置。
+     */
     public static final int TYPE_COLUMN = 9;
 
+    /**
+     * 投影数组中小部件ID列的索引位置。
+     */
     public static final int WIDGET_ID_COLUMN = 10;
 
+    /**
+     * 投影数组中小部件类型列的索引位置。
+     */
     public static final int WIDGET_TYPE_COLUMN = 11;
 
+    /**
+     * 投影数组中同步ID列的索引位置。
+     */
     public static final int SYNC_ID_COLUMN = 12;
 
+    /**
+     * 投影数组中本地修改标记列的索引位置。
+     */
     public static final int LOCAL_MODIFIED_COLUMN = 13;
 
+    /**
+     * 投影数组中原父文件夹ID列的索引位置。
+     */
     public static final int ORIGIN_PARENT_ID_COLUMN = 14;
 
+    /**
+     * 投影数组中Google Task ID列的索引位置。
+     */
     public static final int GTASK_ID_COLUMN = 15;
 
+    /**
+     * 投影数组中版本号列的索引位置。
+     */
     public static final int VERSION_COLUMN = 16;
 
+    /**
+     * Android上下文，用于获取系统服务和资源。
+     */
     private Context mContext;
 
+    /**
+     * ContentResolver实例，用于执行数据库操作。
+     */
     private ContentResolver mContentResolver;
 
+    /**
+     * 创建标记，表示该笔记是否为新建状态。
+     * true表示新建，false表示从数据库加载。
+     */
     private boolean mIsCreate;
 
+    /**
+     * 笔记的ID，如果为INVALID_ID表示未保存到数据库。
+     */
     private long mId;
 
+    /**
+     * 提醒日期时间戳。
+     */
     private long mAlertDate;
 
+    /**
+     * 背景颜色ID，对应预定义的颜色资源。
+     */
     private int mBgColorId;
 
+    /**
+     * 创建日期时间戳。
+     */
     private long mCreatedDate;
 
+    /**
+     * 是否有附件标记，0表示无附件，1表示有附件。
+     */
     private int mHasAttachment;
 
+    /**
+     * 最后修改日期时间戳。
+     */
     private long mModifiedDate;
 
+    /**
+     * 父文件夹ID，用于构建笔记的层级结构。
+     */
     private long mParentId;
 
+    /**
+     * 笔记摘要内容，通常是笔记的前几行文本。
+     */
     private String mSnippet;
 
+    /**
+     * 笔记类型：普通笔记、文件夹或系统文件夹。
+     */
     private int mType;
 
+    /**
+     * 小部件ID，如果笔记被添加到桌面小部件。
+     */
     private int mWidgetId;
 
+    /**
+     * 小部件类型，定义小部件的显示样式。
+     */
     private int mWidgetType;
 
+    /**
+     * 原始父文件夹ID，用于同步时的冲突解决。
+     */
     private long mOriginParent;
 
+    /**
+     * 版本号，用于并发控制和版本验证。
+     */
     private long mVersion;
 
+    /**
+     * 笔记差异数据值，用于存储需要更新的字段。
+     * 只包含相对于当前值的变更，提高更新效率。
+     */
     private ContentValues mDiffNoteValues;
 
+    /**
+     * 关联的数据项列表，存储笔记的附件数据（如图片、录音等）。
+     */
     private ArrayList<SqlData> mDataList;
 
+    /**
+     * 构造函数，创建一个新的笔记对象。
+     * 初始化所有字段为默认值，并标记为创建状态。
+     * 
+     * @param context Android上下文，用于获取系统服务和默认资源
+     */
     public SqlNote(Context context) {
         mContext = context;
         mContentResolver = context.getContentResolver();
@@ -143,6 +284,13 @@ public class SqlNote {
         mDataList = new ArrayList<SqlData>();
     }
 
+    /**
+     * 构造函数，从数据库游标加载笔记信息。
+     * 从游标中读取笔记的所有字段，并加载关联的数据项。
+     * 
+     * @param context Android上下文，用于获取系统服务
+     * @param c 包含笔记信息的数据库游标
+     */
     public SqlNote(Context context, Cursor c) {
         mContext = context;
         mContentResolver = context.getContentResolver();
@@ -154,6 +302,13 @@ public class SqlNote {
         mDiffNoteValues = new ContentValues();
     }
 
+    /**
+     * 构造函数，通过笔记ID从数据库加载笔记信息。
+     * 根据ID查询数据库并加载完整的笔记信息和数据项。
+     * 
+     * @param context Android上下文，用于获取系统服务
+     * @param id 笔记的数据库ID
+     */
     public SqlNote(Context context, long id) {
         mContext = context;
         mContentResolver = context.getContentResolver();
@@ -166,6 +321,12 @@ public class SqlNote {
 
     }
 
+    /**
+     * 通过笔记ID从数据库加载笔记信息。
+     * 执行数据库查询并将结果加载到对象字段中。
+     * 
+     * @param id 要加载的笔记ID
+     */
     private void loadFromCursor(long id) {
         Cursor c = null;
         try {
@@ -185,6 +346,12 @@ public class SqlNote {
         }
     }
 
+    /**
+     * 从数据库游标加载笔记字段值。
+     * 根据预定义的列索引从游标中读取各个字段的值。
+     * 
+     * @param c 包含笔记信息的数据库游标
+     */
     private void loadFromCursor(Cursor c) {
         mId = c.getLong(ID_COLUMN);
         mAlertDate = c.getLong(ALERTED_DATE_COLUMN);
@@ -200,6 +367,10 @@ public class SqlNote {
         mVersion = c.getLong(VERSION_COLUMN);
     }
 
+    /**
+     * 加载笔记关联的数据项内容。
+     * 查询数据库中属于该笔记的所有数据项，并创建SqlData对象列表。
+     */
     private void loadDataContent() {
         Cursor c = null;
         mDataList.clear();
@@ -226,6 +397,14 @@ public class SqlNote {
         }
     }
 
+    /**
+     * 从JSON对象设置笔记内容。
+     * 解析JSON对象中的笔记信息，根据笔记类型处理不同的字段。
+     * 支持文件夹和普通笔记的差异化处理。
+     * 
+     * @param js 包含笔记信息的JSONObject对象
+     * @return 设置是否成功，JSON解析失败时返回false
+     */
     public boolean setContent(JSONObject js) {
         try {
             JSONObject note = js.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
@@ -359,6 +538,13 @@ public class SqlNote {
         return true;
     }
 
+    /**
+     * 将笔记内容转换为JSON对象。
+     * 根据笔记类型生成相应的JSON结构，用于云端同步。
+     * 普通笔记包含完整信息和数据项，文件夹只包含基本信息。
+     * 
+     * @return 包含笔记信息的JSONObject对象，创建状态时返回null
+     */
     public JSONObject getContent() {
         try {
             JSONObject js = new JSONObject();
@@ -370,6 +556,7 @@ public class SqlNote {
 
             JSONObject note = new JSONObject();
             if (mType == Notes.TYPE_NOTE) {
+                // 普通笔记的完整信息
                 note.put(NoteColumns.ID, mId);
                 note.put(NoteColumns.ALERTED_DATE, mAlertDate);
                 note.put(NoteColumns.BG_COLOR_ID, mBgColorId);
@@ -384,6 +571,7 @@ public class SqlNote {
                 note.put(NoteColumns.ORIGIN_PARENT_ID, mOriginParent);
                 js.put(GTaskStringUtils.META_HEAD_NOTE, note);
 
+                // 添加数据项数组
                 JSONArray dataArray = new JSONArray();
                 for (SqlData sqlData : mDataList) {
                     JSONObject data = sqlData.getContent();
@@ -393,6 +581,7 @@ public class SqlNote {
                 }
                 js.put(GTaskStringUtils.META_HEAD_DATA, dataArray);
             } else if (mType == Notes.TYPE_FOLDER || mType == Notes.TYPE_SYSTEM) {
+                // 文件夹的基本信息
                 note.put(NoteColumns.ID, mId);
                 note.put(NoteColumns.TYPE, mType);
                 note.put(NoteColumns.SNIPPET, mSnippet);
@@ -407,39 +596,87 @@ public class SqlNote {
         return null;
     }
 
+    /**
+     * 设置笔记的父文件夹ID。
+     * 用于移动笔记到不同的文件夹中。
+     * 
+     * @param id 新的父文件夹ID
+     */
     public void setParentId(long id) {
         mParentId = id;
         mDiffNoteValues.put(NoteColumns.PARENT_ID, id);
     }
 
+    /**
+     * 设置Google Task ID，用于与云端任务关联。
+     * 
+     * @param gid Google Task的唯一标识符
+     */
     public void setGtaskId(String gid) {
         mDiffNoteValues.put(NoteColumns.GTASK_ID, gid);
     }
 
+    /**
+     * 设置同步ID，用于同步过程中的标识。
+     * 
+     * @param syncId 同步ID
+     */
     public void setSyncId(long syncId) {
         mDiffNoteValues.put(NoteColumns.SYNC_ID, syncId);
     }
 
+    /**
+     * 重置本地修改标记。
+     * 用于表示笔记已经同步，不再有本地修改。
+     */
     public void resetLocalModified() {
         mDiffNoteValues.put(NoteColumns.LOCAL_MODIFIED, 0);
     }
 
+    /**
+     * 获取笔记的ID。
+     * 
+     * @return 笔记的ID，未保存时返回INVALID_ID
+     */
     public long getId() {
         return mId;
     }
 
+    /**
+     * 获取笔记的父文件夹ID。
+     * 
+     * @return 父文件夹ID
+     */
     public long getParentId() {
         return mParentId;
     }
 
+    /**
+     * 获取笔记的摘要内容。
+     * 
+     * @return 笔记摘要字符串
+     */
     public String getSnippet() {
         return mSnippet;
     }
 
+    /**
+     * 判断笔记是否为普通笔记类型。
+     * 
+     * @return true如果是普通笔记，false如果是文件夹或系统文件夹
+     */
     public boolean isNoteType() {
         return mType == Notes.TYPE_NOTE;
     }
 
+    /**
+     * 提交笔记到数据库。
+     * 根据创建状态执行插入或更新操作，
+     * 支持版本验证的并发控制。
+     * 
+     * @param validateVersion 是否启用版本验证
+     * @throws ActionFailureException 操作失败时抛出异常
+     */
     public void commit(boolean validateVersion) {
         if (mIsCreate) {
             if (mId == INVALID_ID && mDiffNoteValues.containsKey(NoteColumns.ID)) {
@@ -494,7 +731,7 @@ public class SqlNote {
             }
         }
 
-        // refresh local info
+        // 刷新本地信息
         loadFromCursor(mId);
         if (mType == Notes.TYPE_NOTE)
             loadDataContent();
