@@ -38,6 +38,13 @@ import java.util.HashMap;
  */
 public class Contact {
     /**
+     * 私有构造函数，用于隐藏隐式公共构造函数。
+     * 防止该工具类被实例化，所有方法都应该通过类名直接调用。
+     */
+    private Contact() {
+    }
+
+    /**
      * 联系人缓存，使用HashMap存储电话号码到姓名的映射关系。
      * 用于缓存查询结果，提高重复查询的性能，避免每次都访问联系人数据库。
      * 键为电话号码，值为对应的联系人姓名。
@@ -77,9 +84,15 @@ public class Contact {
      * @return 联系人姓名，如果未找到则返回null
      */
     public static String getContact(Context context, String phoneNumber) {
+        // 参数验证：检查必要参数是否为null
+        if (context == null || phoneNumber == null || phoneNumber.isEmpty()) {
+            Log.w(TAG, "getContact: Invalid parameters - context or phoneNumber is null/empty");
+            return null;
+        }
+
         // 初始化联系人缓存，如果还未创建则创建新的HashMap实例
         if(sContactCache == null) {
-            sContactCache = new HashMap<String, String>();
+            sContactCache = new HashMap<>();
         }
 
         // 检查缓存中是否已存在该电话号码的查询结果
@@ -100,24 +113,30 @@ public class Contact {
                 null);
 
         // 处理查询结果
-        if (cursor != null && cursor.moveToFirst()) {
+        if (cursor != null) {
             try {
-                // 从查询结果中获取联系人姓名
-                String name = cursor.getString(0);
-                // 将查询结果存入缓存
-                sContactCache.put(phoneNumber, name);
-                return name;
+                if (cursor.moveToFirst()) {
+                    // 从查询结果中获取联系人姓名
+                    String name = cursor.getString(0);
+                    // 将查询结果存入缓存
+                    sContactCache.put(phoneNumber, name);
+                    return name;
+                } else {
+                    // 未找到匹配的联系人，记录调试日志
+                    Log.d(TAG, "No contact matched with number:" + phoneNumber);
+                    return null;
+                }
             } catch (IndexOutOfBoundsException e) {
                 // 处理游标访问越界异常
-                Log.e(TAG, " Cursor get string error " + e.toString());
+                Log.e(TAG, " Cursor get string error ", e);
                 return null;
             } finally {
                 // 确保游标被关闭，释放资源
                 cursor.close();
             }
         } else {
-            // 未找到匹配的联系人，记录调试日志
-            Log.d(TAG, "No contact matched with number:" + phoneNumber);
+            // 查询返回null，记录日志
+            Log.w(TAG, "Query returned null cursor for number:" + phoneNumber);
             return null;
         }
     }

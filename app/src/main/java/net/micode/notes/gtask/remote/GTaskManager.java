@@ -643,11 +643,13 @@ public class GTaskManager {
                 break;
             // 删除本地笔记
             case Node.SYNC_ACTION_DEL_LOCAL:
-                meta = mMetaHashMap.get(c.getString(SqlNote.GTASK_ID_COLUMN));
-                if (meta != null) {
-                    GTaskClient.getInstance().deleteNode(meta);
+                if (c != null) {
+                    meta = mMetaHashMap.get(c.getString(SqlNote.GTASK_ID_COLUMN));
+                    if (meta != null) {
+                        GTaskClient.getInstance().deleteNode(meta);
+                    }
+                    mLocalDeleteIdMap.add(c.getLong(SqlNote.ID_COLUMN));
                 }
-                mLocalDeleteIdMap.add(c.getLong(SqlNote.ID_COLUMN));
                 break;
             // 删除远程任务
             case Node.SYNC_ACTION_DEL_REMOTE:

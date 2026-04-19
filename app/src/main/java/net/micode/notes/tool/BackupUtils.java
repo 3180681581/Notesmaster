@@ -355,9 +355,13 @@ public class BackupUtils {
             mFileDirectory = mContext.getString(R.string.file_path);
             PrintStream ps = null;
             try {
-                FileOutputStream fos = new FileOutputStream(file);
-                ps = new PrintStream(fos);
+                try (FileOutputStream fos = new FileOutputStream(file)) {
+                    ps = new PrintStream(fos);
+                }
             } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return null;
+            } catch (IOException e) {
                 e.printStackTrace();
                 return null;
             } catch (NullPointerException e) {

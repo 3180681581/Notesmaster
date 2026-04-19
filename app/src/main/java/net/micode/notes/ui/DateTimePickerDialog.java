@@ -126,7 +126,7 @@ public class DateTimePickerDialog extends AlertDialog implements OnClickListener
             DateUtils.FORMAT_SHOW_YEAR |
             DateUtils.FORMAT_SHOW_DATE |
             DateUtils.FORMAT_SHOW_TIME;
-        flag |= mIs24HourView ? DateUtils.FORMAT_24HOUR : DateUtils.FORMAT_24HOUR;
+        flag |= mIs24HourView ? DateUtils.FORMAT_24HOUR : DateUtils.FORMAT_12HOUR;
         setTitle(DateUtils.formatDateTime(this.getContext(), date, flag));
     }
 

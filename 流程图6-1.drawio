@@ -1,0 +1,947 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram name="第 1 页" id="qEcK64amTAtzE_ykr6sc">
+    <mxGraphModel dx="2222" dy="1495" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KoViix1HsBYP-VSg6CFq-50" value="界面反馈" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1402" y="12675" width="711" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-51" value="NoteEditActivity.handleImagePickResult 内部处理" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="720" y="4064" width="1632" height="8561" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-52" value="NoteEditActivity.java 回调处理" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2372" y="3175" width="741" height="1145" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-53" value="系统图片选择器" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2578" y="2997" width="330" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-54" value="NoteEditActivity.java 主流程" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2493" y="348" width="498" height="2576" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-55" value="用户操作" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2579" y="20" width="327" height="278" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-56" value="" style="whiteSpace=wrap;strokeWidth=2;verticalAlign=top;" vertex="1" parent="1">
+          <mxGeometry x="2941" y="45" width="298" height="228" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-57" value="[NoteEditActivity.java]" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="KoViix1HsBYP-VSg6CFq-56">
+          <mxGeometry x="46" y="43" width="223" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-58" value="说明: ..." style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="KoViix1HsBYP-VSg6CFq-56">
+          <mxGeometry x="97" y="147" width="120" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-59" value="用户点击菜单选项&#39;插入图片&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2614" y="132" width="257" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-60" value="NoteEditActivity.onOptionsItemSelected(MenuItem item)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2528" y="373" width="428" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-61" value="if (itemId == R.id.menu_insert_image)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="501" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-62" value="调用 pickImageFromSystem()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="629" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-63" value="NoteEditActivity.pickImageFromSystem()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2567" y="757" width="352" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-64" value="创建 Intent 启动系统选择器" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2614" y="861" width="257" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-65" value="Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2566" y="965" width="353" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-66" value="说明：ACTION_OPEN_DOCUMENT 调用系统文档选择器&#xa;这个 Intent 会打开系统的文件浏览器让用户选择" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="1093" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-67" value="intent.addCategory(Intent.CATEGORY_OPENABLE)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2534" y="1293" width="417" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-68" value="说明：CATEGORY_OPENABLE 表示只显示可以打开的文件&#xa;系统会根据 MIME 类型筛选可打开的文件" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="1397" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-69" value="intent.setType(&#39;image/*&#39;)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2624" y="1597" width="238" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-70" value="说明：设置 MIME 类型为任意图片格式，但下一步会进一步限制" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="1701" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-71" value="intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {&#39;image/jpeg&#39;, &#39;image/png&#39;})" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2553" y="1853" width="378" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-72" value="说明：明确指定只支持 jpeg 和 png 两种格式&#xa;选择器只会显示这两种类型的文件" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="1981" width="260" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-73" value="startActivityForResult(intent, REQUEST_CODE_PICK_IMAGE)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2605" y="2157" width="276" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-74" value="REQUEST_CODE_PICK_IMAGE = 2001" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2607" y="2285" width="270" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-75" value="说明：请求码用于区分不同的 startActivityForResult 调用" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="2413" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-76" value="启动系统选择器，等待用户操作" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="2565" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-77" value="说明：系统会显示文件选择器界面，用户选择图片后回调 onActivityResult()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="2693" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-78" value="等待返回" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2681" y="2845" width="124" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-79" value="用户在选择器中选择一张图片" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="3022" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-80" value="NoteEditActivity.onActivityResult(int requestCode, int resultCode, Intent data)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2579" y="3200" width="327" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-81" value="if (requestCode == REQUEST_CODE_PICK_IMAGE &amp;&amp; resultCode == RESULT_OK &amp;&amp; data != null)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2607" y="3352" width="270" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-82" value="说明：检查返回结果，确保是图片选择请求且用户点击了确认" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="3528" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-83" value="Uri uri = data.getData()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2628" y="3680" width="229" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-84" value="说明：从返回的 Intent 中获取用户选择的图片的 Uri&#xa;例如：&#39;content://com.android.providers.media.documents/document/image%3A12345&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2407" y="3784" width="671" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-85" value="handleImagePickResult(uri, data.getFlags())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2613" y="3936" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-86" value="说明：处理图片选择结果，传入图片 Uri 和权限标志" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2715" y="4089" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-87" value="处理逻辑继续" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="2767" y="4229" width="156" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-88" value="NoteEditActivity.handleImagePickResult(Uri uri, int flags)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1070" y="4089" width="376" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-89" value="参数验证[NoteEditActivity.java]" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1128" y="4217" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-90" value="if (uri == null)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1178" y="4370" width="160" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-91" value="showToast(R.string.image_attach_failed)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="761" y="4496" width="353" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-92" value="return" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="885" y="4612" width="105" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-93" value="说明：Uri 为空则直接返回，显示插入失败提示" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="807" y="4752" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-94" value="申请持久化权限" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1338" y="4496" width="172" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-95" value="getContentResolver().takePersistableUriPermission(uri, flags &amp; ...)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1194" y="4600" width="460" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-96" value="说明：关键步骤！获取该 Uri 的持久化访问权限&#xa;防止系统重启或内容提供者失效导致 Uri 无法访问" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1294" y="4728" width="260" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-97" value="try-catch 捕获可能的 SecurityException" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1294" y="4904" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-98" value="说明：某些系统或内容提供者可能不支持持久化权限" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1294" y="5032" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-99" value="确保笔记存在于数据库" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1314" y="5160" width="220" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-100" value="if (!mWorkingNote.ensureNoteExists())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1263" y="5264" width="321" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-101" value="showToast(R.string.image_attach_failed)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="927" y="5427" width="353" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-102" value="return" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1051" y="5543" width="105" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-103" value="说明：新建笔记需要先入库拿到 noteId，这会触发一次保存操作" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="974" y="5670" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-104" value="处理已有图片的情况（MVP版本仅允许一张）" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="5415" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-105" value="if (hasImageAttachment())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1478" y="5543" width="250" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-106" value="说明：检查是否已有图片附件" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1307" y="5682" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-107" value="deleteImageAttachmentInternal()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1286" y="5834" width="301" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-108" value="说明：删除旧图片，用新图片替换（MVP版本限制）" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1307" y="5950" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-109" value="hasImageAttachment() 判断逻辑" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1949" y="5822" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-110" value="return mImageDataId &gt; 0 &amp;&amp; !TextUtils.isEmpty(mImageUri)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1939" y="5950" width="280" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-111" value="构建 ContentValues 准备插入数据" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="6078" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-112" value="ContentValues values = new ContentValues()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="6206" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-113" value="values.put(DataColumns.NOTE_ID, mWorkingNote.getNoteId())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1446" y="6334" width="312" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-114" value="说明：关联到当前笔记" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1492" y="6462" width="220" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-115" value="values.put(DataColumns.MIME_TYPE, Notes.DataConstants.IMAGE_NOTE)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1437" y="6566" width="330" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-116" value="说明：MIME 类型标识为图片附件" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="6694" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-117" value="IMAGE_NOTE = &#39;vnd.android.cursor.item/image_note&#39;（自定义MIME类型）" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1422" y="6822" width="362" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-118" value="values.put(DataColumns.CONTENT, uri.toString())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1445" y="6974" width="316" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-119" value="说明：将 Uri 转换为字符串后存储在 CONTENT 字段&#xa;这是图片在系统中的访问路径" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="7102" width="260" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-120" value="存储格式例如：&#39;content://com.android.providers.media.documents/document/image%3A12345&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1267" y="7278" width="671" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-121" value="values.put(DataColumns.DATA3, getDisplayName(uri))" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1456" y="7406" width="294" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-122" value="说明：DATA3 字段用于存储图片的展示名称" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="7534" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-123" value="getDisplayName() 实现" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1491" y="7662" width="223" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-124" value="查询 OpenableColumns.DISPLAY_NAME 获取文件名" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1451" y="7766" width="303" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-125" value="例如返回：&#39;photo_2024.jpg&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1474" y="7918" width="257" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-126" value="异常情况默认返回：&#39;image&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1476" y="8022" width="252" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-127" value="执行数据库插入操作" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1500" y="8126" width="204" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-128" value="Uri result = getContentResolver().insert(Notes.CONTENT_DATA_URI, values)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1370" y="8230" width="465" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-129" value="说明：通过 ContentResolver 的 insert() 方法&#xa;将 ContentValues 插入到 data 表" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1472" y="8382" width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-130" value="Notes.CONTENT_DATA_URI = &#39;content://micode_notes/data&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1461" y="8582" width="283" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-131" value="if (result == null)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1512" y="8710" width="182" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-132" value="showToast(R.string.image_attach_failed)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1105" y="8836" width="353" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-133" value="return" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1229" y="8940" width="105" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-134" value="说明：插入失败，直接返回" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1156" y="9056" width="252" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-135" value="同步更新各个状态" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1669" y="8836" width="188" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-136" value="updateAttachmentFlag(true)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1630" y="8940" width="266" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-137" value="说明：更新 note 表的 has_attachment 字段为 1" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="9044" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-138" value="查询当前笔记有多少张图片：&#xa;SELECT COUNT(*) FROM data&#xa;WHERE note_id=? AND mime_type=&#39;vnd.android.cursor.item/image_note&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1554" y="9172" width="418" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-139" value="如果计数 &gt; 0，则 has_attachment = 1，否则 = 0" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="9348" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-140" value="更新 note 表：&#xa;UPDATE note SET&#xa;  has_attachment=?,&#xa;  local_modified=1,&#xa;  modified_date=System.currentTimeMillis()&#xa;WHERE _id=?" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="9500" width="365" height="198" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-141" value="loadImageAttachment()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1648" y="9748" width="230" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-142" value="说明：从数据库重新读取图片附件信息" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="9852" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-143" value="初始化变量：mImageDataId = 0, mImageUri = null, mImageDisplayName = null" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="9980" width="260" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-144" value="查询最新的一张图片记录：&#xa;SELECT _id, content, data3 FROM data&#xa;WHERE note_id=? AND mime_type=&#39;vnd.android.cursor.item/image_note&#39;&#xa;ORDER BY _id DESC LIMIT 1" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1554" y="10156" width="418" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-145" value="提取 _id（dataId）、content（Uri）、data3（名称）到成员变量" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="10356" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-146" value="invalidateOptionsMenu()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1645" y="10508" width="235" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-147" value="说明：重新绘制菜单，更新&#39;打开/删除附件&#39;菜单项的可见性" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="10612" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-148" value="setResult(RESULT_OK)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1654" y="10764" width="217" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-149" value="说明：设置返回结果为 OK" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1640" y="10868" width="245" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-150" value="showToast(R.string.image_attach_success)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="10972" width="365" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-151" value="说明：显示&#39;图片已插入&#39;的 Toast 提示" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="11076" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-152" value="refreshImagePreview()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1652" y="11204" width="222" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-153" value="说明：刷新编辑界面的图片预览区域" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="11308" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-154" value="if (!hasImageAttachment())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1635" y="11436" width="255" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-155" value="mImagePreviewContainer.setVisibility(View.GONE)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1295" y="12418" width="420" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-156" value="返回" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1458" y="12534" width="92" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-157" value="else (有图片)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1944" y="11563" width="153" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-158" value="mImagePreviewContainer.setVisibility(View.VISIBLE)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1805" y="11667" width="431" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-159" value="说明：显示预览容器" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1919" y="11771" width="204" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-160" value="mImagePreviewName.setText(mImageDisplayName)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1806" y="11875" width="430" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-161" value="说明：设置图片文件名" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1911" y="12002" width="220" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-162" value="mImagePreview.setImageURI(Uri.parse(mImageUri))" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1805" y="12106" width="432" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-163" value="try-catch 异常处理" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1924" y="12210" width="194" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-164" value="catch (Exception e)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1921" y="12314" width="200" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-165" value="setImageResource(android.R.drawable.ic_menu_report_image)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1764" y="12418" width="513" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-166" value="说明：加载失败时显示系统默认的错误图标" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1891" y="12522" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-167" value="用户看到编辑界面中已显示图片缩略图和文件名" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1633" y="12700" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-168" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-59" target="KoViix1HsBYP-VSg6CFq-60">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-169" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-60" target="KoViix1HsBYP-VSg6CFq-61">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-170" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-61" target="KoViix1HsBYP-VSg6CFq-62">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-171" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-62" target="KoViix1HsBYP-VSg6CFq-63">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-172" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-63" target="KoViix1HsBYP-VSg6CFq-64">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-173" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-64" target="KoViix1HsBYP-VSg6CFq-65">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-174" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-65" target="KoViix1HsBYP-VSg6CFq-66">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-175" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-66" target="KoViix1HsBYP-VSg6CFq-67">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-176" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-67" target="KoViix1HsBYP-VSg6CFq-68">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-177" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-68" target="KoViix1HsBYP-VSg6CFq-69">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-178" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-69" target="KoViix1HsBYP-VSg6CFq-70">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-179" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-70" target="KoViix1HsBYP-VSg6CFq-71">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-180" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-71" target="KoViix1HsBYP-VSg6CFq-72">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-181" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-72" target="KoViix1HsBYP-VSg6CFq-73">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-182" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-73" target="KoViix1HsBYP-VSg6CFq-74">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-183" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-74" target="KoViix1HsBYP-VSg6CFq-75">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-184" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-75" target="KoViix1HsBYP-VSg6CFq-76">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-185" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-76" target="KoViix1HsBYP-VSg6CFq-77">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-186" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-77" target="KoViix1HsBYP-VSg6CFq-78">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-187" value="用户选择图片" style="curved=1;dashed=1;dashPattern=2 3;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-78" target="KoViix1HsBYP-VSg6CFq-79">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-188" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-79" target="KoViix1HsBYP-VSg6CFq-80">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-189" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-80" target="KoViix1HsBYP-VSg6CFq-81">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-190" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-81" target="KoViix1HsBYP-VSg6CFq-82">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-191" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-82" target="KoViix1HsBYP-VSg6CFq-83">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-192" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-83" target="KoViix1HsBYP-VSg6CFq-84">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-193" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-84" target="KoViix1HsBYP-VSg6CFq-85">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-194" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.74;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-85" target="KoViix1HsBYP-VSg6CFq-86">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2845" y="4039" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-195" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-86" target="KoViix1HsBYP-VSg6CFq-87">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-196" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.09;exitY=1;entryX=1;entryY=0.38;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-85" target="KoViix1HsBYP-VSg6CFq-88">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2567" y="4039" />
+              <mxPoint x="2567" y="4064" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-197" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-88" target="KoViix1HsBYP-VSg6CFq-89">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-198" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-89" target="KoViix1HsBYP-VSg6CFq-90">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-199" value="是" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.79;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-90" target="KoViix1HsBYP-VSg6CFq-91">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="937" y="4460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-200" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-91" target="KoViix1HsBYP-VSg6CFq-92">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-201" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-92" target="KoViix1HsBYP-VSg6CFq-93">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-202" value="否" style="curved=1;startArrow=none;endArrow=block;exitX=0.94;exitY=0.99;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-90" target="KoViix1HsBYP-VSg6CFq-94">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1424" y="4460" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-203" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-94" target="KoViix1HsBYP-VSg6CFq-95">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-204" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-95" target="KoViix1HsBYP-VSg6CFq-96">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-205" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-96" target="KoViix1HsBYP-VSg6CFq-97">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-206" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-97" target="KoViix1HsBYP-VSg6CFq-98">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-207" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-98" target="KoViix1HsBYP-VSg6CFq-99">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-208" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-99" target="KoViix1HsBYP-VSg6CFq-100">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-209" value="是" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-100" target="KoViix1HsBYP-VSg6CFq-101">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1104" y="5379" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-210" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-101" target="KoViix1HsBYP-VSg6CFq-102">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-211" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-102" target="KoViix1HsBYP-VSg6CFq-103">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-212" value="否" style="curved=1;startArrow=none;endArrow=block;exitX=0.79;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-100" target="KoViix1HsBYP-VSg6CFq-104">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1602" y="5379" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-213" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-104" target="KoViix1HsBYP-VSg6CFq-105">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-214" value="是" style="curved=1;startArrow=none;endArrow=block;exitX=0.22;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-105" target="KoViix1HsBYP-VSg6CFq-106">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1437" y="5633" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-215" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-106" target="KoViix1HsBYP-VSg6CFq-107">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-216" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-107" target="KoViix1HsBYP-VSg6CFq-108">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-217" value="否" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.81;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-105" target="KoViix1HsBYP-VSg6CFq-109">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2079" y="5633" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-218" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-109" target="KoViix1HsBYP-VSg6CFq-110">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-219" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.11;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-108" target="KoViix1HsBYP-VSg6CFq-111">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1437" y="6053" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-220" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=1;entryY=0.27;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-110" target="KoViix1HsBYP-VSg6CFq-111">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2079" y="6053" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-221" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-111" target="KoViix1HsBYP-VSg6CFq-112">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-222" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-112" target="KoViix1HsBYP-VSg6CFq-113">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-223" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-113" target="KoViix1HsBYP-VSg6CFq-114">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-224" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-114" target="KoViix1HsBYP-VSg6CFq-115">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-225" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-115" target="KoViix1HsBYP-VSg6CFq-116">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-226" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-116" target="KoViix1HsBYP-VSg6CFq-117">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-227" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-117" target="KoViix1HsBYP-VSg6CFq-118">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-228" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-118" target="KoViix1HsBYP-VSg6CFq-119">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-229" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-119" target="KoViix1HsBYP-VSg6CFq-120">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-230" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-120" target="KoViix1HsBYP-VSg6CFq-121">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-231" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-121" target="KoViix1HsBYP-VSg6CFq-122">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-232" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-122" target="KoViix1HsBYP-VSg6CFq-123">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-233" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-123" target="KoViix1HsBYP-VSg6CFq-124">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-234" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-124" target="KoViix1HsBYP-VSg6CFq-125">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-235" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-125" target="KoViix1HsBYP-VSg6CFq-126">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-236" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-126" target="KoViix1HsBYP-VSg6CFq-127">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-237" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-127" target="KoViix1HsBYP-VSg6CFq-128">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-238" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-128" target="KoViix1HsBYP-VSg6CFq-129">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-239" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-129" target="KoViix1HsBYP-VSg6CFq-130">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-240" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-130" target="KoViix1HsBYP-VSg6CFq-131">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-241" value="是" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.83;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-131" target="KoViix1HsBYP-VSg6CFq-132">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1282" y="8800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-242" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-132" target="KoViix1HsBYP-VSg6CFq-133">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-243" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-133" target="KoViix1HsBYP-VSg6CFq-134">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-244" value="否" style="curved=1;startArrow=none;endArrow=block;exitX=0.87;exitY=0.99;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-131" target="KoViix1HsBYP-VSg6CFq-135">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1763" y="8800" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-245" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-135" target="KoViix1HsBYP-VSg6CFq-136">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-246" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-136" target="KoViix1HsBYP-VSg6CFq-137">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-247" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-137" target="KoViix1HsBYP-VSg6CFq-138">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-248" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-138" target="KoViix1HsBYP-VSg6CFq-139">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-249" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-139" target="KoViix1HsBYP-VSg6CFq-140">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-250" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-140" target="KoViix1HsBYP-VSg6CFq-141">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-251" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-141" target="KoViix1HsBYP-VSg6CFq-142">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-252" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-142" target="KoViix1HsBYP-VSg6CFq-143">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-253" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-143" target="KoViix1HsBYP-VSg6CFq-144">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-254" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-144" target="KoViix1HsBYP-VSg6CFq-145">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-255" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-145" target="KoViix1HsBYP-VSg6CFq-146">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-256" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-146" target="KoViix1HsBYP-VSg6CFq-147">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-257" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-147" target="KoViix1HsBYP-VSg6CFq-148">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-258" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-148" target="KoViix1HsBYP-VSg6CFq-149">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-259" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-149" target="KoViix1HsBYP-VSg6CFq-150">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-260" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-150" target="KoViix1HsBYP-VSg6CFq-151">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-261" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-151" target="KoViix1HsBYP-VSg6CFq-152">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-262" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-152" target="KoViix1HsBYP-VSg6CFq-153">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-263" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-153" target="KoViix1HsBYP-VSg6CFq-154">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-264" value="是" style="curved=1;startArrow=none;endArrow=block;exitX=0.07;exitY=1.01;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-154" target="KoViix1HsBYP-VSg6CFq-155">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1504" y="11527" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-265" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.51;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-155" target="KoViix1HsBYP-VSg6CFq-156">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-266" value="否" style="curved=1;startArrow=none;endArrow=block;exitX=0.93;exitY=1.01;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-154" target="KoViix1HsBYP-VSg6CFq-157">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2021" y="11527" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-267" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-157" target="KoViix1HsBYP-VSg6CFq-158">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-268" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-158" target="KoViix1HsBYP-VSg6CFq-159">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-269" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-159" target="KoViix1HsBYP-VSg6CFq-160">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-270" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-160" target="KoViix1HsBYP-VSg6CFq-161">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-271" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-161" target="KoViix1HsBYP-VSg6CFq-162">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-272" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-162" target="KoViix1HsBYP-VSg6CFq-163">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-273" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-163" target="KoViix1HsBYP-VSg6CFq-164">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-274" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=-0.01;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-164" target="KoViix1HsBYP-VSg6CFq-165">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-275" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=0.99;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-165" target="KoViix1HsBYP-VSg6CFq-166">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-276" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.51;exitY=0.99;entryX=0;entryY=0.08;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-156" target="KoViix1HsBYP-VSg6CFq-167">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1504" y="12675" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KoViix1HsBYP-VSg6CFq-277" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=1;entryY=0.08;rounded=0;" edge="1" parent="1" source="KoViix1HsBYP-VSg6CFq-166" target="KoViix1HsBYP-VSg6CFq-167">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2021" y="12675" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

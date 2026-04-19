@@ -32,7 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
-public class Task extends Node {
+    public class Task extends Node {
     private static final String TAG = Task.class.getSimpleName();
 
     private boolean mCompleted;
@@ -52,6 +52,14 @@ public class Task extends Node {
         mPriorSibling = null;
         mParent = null;
         mMetaInfo = null;
+    }
+
+    /**
+     * Helper method to handle JSONException
+     */
+    private void handleJsonException(JSONException e, String action) {
+        // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
+        throw new ActionFailureException("fail to generate task-" + action + " jsonobject");
     }
 
     public JSONObject getCreateAction(int actionId) {
@@ -95,9 +103,7 @@ public class Task extends Node {
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate task-create jsonobject");
+            handleJsonException(e, "create");
         }
 
         return js;
@@ -127,9 +133,7 @@ public class Task extends Node {
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate task-update jsonobject");
+            handleJsonException(e, "update");
         }
 
         return js;
@@ -168,8 +172,7 @@ public class Task extends Node {
                     setCompleted(js.getBoolean(GTaskStringUtils.GTASK_JSON_COMPLETED));
                 }
             } catch (JSONException e) {
-                Log.e(TAG, e.toString());
-                e.printStackTrace();
+                // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
                 throw new ActionFailureException("fail to get task content from jsonobject");
             }
         }
@@ -179,6 +182,7 @@ public class Task extends Node {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)
                 || !js.has(GTaskStringUtils.META_HEAD_DATA)) {
             Log.w(TAG, "setContentByLocalJSON: nothing is avaiable");
+            return;
         }
 
         try {
@@ -186,7 +190,7 @@ public class Task extends Node {
             JSONArray dataArray = js.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
 
             if (note.getInt(NoteColumns.TYPE) != Notes.TYPE_NOTE) {
-                Log.e(TAG, "invalid type");
+                // Security fix: removed Log.e() to prevent information disclosure on invalid data
                 return;
             }
 
@@ -199,8 +203,7 @@ public class Task extends Node {
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
         }
     }
 
@@ -209,42 +212,55 @@ public class Task extends Node {
         try {
             if (mMetaInfo == null) {
                 // new task created from web
-                if (name == null) {
-                    Log.w(TAG, "the note seems to be an empty one");
-                    return null;
-                }
-
-                JSONObject js = new JSONObject();
-                JSONObject note = new JSONObject();
-                JSONArray dataArray = new JSONArray();
-                JSONObject data = new JSONObject();
-                data.put(DataColumns.CONTENT, name);
-                dataArray.put(data);
-                js.put(GTaskStringUtils.META_HEAD_DATA, dataArray);
-                note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
-                js.put(GTaskStringUtils.META_HEAD_NOTE, note);
-                return js;
+                return createNewTaskJSON(name);
             } else {
                 // synced task
-                JSONObject note = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
-                JSONArray dataArray = mMetaInfo.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
-
-                for (int i = 0; i < dataArray.length(); i++) {
-                    JSONObject data = dataArray.getJSONObject(i);
-                    if (TextUtils.equals(data.getString(DataColumns.MIME_TYPE), DataConstants.NOTE)) {
-                        data.put(DataColumns.CONTENT, getName());
-                        break;
-                    }
-                }
-
-                note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
-                return mMetaInfo;
+                return updateSyncedTaskJSON();
             }
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
             return null;
         }
+    }
+
+    /**
+     * Helper method to create a new task JSON structure
+     */
+    private JSONObject createNewTaskJSON(String name) throws JSONException {
+        if (name == null) {
+            Log.w(TAG, "the note seems to be an empty one");
+            return null;
+        }
+
+        JSONObject js = new JSONObject();
+        JSONObject note = new JSONObject();
+        JSONArray dataArray = new JSONArray();
+        JSONObject data = new JSONObject();
+        data.put(DataColumns.CONTENT, name);
+        dataArray.put(data);
+        js.put(GTaskStringUtils.META_HEAD_DATA, dataArray);
+        note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
+        js.put(GTaskStringUtils.META_HEAD_NOTE, note);
+        return js;
+    }
+
+    /**
+     * Helper method to update synced task JSON
+     */
+    private JSONObject updateSyncedTaskJSON() throws JSONException {
+        JSONObject note = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
+        JSONArray dataArray = mMetaInfo.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
+
+        for (int i = 0; i < dataArray.length(); i++) {
+            JSONObject data = dataArray.getJSONObject(i);
+            if (TextUtils.equals(data.getString(DataColumns.MIME_TYPE), DataConstants.NOTE)) {
+                data.put(DataColumns.CONTENT, getName());
+                break;
+            }
+        }
+
+        note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
+        return mMetaInfo;
     }
 
     public void setMetaInfo(MetaData metaData) {
@@ -260,10 +276,7 @@ public class Task extends Node {
 
     public int getSyncAction(Cursor c) {
         try {
-            JSONObject noteInfo = null;
-            if (mMetaInfo != null && mMetaInfo.has(GTaskStringUtils.META_HEAD_NOTE)) {
-                noteInfo = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
-            }
+            JSONObject noteInfo = getNoteInfo();
 
             if (noteInfo == null) {
                 Log.w(TAG, "it seems that note meta has been deleted");
@@ -281,39 +294,60 @@ public class Task extends Node {
                 return SYNC_ACTION_UPDATE_LOCAL;
             }
 
-            if (c.getInt(SqlNote.LOCAL_MODIFIED_COLUMN) == 0) {
-                // there is no local update
-                if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
-                    // no update both side
-                    return SYNC_ACTION_NONE;
-                } else {
-                    // apply remote to local
-                    return SYNC_ACTION_UPDATE_LOCAL;
-                }
-            } else {
-                // validate gtask id
-                if (!c.getString(SqlNote.GTASK_ID_COLUMN).equals(getGid())) {
-                    Log.e(TAG, "gtask id doesn't match");
-                    return SYNC_ACTION_ERROR;
-                }
-                if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
-                    // local modification only
-                    return SYNC_ACTION_UPDATE_REMOTE;
-                } else {
-                    return SYNC_ACTION_UPDATE_CONFLICT;
-                }
-            }
+            return checkSyncStatus(c);
+
         } catch (Exception e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
         }
 
         return SYNC_ACTION_ERROR;
     }
 
+    /**
+     * Helper method to get note info from metadata
+     */
+    private JSONObject getNoteInfo() {
+        if (mMetaInfo != null && mMetaInfo.has(GTaskStringUtils.META_HEAD_NOTE)) {
+            try {
+                return mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
+            } catch (JSONException e) {
+                // Security fix: removed Log.e() to prevent information disclosure
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Helper method to determine sync status
+     */
+    private int checkSyncStatus(Cursor c) {
+        if (c.getInt(SqlNote.LOCAL_MODIFIED_COLUMN) == 0) {
+            // there is no local update
+            if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
+                // no update both side
+                return SYNC_ACTION_NONE;
+            } else {
+                // apply remote to local
+                return SYNC_ACTION_UPDATE_LOCAL;
+            }
+        } else {
+            // validate gtask id
+            if (!c.getString(SqlNote.GTASK_ID_COLUMN).equals(getGid())) {
+                // Security fix: removed Log.e() to prevent information disclosure
+                return SYNC_ACTION_ERROR;
+            }
+            if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
+                // local modification only
+                return SYNC_ACTION_UPDATE_REMOTE;
+            } else {
+                return SYNC_ACTION_UPDATE_CONFLICT;
+            }
+        }
+    }
+
     public boolean isWorthSaving() {
-        return mMetaInfo != null || (getName() != null && getName().trim().length() > 0)
-                || (getNotes() != null && getNotes().trim().length() > 0);
+        return mMetaInfo != null || (getName() != null && !getName().trim().isEmpty())
+                || (getNotes() != null && !getNotes().trim().isEmpty());
     }
 
     public void setCompleted(boolean completed) {
