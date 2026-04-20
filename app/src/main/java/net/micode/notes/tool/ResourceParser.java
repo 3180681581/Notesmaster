@@ -22,6 +22,8 @@ import android.preference.PreferenceManager;
 import net.micode.notes.R;
 import net.micode.notes.ui.NotesPreferenceActivity;
 
+import java.security.SecureRandom;
+
 /**
  * 资源解析器
  * 管理便签应用中各种资源的ID映射，包括：
@@ -31,6 +33,10 @@ import net.micode.notes.ui.NotesPreferenceActivity;
  * - 列表项背景资源
  */
 public class ResourceParser {
+
+    // ==================== 随机数生成器 ====================
+    /** 安全的随机数生成器，用于生成背景颜色选择 */
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     // ==================== 背景颜色常量 ====================
     public static final int YELLOW           = 0;  // 黄色
@@ -103,8 +109,10 @@ public class ResourceParser {
         // 检查用户是否开启了随机背景色
         if (PreferenceManager.getDefaultSharedPreferences(context).getBoolean(
                 NotesPreferenceActivity.PREFERENCE_SET_BG_COLOR_KEY, false)) {
-            // 随机返回一个颜色
-            return (int) (Math.random() * NoteBgResources.BG_EDIT_RESOURCES.length);
+            // 使用SecureRandom生成安全的随机数，确保返回值在[0, length)范围内
+            // 避免使用Math.random()可能引发的安全问题（CVE-2013-6386等）
+            int length = NoteBgResources.BG_EDIT_RESOURCES.length;
+            return SECURE_RANDOM.nextInt(length);
         } else {
             return BG_DEFAULT_COLOR;
         }

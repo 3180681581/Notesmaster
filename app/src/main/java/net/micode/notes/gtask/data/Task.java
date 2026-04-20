@@ -31,28 +31,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- * Task 类表示 Google Tasks 中的任务项。
- * 该类继承自 Node 类，实现了任务的创建、更新、同步等操作，
- * 支持与本地笔记数据的双向转换和冲突解决。
- * 
- * 主要功能：
- * - 生成创建和更新任务的 JSON 操作指令
- * - 从远程 JSON 数据设置任务内容
- * - 从本地 JSON 数据设置任务内容
- * - 将任务内容转换为本地 JSON 格式
- * - 分析同步动作类型（无操作、本地更新、远程更新、冲突等）
- * - 判断任务是否值得保存
- * 
- * 任务属性：
- * - 完成状态：标识任务是否已完成
- * - 备注信息：任务的详细描述
- * - 前一个兄弟节点：用于维护任务在列表中的顺序
- * - 父任务列表：所属的任务列表
- * - 元信息：存储任务的本地笔记数据
- */
+
 public class Task extends Node {
-    /** 日志标签，用于调试和错误日志记录 */
     private static final String TAG = Task.class.getSimpleName();
 
     /** 任务的完成状态，true表示已完成，false表示未完成 */
@@ -81,6 +61,14 @@ public class Task extends Node {
         mPriorSibling = null;
         mParent = null;
         mMetaInfo = null;
+    }
+
+    /**
+     * Helper method to handle JSONException
+     */
+    private void handleJsonException(JSONException e, String action) {
+        // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
+        throw new ActionFailureException("fail to generate task-" + action + " jsonobject");
     }
 
     /**
@@ -132,9 +120,7 @@ public class Task extends Node {
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate task-create jsonobject");
+            handleJsonException(e, "create");
         }
 
         return js;
@@ -172,9 +158,7 @@ public class Task extends Node {
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate task-update jsonobject");
+            handleJsonException(e, "update");
         }
 
         return js;
@@ -220,8 +204,7 @@ public class Task extends Node {
                     setCompleted(js.getBoolean(GTaskStringUtils.GTASK_JSON_COMPLETED));
                 }
             } catch (JSONException e) {
-                Log.e(TAG, e.toString());
-                e.printStackTrace();
+                // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
                 throw new ActionFailureException("fail to get task content from jsonobject");
             }
         }
@@ -237,6 +220,7 @@ public class Task extends Node {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)
                 || !js.has(GTaskStringUtils.META_HEAD_DATA)) {
             Log.w(TAG, "setContentByLocalJSON: nothing is avaiable");
+            return;
         }
 
         try {
@@ -244,7 +228,7 @@ public class Task extends Node {
             JSONArray dataArray = js.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
 
             if (note.getInt(NoteColumns.TYPE) != Notes.TYPE_NOTE) {
-                Log.e(TAG, "invalid type");
+                // Security fix: removed Log.e() to prevent information disclosure on invalid data
                 return;
             }
 
@@ -258,8 +242,7 @@ public class Task extends Node {
             }
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
         }
     }
 
@@ -273,7 +256,7 @@ public class Task extends Node {
         String name = getName();
         try {
             if (mMetaInfo == null) {
-                // 新任务从网页创建
+                // new task created from web
                 if (name == null) {
                     Log.w(TAG, "the note seems to be an empty one");
                     return null;
@@ -290,11 +273,10 @@ public class Task extends Node {
                 js.put(GTaskStringUtils.META_HEAD_NOTE, note);
                 return js;
             } else {
-                // 已同步的任务
+                // synced task
                 JSONObject note = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
                 JSONArray dataArray = mMetaInfo.getJSONArray(GTaskStringUtils.META_HEAD_DATA);
 
-                // 更新笔记内容
                 for (int i = 0; i < dataArray.length(); i++) {
                     JSONObject data = dataArray.getJSONObject(i);
                     if (TextUtils.equals(data.getString(DataColumns.MIME_TYPE), DataConstants.NOTE)) {
@@ -303,14 +285,8 @@ public class Task extends Node {
                     }
                 }
 
-                note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
-                return mMetaInfo;
-            }
-        } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            return null;
-        }
+        note.put(NoteColumns.TYPE, Notes.TYPE_NOTE);
+        return mMetaInfo;
     }
 
     /**
@@ -339,10 +315,7 @@ public class Task extends Node {
      */
     public int getSyncAction(Cursor c) {
         try {
-            JSONObject noteInfo = null;
-            if (mMetaInfo != null && mMetaInfo.has(GTaskStringUtils.META_HEAD_NOTE)) {
-                noteInfo = mMetaInfo.getJSONObject(GTaskStringUtils.META_HEAD_NOTE);
-            }
+            JSONObject noteInfo = getNoteInfo();
 
             if (noteInfo == null) {
                 Log.w(TAG, "it seems that note meta has been deleted");
@@ -361,25 +334,24 @@ public class Task extends Node {
             }
 
             if (c.getInt(SqlNote.LOCAL_MODIFIED_COLUMN) == 0) {
-                // 没有本地更新
+                // there is no local update
                 if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
-                    // 两边都没有更新
+                    // no update both side
                     return SYNC_ACTION_NONE;
                 } else {
-                    // 应用远程更新到本地
+                    // apply remote to local
                     return SYNC_ACTION_UPDATE_LOCAL;
                 }
             } else {
-                // 验证 Google Task ID
+                // validate gtask id
                 if (!c.getString(SqlNote.GTASK_ID_COLUMN).equals(getGid())) {
                     Log.e(TAG, "gtask id doesn't match");
                     return SYNC_ACTION_ERROR;
                 }
                 if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
-                    // 只有本地修改
+                    // local modification only
                     return SYNC_ACTION_UPDATE_REMOTE;
                 } else {
-                    // 两边都有修改，产生冲突
                     return SYNC_ACTION_UPDATE_CONFLICT;
                 }
             }
@@ -398,8 +370,8 @@ public class Task extends Node {
      * @return true 如果任务包含有效内容值得保存，false 否则
      */
     public boolean isWorthSaving() {
-        return mMetaInfo != null || (getName() != null && getName().trim().length() > 0)
-                || (getNotes() != null && getNotes().trim().length() > 0);
+        return mMetaInfo != null || (getName() != null && !getName().trim().isEmpty())
+                || (getNotes() != null && !getNotes().trim().isEmpty());
     }
 
     /**

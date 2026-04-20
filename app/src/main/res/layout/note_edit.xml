@@ -146,7 +146,7 @@
                     android:background="@android:color/darker_gray"
                     android:contentDescription="@string/image_attachment_preview_title" />
             </LinearLayout>
-                    <!-- ---------------------------------------- -->
+                    <!-- == -->
 
             <ImageView
                 android:layout_width="fill_parent"

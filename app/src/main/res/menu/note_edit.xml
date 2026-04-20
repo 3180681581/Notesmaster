@@ -57,7 +57,7 @@
     <item
         android:id="@+id/menu_delete_image_attachment"
         android:title="@string/menu_delete_image_attachment" />
-    <!-- ---------------------------------------- -->
+    <!-- End of image insertion feature menu -->
 
     <item
         android:id="@+id/menu_alert"

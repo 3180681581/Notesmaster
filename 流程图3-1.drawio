@@ -1,0 +1,237 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram name="第 1 页" id="J9SvcClF7JjeXOgU8FPw">
+    <mxGraphModel dx="1333" dy="897" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-1" value="[NoteEditActivity.java]&#xa;用户在笔记编辑页" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1111" y="20" width="223" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-2" value="点击删除菜单项&#xa;NoteEditActivity.onOptionsItemSelected()&#xa;R.id.delete_note 菜单项被点击" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1043" y="148" width="359" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-3" value="弹出确认对话框&#xa;AlertDialog.Builder builder = new AlertDialog.Builder(this)&#xa;builder.setTitle（确定删除?）&#xa;builder.setPositiveButton（删除, ...）&#xa;builder.show()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1093" y="300" width="260" height="246" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-4" value="用户确认删除" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1145" y="596" width="156" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-5" value="[NoteEditActivity.java]&#xa;NoteEditActivity.deleteNote()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1086" y="700" width="273" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-6" value="检查笔记是否关联 Widget" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="513" y="900" width="243" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-7" value="if（mNoteWidgetId &amp;gt; 0）&#xa;NoteWidgetProvider_2x.updateWidget() 清除 Widget&#xa;values.put(NoteColumns.WIDGET_ID, INVALID_APPWIDGET_ID)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="459" y="1076" width="350" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-8" value="ContentResolver.delete(CONTENT_NOTE_URI, ...)&#xa;where: _id=?&#xa;args: [noteId]&#xa;执行删除" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="806" y="852" width="391" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-9" value="若要恢复功能，改为移动到垃圾箱&#xa;ContentValues values = new ContentValues()&#xa;values.put(NoteColumns.PARENT_ID, ID_TRASH_FOLDER)&#xa;values.put(NoteColumns.LOCAL_MODIFIED, 1)&#xa;ContentResolver.update(CONTENT_NOTE_URI, values, ...)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1247" y="828" width="395" height="198" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-10" value="finish() 返回列表" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1692" y="900" width="180" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-11" value="[NotesProvider.java]&#xa;NotesProvider.delete()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="891" y="1112" width="221" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-12" value="mMatcher.match(uri) 判断 URI 类型" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="76" y="1288" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-13" value="getWritableDatabase() 获取写连接" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="386" y="1288" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-14" value="database.delete(TABLE.NOTE, where, args)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="696" y="1288" width="281" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-15" value="同时删除 data 表中的内容&#xa;database.delete(TABLE.DATA, note_id=?, [noteId])" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1027" y="1276" width="277" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-16" value="getContext().getContentResolver().notifyChange(uri, null)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1354" y="1288" width="445" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-17" value="返回删除的行数" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1849" y="1300" width="172" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-18" value="[NotesDatabaseHelper.java]&#xa;SQLiteDatabase.delete()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="707" y="1428" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-19" value="DELETE FROM note WHERE _id=?" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="552" y="1556" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-20" value="DELETE FROM data WHERE note_id=?" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="862" y="1556" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-21" value="[NotesListActivity.java]&#xa;NotesListActivity.onResume()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="548" y="1684" width="268" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-22" value="ContentObserver 收到数据变化通知" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="1812" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-23" value="NotesListAdapter.notifyDataSetChanged()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="330" y="1824" width="357" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-24" value="删除的笔记从列表中消失" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="737" y="1824" width="236" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-25" value="ListView 自动刷新显示" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="1023" y="1824" width="221" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-26" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-1" target="y5np7r6OvDeFqaZEa4xd-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-27" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-2" target="y5np7r6OvDeFqaZEa4xd-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-28" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-3" target="y5np7r6OvDeFqaZEa4xd-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-29" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-4" target="y5np7r6OvDeFqaZEa4xd-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-30" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.69;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-5" target="y5np7r6OvDeFqaZEa4xd-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="634" y="803" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-31" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-6" target="y5np7r6OvDeFqaZEa4xd-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-32" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.01;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-5" target="y5np7r6OvDeFqaZEa4xd-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1001" y="803" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-33" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-5" target="y5np7r6OvDeFqaZEa4xd-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1444" y="803" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-34" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.7;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-5" target="y5np7r6OvDeFqaZEa4xd-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1782" y="803" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-35" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-8" target="y5np7r6OvDeFqaZEa4xd-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-36" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.68;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="206" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-37" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.79;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-13">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="516" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-38" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.21;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="837" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-39" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.79;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1166" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-40" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.75;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1577" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-41" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.65;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-11" target="y5np7r6OvDeFqaZEa4xd-17">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1935" y="1251" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-42" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-14" target="y5np7r6OvDeFqaZEa4xd-18">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-43" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.14;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-18" target="y5np7r6OvDeFqaZEa4xd-19">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="682" y="1531" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-44" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.86;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-18" target="y5np7r6OvDeFqaZEa4xd-20">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="992" y="1531" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-45" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-19" target="y5np7r6OvDeFqaZEa4xd-21">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-46" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.71;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-21" target="y5np7r6OvDeFqaZEa4xd-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="1787" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-47" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.11;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-21" target="y5np7r6OvDeFqaZEa4xd-23">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="509" y="1787" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-48" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.89;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-21" target="y5np7r6OvDeFqaZEa4xd-24">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="855" y="1787" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="y5np7r6OvDeFqaZEa4xd-49" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.74;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="y5np7r6OvDeFqaZEa4xd-21" target="y5np7r6OvDeFqaZEa4xd-25">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1133" y="1787" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

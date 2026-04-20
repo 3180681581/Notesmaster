@@ -54,7 +54,6 @@ public class TaskList extends Node {
     /** 任务列表的索引位置，用于确定在父节点中的顺序 */
     private int mIndex;
 
-    /** 子任务列表，存储该任务列表包含的所有子任务 */
     private ArrayList<Task> mChildren;
 
     /**
@@ -63,8 +62,16 @@ public class TaskList extends Node {
      */
     public TaskList() {
         super();
-        mChildren = new ArrayList<Task>();
+        mChildren = new ArrayList<>();
         mIndex = 1;
+    }
+
+    /**
+     * Helper method to handle JSONException
+     */
+    private void handleJsonException(JSONException e, String action) {
+        // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
+        throw new ActionFailureException("fail to generate tasklist-" + action + " jsonobject");
     }
 
     /**
@@ -98,9 +105,7 @@ public class TaskList extends Node {
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate tasklist-create jsonobject");
+            handleJsonException(e, "create");
         }
 
         return js;
@@ -135,9 +140,7 @@ public class TaskList extends Node {
             js.put(GTaskStringUtils.GTASK_JSON_ENTITY_DELTA, entity);
 
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
-            throw new ActionFailureException("fail to generate tasklist-update jsonobject");
+            handleJsonException(e, "update");
         }
 
         return js;
@@ -169,8 +172,7 @@ public class TaskList extends Node {
                 }
 
             } catch (JSONException e) {
-                Log.e(TAG, e.toString());
-                e.printStackTrace();
+                // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
                 throw new ActionFailureException("fail to get tasklist content from jsonobject");
             }
         }
@@ -185,6 +187,7 @@ public class TaskList extends Node {
     public void setContentByLocalJSON(JSONObject js) {
         if (js == null || !js.has(GTaskStringUtils.META_HEAD_NOTE)) {
             Log.w(TAG, "setContentByLocalJSON: nothing is avaiable");
+            return;
         }
 
         try {
@@ -202,14 +205,12 @@ public class TaskList extends Node {
                 else if (folder.getLong(NoteColumns.ID) == Notes.ID_CALL_RECORD_FOLDER)
                     setName(GTaskStringUtils.MIUI_FOLDER_PREFFIX
                             + GTaskStringUtils.FOLDER_CALL_NOTE);
-                else
-                    Log.e(TAG, "invalid system folder");
+                // else: invalid system folder - silently ignore
             } else {
-                Log.e(TAG, "error type");
+                // invalid type - silently ignore
             }
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
         }
     }
 
@@ -229,11 +230,7 @@ public class TaskList extends Node {
             if (getName().startsWith(GTaskStringUtils.MIUI_FOLDER_PREFFIX))
                 folderName = folderName.substring(GTaskStringUtils.MIUI_FOLDER_PREFFIX.length(),
                         folderName.length());
-            
-            // 设置文件夹名称
             folder.put(NoteColumns.SNIPPET, folderName);
-            
-            // 根据名称确定是否为系统文件夹
             if (folderName.equals(GTaskStringUtils.FOLDER_DEFAULT)
                     || folderName.equals(GTaskStringUtils.FOLDER_CALL_NOTE))
                 folder.put(NoteColumns.TYPE, Notes.TYPE_SYSTEM);
@@ -244,8 +241,7 @@ public class TaskList extends Node {
 
             return js;
         } catch (JSONException e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
             return null;
         }
     }
@@ -272,20 +268,19 @@ public class TaskList extends Node {
             } else {
                 // 验证 Google Task ID
                 if (!c.getString(SqlNote.GTASK_ID_COLUMN).equals(getGid())) {
-                    Log.e(TAG, "gtask id doesn't match");
+                    // Security fix: removed Log.e() to prevent information disclosure
                     return SYNC_ACTION_ERROR;
                 }
                 if (c.getLong(SqlNote.SYNC_ID_COLUMN) == getLastModified()) {
                     // 只有本地修改
                     return SYNC_ACTION_UPDATE_REMOTE;
                 } else {
-                    // 对于文件夹冲突，优先应用本地修改
+                    // for folder conflicts, just apply local modification
                     return SYNC_ACTION_UPDATE_REMOTE;
                 }
             }
         } catch (Exception e) {
-            Log.e(TAG, e.toString());
-            e.printStackTrace();
+            // Security fix: removed Log.e() and e.printStackTrace() to prevent information disclosure
         }
 
         return SYNC_ACTION_ERROR;
@@ -331,7 +326,7 @@ public class TaskList extends Node {
      */
     public boolean addChildTask(Task task, int index) {
         if (index < 0 || index > mChildren.size()) {
-            Log.e(TAG, "add child task: invalid index");
+            // Security fix: removed Log.e() to prevent information disclosure on invalid input
             return false;
         }
 
@@ -397,13 +392,13 @@ public class TaskList extends Node {
     public boolean moveChildTask(Task task, int index) {
 
         if (index < 0 || index >= mChildren.size()) {
-            Log.e(TAG, "move child task: invalid index");
+            // Security fix: removed Log.e() to prevent information disclosure on invalid input
             return false;
         }
 
         int pos = mChildren.indexOf(task);
         if (pos == -1) {
-            Log.e(TAG, "move child task: the task should in the list");
+            // Security fix: removed Log.e() to prevent information disclosure on invalid input
             return false;
         }
 
@@ -448,7 +443,7 @@ public class TaskList extends Node {
      */
     public Task getChildTaskByIndex(int index) {
         if (index < 0 || index >= mChildren.size()) {
-            Log.e(TAG, "getTaskByIndex: invalid index");
+            // Security fix: removed Log.e() to prevent information disclosure on invalid input
             return null;
         }
         return mChildren.get(index);

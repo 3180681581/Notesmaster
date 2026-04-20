@@ -1,0 +1,133 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/26.2.15 Chrome/134.0.6998.205 Electron/35.2.1 Safari/537.36" version="26.2.15">
+  <diagram name="第 1 页" id="oasxzzoSZqLHuaA2cV9t">
+    <mxGraphModel dx="1333" dy="897" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-1" value="用户点击菜单选项&#39;打开图片附件&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="453" y="20" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-2" value="[NoteEditActivity.java]&#xa;NoteEditActivity.onOptionsItemSelected(MenuItem item)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="369" y="148" width="428" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-3" value="if (itemId == R.id.menu_open_image_attachment)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="420" y="300" width="326" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-4" value="调用 openImageAttachment()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="453" y="428" width="260" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-5" value="[NoteEditActivity.java]&#xa;NoteEditActivity.openImageAttachment()" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="406" y="556" width="355" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-6" value="if (!hasImageAttachment())" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="57" y="684" width="255" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-7" value="showToast(R.string.image_not_found)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="20" y="824" width="330" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-8" value="return&#xa;说明：没有图片附件，显示提示并返回" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1000" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-9" value="try-catch 异常处理" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="675" y="684" width="194" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-10" value="Intent intent = new Intent(Intent.ACTION_VIEW)&#xa;说明：ACTION_VIEW 表示查看/打开文件" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="432" y="788" width="263" height="126" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-11" value="intent.setDataAndType(Uri.parse(mImageUri), &#39;image/*&#39;)&#xa;说明：设置要打开的数据（图片 Uri）和 MIME 类型&#xa;mImageUri 从数据库读取，例如：&#39;content://...&#39;" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="365" y="964" width="395" height="174" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-12" value="intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)&#xa;说明：授予被启动应用的读权限" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="315" y="1188" width="497" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-13" value="startActivity(intent)&#xa;说明：启动系统的图片查看器应用" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="433" y="1316" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-14" value="catch (ActivityNotFoundException e)" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="849" y="800" width="265" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-15" value="showToast(R.string.image_open_failed)&#xa;说明：如果系统没有安装图片查看应用" style="whiteSpace=wrap;strokeWidth=2;" vertex="1" parent="1">
+          <mxGeometry x="811" y="1012" width="342" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-16" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-1" target="GydwUbJ-rMB7G1sl1qg6-2">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-17" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-2" target="GydwUbJ-rMB7G1sl1qg6-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-18" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-3" target="GydwUbJ-rMB7G1sl1qg6-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-19" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-4" target="GydwUbJ-rMB7G1sl1qg6-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-20" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.87;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-5" target="GydwUbJ-rMB7G1sl1qg6-6">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="659" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-21" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-6" target="GydwUbJ-rMB7G1sl1qg6-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-22" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-7" target="GydwUbJ-rMB7G1sl1qg6-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-23" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.82;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-5" target="GydwUbJ-rMB7G1sl1qg6-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="772" y="659" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-24" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0;exitY=0.95;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-9" target="GydwUbJ-rMB7G1sl1qg6-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="563" y="763" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-25" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-10" target="GydwUbJ-rMB7G1sl1qg6-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-26" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-11" target="GydwUbJ-rMB7G1sl1qg6-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-27" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-12" target="GydwUbJ-rMB7G1sl1qg6-13">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-28" value="" style="curved=1;startArrow=none;endArrow=block;exitX=1;exitY=0.95;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-9" target="GydwUbJ-rMB7G1sl1qg6-14">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="982" y="763" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="GydwUbJ-rMB7G1sl1qg6-29" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;" edge="1" parent="1" source="GydwUbJ-rMB7G1sl1qg6-14" target="GydwUbJ-rMB7G1sl1qg6-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -178,7 +178,7 @@ public class GTaskClient {
     public boolean login(Activity activity) {
         // ========== 第1步：检查登录状态是否过期 ==========
         // 假设 Cookie 有效期为 5 分钟，需要定时重新登录
-        final long interval = 1000 * 60 * 5;
+        final long interval = 1000L * 60 * 5;
         if (mLastLoginTime + interval < System.currentTimeMillis()) {
             // 登录状态已过期，需要重新登录
             mLoggedin = false;
@@ -452,9 +452,8 @@ public class GTaskClient {
         }
 
         // ========== 读取响应内容 ==========
-        try {
-            InputStreamReader isr = new InputStreamReader(input);
-            BufferedReader br = new BufferedReader(isr);
+        try (InputStreamReader isr = new InputStreamReader(input);
+             BufferedReader br = new BufferedReader(isr)) {
             StringBuilder sb = new StringBuilder();
 
             // 逐行读取响应内容
@@ -465,8 +464,6 @@ public class GTaskClient {
                 }
                 sb = sb.append(buff);
             }
-        } finally {
-            input.close();
         }
     }
 
